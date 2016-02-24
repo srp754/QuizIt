@@ -1,3 +1,0 @@
-# QuizIt
-
-Quiz website.
