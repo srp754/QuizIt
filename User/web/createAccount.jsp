@@ -14,10 +14,10 @@
 <h1>Create New Account</h1>
 <p>Please enter proposed name and password.
 </p>
-<p><%= request.getAttribute("createInfo") %></p>
+<p><%= session.getAttribute("createInfo") %></p>
 <form action="NewAccountServlet" method="post">
     <p>User Name: <input type="text" name="username" /></p>
-    <p>Password: <input type="text" name="password" /><br>
+    <p>Password: <input type="password" name="password" /><br>
         <input type="checkbox" name="adminCheckbox" value="Admin">Admin Account?<br>
         <input type="submit" value="Login"/></p>
 </form>

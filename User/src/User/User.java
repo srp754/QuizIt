@@ -13,12 +13,14 @@ public class User {
     private String username;
     private final static int SALT_IDX = 0;
     private final static int PW_IDX = 1;
+    private final static int MAX_RECENT_CREATED_QUIZZES = 5;
 
     private Map<String, List> dbUsersPasswords;
     private Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
     private List<String> dbFriends = new ArrayList<String>(); // REMOVE when DB exists
     private Map<String, Double> dbQuizHistory = new HashMap<String, Double>(); // REMOVE when DB exists
     private List<String> dbAchievements = new ArrayList<String>(); // REMOVE when DB exists
+    private Map<String, List<String>> dbQuizzesCreated = new HashMap<String, List<String>>(); // REMOVE when DB exists
 
     public User() {
         dbUsersPasswords = new HashMap<String, List>(); //REMOVE when DB exists
@@ -27,7 +29,7 @@ public class User {
         l.add(salt);
         l.add(hexToString(generateHashValue(salt, "pass")));
         dbUsersPasswords.put("scott", l);
-        dbAchievements.add(Achievements.AMATEUR_AUTHOR.toString());
+        //dbAchievements.add(Achievements.AMATEUR_AUTHOR.toString());
         System.out.println("user Constructor");
     }
 
@@ -61,6 +63,8 @@ public class User {
         this.username = username;
     }
 
+    public String getUsername() { return username; }
+
     /**
      * Checks if the login username and password are correct
      * @param username Login username
@@ -71,11 +75,20 @@ public class User {
         return userExists(username) && passwordMatches(username, password);
     }
 
+    /**
+     * Changes a user from a regular to admin user
+     * @param userToPromote Username to promote to admin
+     */
     public void promoteToAdmin(String userToPromote) {
         //TODO replace with DB code
         dbUsersAdmin.put(userToPromote, true);
     }
 
+    /**
+     * Checks if a user has admin privilges or not
+     * @param username Username to check for admin
+     * @return true if admin, false otherwise
+     */
     public boolean isAdmin(String username) {
         //TODO replace with DB code
         return dbUsersAdmin.get(username);
@@ -106,7 +119,7 @@ public class User {
      * @param quizId
      * @param grade
      */
-    public void addQuiz(String quizId, Double grade) {
+    public void addQuizScore(String quizId, Double grade) {
         //TODO add to DB when it's ready
         dbQuizHistory.put(quizId, grade);
     }
@@ -140,11 +153,66 @@ public class User {
         return dbQuizHistory.size();
     }
 
+    /**
+     * Adds a created quiz to the user's history and database. Checks for achievements every time a quiz is created.
+     * @param quizId Quiz identifier
+     */
+    public void addCreatedQuiz(String quizId) {
+        //TODO replace with DB when it's ready
+        // If user has created a quiz before, add new quiz to the database
+        if(dbQuizzesCreated.containsKey(username)) {
+            List<String> quizList = dbQuizzesCreated.get(username);
+            quizList.add(quizId);
+
+            // Check for achievements
+            if(getNumberOfQuizzesCreated() == 5) {
+                addAchievement(Achievements.PRODIGIOUS_AUTHOR);
+            }
+            else if(getNumberOfQuizzesCreated() == 10) {
+                addAchievement(Achievements.PROLIFIC_AUTHOR);
+            }
+        }
+        // Initialize created quiz list for user
+        else {
+            List<String> quizList = new ArrayList<String>();
+            quizList.add(quizId);
+            dbQuizzesCreated.put(username, quizList);
+            addAchievement(Achievements.AMATEUR_AUTHOR); // First created quiz achievement
+        }
+    }
+
 
     public Integer getNumberOfQuizzesCreated() {
         //TODO replace with DB when it's ready
-        return 0;
+        if(dbQuizzesCreated.get(username) == null) {
+            return 0;
+        }
+        else {
+            return dbQuizzesCreated.get(username).size();
+        }
     }
+
+    /**
+     * Returns the 5 most recently created quizzes for the user or empty list if user has not
+     * created a quiz.
+     * @return
+     */
+    public List<String> getRecentlyCreatedQuizzes() {
+        //TODO pull from DB when it's ready
+        int numQuizzesCreated = getNumberOfQuizzesCreated();
+
+        if (numQuizzesCreated== 0) {
+            return new ArrayList<String>();
+        }
+        else {
+            List<String> quizList = new ArrayList<String>();
+            for (int i = numQuizzesCreated-1; i >= Math.max(numQuizzesCreated - MAX_RECENT_CREATED_QUIZZES, 0); i--) {
+                quizList.add(dbQuizzesCreated.get(username).get(i));
+            }
+            return quizList;
+        }
+    }
+
     /**
      * Adds the user's achievement to the database
      * @param achievement

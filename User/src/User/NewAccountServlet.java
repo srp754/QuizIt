@@ -20,12 +20,12 @@ public class NewAccountServlet extends HttpServlet {
         String adminCheckbox = request.getParameter("adminCheckbox");
 
         if(user.createNewUser(username, password, adminCheckbox != null)) {
-            request.setAttribute("createInfo",new String(""));
+            request.getSession().setAttribute("createInfo",new String(""));
             RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
             dispatch.forward(request, response);
         }
         else {
-            request.setAttribute("createInfo",new String("Username already taken. Please try another."));
+            request.getSession().setAttribute("createInfo",new String("Username already taken. Please try another."));
             RequestDispatcher dispatch = request.getRequestDispatcher("createAccount.jsp");
             dispatch.forward(request, response);
         }
