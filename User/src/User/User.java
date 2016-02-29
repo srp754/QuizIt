@@ -29,8 +29,14 @@ public class User {
         l.add(salt);
         l.add(hexToString(generateHashValue(salt, "pass")));
         dbUsersPasswords.put("scott", l);
-        //dbAchievements.add(Achievements.AMATEUR_AUTHOR.toString());
-        System.out.println("user Constructor");
+        dbUsersAdmin.put("scott", false);
+
+        l.clear();
+        salt = generateSalt();
+        l.add(salt);
+        l.add(hexToString(generateHashValue(salt, "test")));
+        dbUsersPasswords.put("john", l);
+        dbUsersAdmin.put("john", true);
     }
 
 
@@ -85,11 +91,10 @@ public class User {
     }
 
     /**
-     * Checks if a user has admin privilges or not
-     * @param username Username to check for admin
+     * Checks if a user has admin privileges or not
      * @return true if admin, false otherwise
      */
-    public boolean isAdmin(String username) {
+    public boolean isAdmin() {
         //TODO replace with DB code
         return dbUsersAdmin.get(username);
     }
@@ -230,6 +235,10 @@ public class User {
     public Integer getNumberOfUsers() {
         //TODO Get from DB when ready
         return dbUsersPasswords.size();
+    }
+
+    public Set<String> getAllUsers() {
+        return dbUsersPasswords.keySet();
     }
 
     private boolean userExists(String username) {
