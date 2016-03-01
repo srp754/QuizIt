@@ -25,11 +25,18 @@
     <p>Quiz ID: <input type="text" name="quizid" /></p>
         <input type="submit" value="CreateQuiz"/></p>
 </form>
+<p>Take a quiz</p>
+<form action="TakeQuizServlet" method="post">
+    <p>Quiz ID: <input type="text" name="quizid" />
+        Score: <input type="text" name="score" />
+    </p>
+    <input type="submit"/></p>
+</form>
 <h1>Achievements</h1>
 <ul>
     <%
-        for(String s : user.getAchievements()) {
-            out.println("<li>" + s + "</li>");
+        for(Achievement a : user.getAchievements()) {
+            out.println("<li>" + a.toString() + "</li>");
         }
     %>
 </ul>
@@ -38,6 +45,15 @@
     <%
         for(String s : user.getRecentlyCreatedQuizzes()) {
             out.println("<li>" + s + "</li>");
+        }
+    %>
+</ul>
+<h1>Recently Taken Quizzes</h1>
+<ul>
+    <%
+        Map<String, Double> quizScores = user.getRecentlyTakenQuizzes();
+        for(String s : quizScores.keySet()) {
+            out.println("<li>" + s + ": " + quizScores.get(s).toString() + "</li>");
         }
     %>
 </ul>
