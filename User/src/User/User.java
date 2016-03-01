@@ -14,13 +14,14 @@ public class User {
     private final static int SALT_IDX = 0;
     private final static int PW_IDX = 1;
     private final static int MAX_RECENT_CREATED_QUIZZES = 5;
+    private final static int MAX_RECENT_TAKEN_QUIZZES = 5;
 
     private Map<String, List> dbUsersPasswords;
     private Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
     private List<String> dbFriends = new ArrayList<String>(); // REMOVE when DB exists
-    private Map<String, Double> dbQuizHistory = new HashMap<String, Double>(); // REMOVE when DB exists
-    private List<String> dbAchievements = new ArrayList<String>(); // REMOVE when DB exists
-    private Map<String, List<String>> dbQuizzesCreated = new HashMap<String, List<String>>(); // REMOVE when DB exists
+    private Map<String, Double> dbQuizHistory = new LinkedHashMap<String, Double>(); // REMOVE when DB exists
+    private List<Achievement> dbAchievements = new ArrayList<Achievement>(); // REMOVE when DB exists
+    private Map<String, List<String>> dbQuizzesCreated = new LinkedHashMap<String, List<String>>(); // REMOVE when DB exists
 
     public User() {
         dbUsersPasswords = new HashMap<String, List>(); //REMOVE when DB exists
@@ -30,13 +31,6 @@ public class User {
         l.add(hexToString(generateHashValue(salt, "pass")));
         dbUsersPasswords.put("scott", l);
         dbUsersAdmin.put("scott", false);
-
-        l.clear();
-        salt = generateSalt();
-        l.add(salt);
-        l.add(hexToString(generateHashValue(salt, "test")));
-        dbUsersPasswords.put("john", l);
-        dbUsersAdmin.put("john", true);
     }
 
 
@@ -122,11 +116,16 @@ public class User {
     /**
      * Adds a user's quiz ID and score to the database
      * @param quizId
-     * @param grade
+     * @param score
      */
-    public void addQuizScore(String quizId, Double grade) {
+    public void addQuizScore(String quizId, Double score) {
         //TODO add to DB when it's ready
-        dbQuizHistory.put(quizId, grade);
+        dbQuizHistory.put(quizId, score);
+
+        // TODO If user has max score for a quiz, they earn GREATEST achievement
+        if(score > 0 && !dbAchievements.contains(Achievement.GREATEST)) {
+            addAchievement(Achievement.GREATEST);
+        }
     }
 
     /**
@@ -170,11 +169,11 @@ public class User {
             quizList.add(quizId);
 
             // Check for achievements
-            if(getNumberOfQuizzesCreated() == 5) {
-                addAchievement(Achievements.PRODIGIOUS_AUTHOR);
+            if(getNumberOfQuizzesCreated() == Achievement.PRODIGIOUS_AUTHOR.getThreshold()) {
+                addAchievement(Achievement.PRODIGIOUS_AUTHOR);
             }
-            else if(getNumberOfQuizzesCreated() == 10) {
-                addAchievement(Achievements.PROLIFIC_AUTHOR);
+            else if(getNumberOfQuizzesCreated() == Achievement.PRODIGIOUS_AUTHOR.getThreshold()) {
+                addAchievement(Achievement.PROLIFIC_AUTHOR);
             }
         }
         // Initialize created quiz list for user
@@ -182,7 +181,7 @@ public class User {
             List<String> quizList = new ArrayList<String>();
             quizList.add(quizId);
             dbQuizzesCreated.put(username, quizList);
-            addAchievement(Achievements.AMATEUR_AUTHOR); // First created quiz achievement
+            addAchievement(Achievement.AMATEUR_AUTHOR); // First created quiz achievement
         }
     }
 
@@ -219,15 +218,37 @@ public class User {
     }
 
     /**
+     * Returns the 5 most recently taken quizzes and scores for the user or empty list if user has not
+     * taken a quiz.
+     * @return
+     */
+    public Map<String, Double> getRecentlyTakenQuizzes() {
+        //TODO pull from DB when it's ready
+        int numQuizzesTaken = getNumberOfQuizzesTaken();
+
+        if (numQuizzesTaken== 0) {
+            return new LinkedHashMap<String, Double>();
+        }
+        else {
+            Map<String, Double> quizList = new LinkedHashMap<String, Double>();
+            List<String> keys = new ArrayList<String>(dbQuizHistory.keySet());
+            for (int i = keys.size()-1; i >= Math.max(numQuizzesTaken - MAX_RECENT_TAKEN_QUIZZES, 0); i--) {
+                quizList.put(keys.get(i), dbQuizHistory.get(keys.get(i)));
+            }
+            return quizList;
+        }
+    }
+
+    /**
      * Adds the user's achievement to the database
      * @param achievement
      */
-    public void addAchievement(Achievements achievement) {
+    public void addAchievement(Achievement achievement) {
         //TODO add to DB when it's ready
-        dbAchievements.add(achievement.toString());
+        dbAchievements.add(achievement);
     }
 
-    public List<String> getAchievements() {
+    public List<Achievement> getAchievements() {
         //TODO get from DB when ready
         return dbAchievements;
     }
@@ -251,7 +272,6 @@ public class User {
 
     // Returns the hash'd password from the database.  Assumes the username exists.
     private String getPasswordFromDB(String username) {
-        System.out.println(dbUsersPasswords.get(username));
         return (String) dbUsersPasswords.get(username).get(PW_IDX);
     }
 
@@ -261,7 +281,7 @@ public class User {
             byte[] salt = (byte[]) dbUsersPasswords.get(username).get(SALT_IDX);
             String dbPassword = (String) dbUsersPasswords.get(username).get(PW_IDX);
             String hashPassword = hexToString(generateHashValue(salt, password));
-            return hashPassword.equals(getPasswordFromDB(username));
+            return hashPassword.equals(dbPassword);
         }
         return false;
     }
@@ -303,44 +323,6 @@ public class User {
             buff.append(Integer.toString(val, 16));
         }
         return buff.toString();
-    }
-
-    private enum Achievements {
-        AMATEUR_AUTHOR {
-            public String toString() {
-                return "Amateur Author";
-            }
-        },
-
-        PROLIFIC_AUTHOR {
-            public String toString() {
-                return "Prolific Author";
-            }
-        },
-
-        PRODIGIOUS_AUTHOR {
-            public String toString() {
-                return "Prodigious Author";
-            }
-        },
-
-        QUIZ_MACHINE {
-            public String toString() {
-                return "Quiz Machine";
-            }
-        },
-
-        GREATEST {
-            public String toString() {
-                return "I am the Greatest";
-            }
-        },
-
-        PRACTICE_PERFECT {
-            public String toString() {
-                return "Practice Makes Perfect";
-            }
-        }
     }
 
 }
