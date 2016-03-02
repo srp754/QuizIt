@@ -1,8 +1,7 @@
 package user; /**
- * Created by scottparsons on 2/26/16.
+ * Created by scottparsons on 3/2/16.
  */
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -10,7 +9,7 @@ import javax.servlet.http.*;
 
 @WebListener()
 public class UserListener implements ServletContextListener,
-        HttpSessionListener {
+        HttpSessionListener, HttpSessionAttributeListener {
 
     // Public constructor is required by servlet spec
     public UserListener() {

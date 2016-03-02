@@ -32,7 +32,7 @@ public class User {
         dbUsersPasswords = new HashMap<String, List>(); //REMOVE when DB exists
         List l = new ArrayList();
         byte[] salt = generateSalt();
-        l.add(salt);
+        l.add(hexToString(salt));
         l.add(hexToString(generateHashValue(hexToString(salt), "pass")));
         dbUsersPasswords.put("scott", l);
         dbUsersAdmin.put("scott", false);
@@ -336,9 +336,9 @@ public class User {
     // Checks if user login password matches the hash value stored in the database
     private boolean passwordMatches(String username, String password) {
         if (userExists(username)) {
-            byte[] salt = (byte[]) dbUsersPasswords.get(username).get(SALT_IDX);
+            String salt = (String) dbUsersPasswords.get(username).get(SALT_IDX);
             String dbPassword = (String) dbUsersPasswords.get(username).get(PW_IDX);
-            String hashPassword = hexToString(generateHashValue(hexToString(salt), password));
+            String hashPassword = hexToString(generateHashValue(salt, password));
             return hashPassword.equals(dbPassword);
         }
         return false;
