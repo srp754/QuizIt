@@ -37,4 +37,8 @@ public class Quiz {
 			System.out.println(questions.get(i).toString());
 		}
 	}
+	
+	public List<Question> getQuestions() {
+		return questions; 
+	}
 }

@@ -14,4 +14,8 @@ public class QResponseAnswer implements Answer{
 	public String toString() {
 		return answerStr; 
 	}
+	
+	public int getId() {
+		return answerId; 
+	}
 }
