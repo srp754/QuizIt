@@ -1,4 +1,4 @@
-package User;
+package user;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
