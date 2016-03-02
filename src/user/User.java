@@ -16,10 +16,12 @@ public class User {
     private final static int MAX_RECENT_CREATED_QUIZZES = 5;
     private final static int MAX_RECENT_TAKEN_QUIZZES = 5;
 
-    private Map<String, List> dbUsersPasswords;
-    private Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
+    private static Map<String, List> dbUsersPasswords;
+    private static Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
     private List<String> dbFriends = new ArrayList<String>(); // REMOVE when DB exists
-    private Map<String, Double> dbQuizHistory = new LinkedHashMap<String, Double>(); // REMOVE when DB exists
+    private static Map<String, List<String>> dbFriendRequests = new HashMap<String, List<String>>();
+    private static Map<String, List<String>> dbMessages = new HashMap<String, List<String>>();
+    private static Map<String, Double> dbQuizHistory = new LinkedHashMap<String, Double>(); // REMOVE when DB exists
     private List<Achievement> dbAchievements = new ArrayList<Achievement>(); // REMOVE when DB exists
     private Map<String, List<String>> dbQuizzesCreated = new LinkedHashMap<String, List<String>>(); // REMOVE when DB exists
 
@@ -92,6 +94,10 @@ public class User {
         //TODO replace with DB code
         return dbUsersAdmin.get(username);
     }
+    
+    public boolean isFriends(String friendUsername) {
+    	return dbFriends.contains(friendUsername);
+    }
 
     /**
      * Adds the username to the user's friend list
@@ -106,11 +112,46 @@ public class User {
      * Removes a friend from the user's friend list
      * @param friendUsername Friend's username to remove from friend list
      */
-    public void removesFriend(String friendUsername) {
+    public void removeFriend(String friendUsername) {
         //TODO remove from DB when it's ready
         if(dbFriends.contains(friendUsername)) {
             dbFriends.remove(friendUsername);
         }
+    }
+    
+    public boolean sentRequest(String friendUsername) {
+    	if (!dbFriendRequests.containsKey(username)) return false;
+    	return dbFriendRequests.get(username).contains(friendUsername);
+    }
+    
+    public List<String> getFriendRequests() {
+    	//TODO get from DB when it's ready
+    	if (dbFriendRequests.containsKey(username)) {
+    		return dbFriendRequests.get(username);
+    	} else {
+    		return new ArrayList<String>();
+    	}
+    }
+    
+    public List<String> getMessages() {
+    	//TODO get from DB when it's ready
+    	if (dbMessages.containsKey(username)) {
+    		return dbMessages.get(username);
+    	} else {
+    		return new ArrayList<String>();
+    	}
+    }
+    
+    public static void addMessage(String username, String id) {
+    	if (!dbMessages.containsKey(username)) {
+    		dbMessages.put(username, new ArrayList<String>());
+    	}
+    	dbMessages.get(username).add(id);
+    }
+    
+    public static void removeMessage(String username, String id) {
+    	//TODO error checking
+    	dbMessages.get(username).remove(id);
     }
 
     /**
@@ -146,6 +187,11 @@ public class User {
     public Double getQuizScore(String quizId) {
         //TODO get from DB when it's ready
         return dbQuizHistory.get(quizId);
+    }
+    
+    public Double getQuizHighScore(String quizId) {
+    	//TODO get from DB when it's ready
+    	return 100.0;
     }
 
     /**
@@ -262,7 +308,7 @@ public class User {
         return dbUsersPasswords.keySet();
     }
 
-    private boolean userExists(String username) {
+    public static boolean userExists(String username) {
         // TODO replace with database code
         if(dbUsersPasswords.containsKey(username)) {
             System.out.println("username exists");
