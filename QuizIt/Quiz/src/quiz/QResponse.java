@@ -8,10 +8,12 @@ public class QResponse implements Question {
 
 	private String question;
 	private Answer answer;
-
-	public QResponse(String question, Answer answer) {
+	private int questionId; 
+	
+	public QResponse(String question, Answer answer, int questionId) {
 		this.question = question;
 		this.answer = answer;
+		this.questionId = questionId; 
 	}
 	
 	public Answer getAnswer() {
@@ -32,6 +34,10 @@ public class QResponse implements Question {
 	
 	public String toString() {
 		return question; 
+	}
+	
+	public int getId() {
+		return questionId; 
 	}
 	
 }

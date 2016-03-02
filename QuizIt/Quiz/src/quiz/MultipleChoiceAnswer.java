@@ -16,4 +16,8 @@ public class MultipleChoiceAnswer implements Answer{
 		return answerStr; 
 	}
 	
+	public int getId() {
+		return answerId; 
+	}
+	
 }

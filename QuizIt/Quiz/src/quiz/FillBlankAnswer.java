@@ -5,6 +5,7 @@ public class FillBlankAnswer implements Answer{
 	
 	private String answerStr; 
 	private int answerId; 
+	
 	public FillBlankAnswer(String answerStr, int answerId) {
 		this.answerStr = answerStr; 
 		this.answerId = answerId; 
@@ -12,5 +13,9 @@ public class FillBlankAnswer implements Answer{
 	
 	public String toString() {
 		return answerStr; 
+	}
+	
+	public int getId() {
+		return answerId; 
 	}
 }

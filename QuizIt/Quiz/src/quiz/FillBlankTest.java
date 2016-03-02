@@ -13,7 +13,7 @@ public class FillBlankTest {
 		String secondHalf = ".";
 		FillBlankAnswer fba1 = new FillBlankAnswer("mammal", 0);
 		FillBlankAnswer fba2 = new FillBlankAnswer("lizard", 1);
-		FillBlank fb1 = new FillBlank(firstHalf, secondHalf, fba1);
+		FillBlank fb1 = new FillBlank(firstHalf, secondHalf, fba1, 0);
 		assertTrue(fb1.checkAnswer(fba1));
 		assertTrue(!fb1.checkAnswer(fba2)); 
 	}
@@ -27,7 +27,7 @@ public class FillBlankTest {
 		FillBlankAnswer fba2 = new FillBlankAnswer("Blue Whale", 1);
 		FillBlankAnswer fba3 = new FillBlankAnswer("BLUE WHALE", 2);
 		FillBlankAnswer fba4 = new FillBlankAnswer("blu whale", 3);
-		FillBlank fb1 = new FillBlank(firstHalf, secondHalf, fba1);
+		FillBlank fb1 = new FillBlank(firstHalf, secondHalf, fba1, 0);
 		assertTrue(fb1.checkAnswer(fba1));
 		assertTrue(fb1.checkAnswer(fba2));
 		assertTrue(fb1.checkAnswer(fba3));
