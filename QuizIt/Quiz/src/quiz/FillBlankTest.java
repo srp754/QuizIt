@@ -11,8 +11,8 @@ public class FillBlankTest {
 		// Similar quiz to question response, checks if the guaranteed interface methods work 
 		String firstHalf = "The elephant is the largest land"; 
 		String secondHalf = ".";
-		FillBlankAnswer fba1 = new FillBlankAnswer("mammal");
-		FillBlankAnswer fba2 = new FillBlankAnswer("lizard");
+		FillBlankAnswer fba1 = new FillBlankAnswer("mammal", 0);
+		FillBlankAnswer fba2 = new FillBlankAnswer("lizard", 1);
 		FillBlank fb1 = new FillBlank(firstHalf, secondHalf, fba1);
 		assertTrue(fb1.checkAnswer(fba1));
 		assertTrue(!fb1.checkAnswer(fba2)); 
@@ -23,10 +23,10 @@ public class FillBlankTest {
 		// Test if we accept different capitalizations 
 		String firstHalf = "The"; 
 		String secondHalf = "is the largest animal ever known to have lived.";
-		FillBlankAnswer fba1 = new FillBlankAnswer("blue whale");
-		FillBlankAnswer fba2 = new FillBlankAnswer("Blue Whale");
-		FillBlankAnswer fba3 = new FillBlankAnswer("BLUE WHALE");
-		FillBlankAnswer fba4 = new FillBlankAnswer("blu whale");
+		FillBlankAnswer fba1 = new FillBlankAnswer("blue whale", 0);
+		FillBlankAnswer fba2 = new FillBlankAnswer("Blue Whale", 1);
+		FillBlankAnswer fba3 = new FillBlankAnswer("BLUE WHALE", 2);
+		FillBlankAnswer fba4 = new FillBlankAnswer("blu whale", 3);
 		FillBlank fb1 = new FillBlank(firstHalf, secondHalf, fba1);
 		assertTrue(fb1.checkAnswer(fba1));
 		assertTrue(fb1.checkAnswer(fba2));
