@@ -3,10 +3,12 @@ package quiz;
 public class PictureResponse implements Question{
 	private String imageURL; 
 	private Answer answer; 
+	private int questionId; 
 	
-	public PictureResponse(String imageURL, Answer answer) {
+	public PictureResponse(String imageURL, Answer answer, int questionId) {
 		this.imageURL = imageURL; 
 		this.answer = answer; 
+		this.questionId = questionId; 
 	}
 	
 	public Answer getAnswer() {
@@ -25,5 +27,9 @@ public class PictureResponse implements Question{
 	
 	public String toString() {
 		return imageURL; 
+	}
+	
+	public int getId() {
+		return questionId; 
 	}
 }

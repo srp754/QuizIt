@@ -5,4 +5,5 @@ public interface Answer {
 	
 	public String toString(); 
 	
+	public int getId(); 
 }

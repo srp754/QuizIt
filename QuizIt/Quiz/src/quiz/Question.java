@@ -11,4 +11,7 @@ public interface Question {
 	// Checks if the user's response to the question is the correct answer 
 	public boolean checkAnswer(Answer answer);
 	
+	//Returns the question ID
+	public int getId();
+	
 }

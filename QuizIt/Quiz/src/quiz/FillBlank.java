@@ -9,11 +9,13 @@ public class FillBlank implements Question{
 	private String firstHalfQ;
 	private String secondHalfQ; 
 	private Answer answer; 
+	private int questionId; 
 	
-	public FillBlank(String firstHalfQ, String secondHalfQ, Answer answer) {
+	public FillBlank(String firstHalfQ, String secondHalfQ, Answer answer, int questionId) {
 		this.firstHalfQ = firstHalfQ;
 		this.secondHalfQ = secondHalfQ; 
 		this.answer = answer;
+		this.questionId = questionId; 
 	}
 	
 	public Answer getAnswer() {
@@ -31,5 +33,9 @@ public class FillBlank implements Question{
 	
 	public String toString() {
 		return firstHalfQ + "   " + secondHalfQ; 
+	}
+	
+	public int getId() {
+		return questionId; 
 	}
 }

@@ -9,11 +9,13 @@ public class MultipleChoice implements Question{
 	private List<String> choices;
 	private String question; 
 	private Answer answer; 
+	private int questionId; 
 	
-	public MultipleChoice(String question, Answer answer, List<String> choices) {
+	public MultipleChoice(String question, Answer answer, List<String> choices, int questionId) {
 		this.question = question; 
 		this.answer = answer; 
 		this.choices = choices; 
+		this.questionId = questionId; 
 	}
 	
 	public Answer getAnswer() {
@@ -35,6 +37,10 @@ public class MultipleChoice implements Question{
 	//Override of toString
 	public String toString() {
 		return question; 
+	}
+	
+	public int getId() {
+		return questionId; 
 	}
 	
 }

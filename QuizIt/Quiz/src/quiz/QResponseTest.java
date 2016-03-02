@@ -12,7 +12,7 @@ public class QResponseTest {
 		String q1 = "What is 2+2?"; 
 		QResponseAnswer qra1 = new QResponseAnswer("4", 0);
 		QResponseAnswer qra2 = new QResponseAnswer("2", 1);
-		QResponse qr1 = new QResponse(q1, qra1);
+		QResponse qr1 = new QResponse(q1, qra1, 0);
 		assertTrue(qr1.checkAnswer(qra1));
 		assertTrue(!qr1.checkAnswer(qra2)); 
 	}
@@ -26,7 +26,7 @@ public class QResponseTest {
 		QResponseAnswer qra3 = new QResponseAnswer("george washington", 2);
 		QResponseAnswer qra4 = new QResponseAnswer("george WASHINGTON", 3);
 		QResponseAnswer qra5 = new QResponseAnswer("Washington", 4);
-		QResponse qr1 = new QResponse(q1, qra1);
+		QResponse qr1 = new QResponse(q1, qra1, 0);
 		assertTrue(qr1.checkAnswer(qra1));
 		assertTrue(qr1.checkAnswer(qra2)); 
 		assertTrue(qr1.checkAnswer(qra3)); 
