@@ -6,9 +6,10 @@ public class MultipleChoiceAnswer implements Answer{
 	// represent the multiple choice buttons
 	
 	private String answerStr; 
-	
-	public MultipleChoiceAnswer(String answerStr) {
+	private int answerId; 
+	public MultipleChoiceAnswer(String answerStr, int answerId) {
 		this.answerStr = answerStr; 
+		this.answerId = answerId; 
 	}
 	
 	public String toString() {

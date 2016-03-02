@@ -12,18 +12,20 @@ public class QuizTest {
 	public void initQuiz() {
 		List<Question> questions = new ArrayList<Question>();
 		String q1 = "What is 2+2?"; 
-		QResponseAnswer qra1 = new QResponseAnswer("4");
+		QResponseAnswer qra1 = new QResponseAnswer("4", 0);
 		QResponse qr1 = new QResponse(q1, qra1);
 		String q2 = "What is 3+3?"; 
-		QResponseAnswer qra2 = new QResponseAnswer("6");
+		QResponseAnswer qra2 = new QResponseAnswer("6", 1);
 		QResponse qr2 = new QResponse(q2, qra2);
 		String q3 = "What is 4+4?"; 
-		QResponseAnswer qra3 = new QResponseAnswer("8");
+		QResponseAnswer qra3 = new QResponseAnswer("8", 2);
 		QResponse qr3 = new QResponse(q3, qra3);
 		questions.add(qr1);
 		questions.add(qr2);
 		questions.add(qr3);
-		quiz = new Quiz(questions);
+		//String quizName = "Math Quiz"; 
+		//String quizDescription = "An assortment of different math questions.";
+		quiz = new Quiz(questions, 0);
 	}
 	
 	@Test

@@ -2,9 +2,10 @@ package quiz;
 
 public class PictureResponseAnswer implements Answer{
 	private String answer; 
-	
-	public PictureResponseAnswer(String answer) {
+	private int answerId; 
+	public PictureResponseAnswer(String answer, int answerId) {
 		this.answer = answer; 
+		this.answerId = answerId; 
 	}
 	
 	public String toString(){
