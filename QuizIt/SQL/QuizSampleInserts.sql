@@ -1,15 +1,15 @@
 USE c_cs108_ashavsky
 
 INSERT INTO QuizSummary VALUES
-  (null,'Quiz One','Description Of Quiz One', 21, '19881221'),
-  (null,'Quiz Two','Description Of Quiz Two', 42, '20010101'),
-  (null,'Quiz Three','Description Of Quiz Three', 100, '20101010')
+  (null,'Quiz One','Description Of Quiz One', 3, '19881221'),
+  (null,'Quiz Two','Description Of Quiz Two', 4, '20010101'),
+  (null,'Quiz Three','Description Of Quiz Three', 5, '20101010')
 ;
 
 INSERT INTO QuizHistory VALUES
-  (null,1, 21, 3, 5, '000200', '20160101'),
-  (null,1, 42, 4, 5, '000100', '20160102'),
-  (null,2, 100, 1, 5, '000200', '20160303')
+  (null,1, 1, 3, 5, '000200', '20160101'),
+  (null,1, 2, 4, 5, '000100', '20160102'),
+  (null,2, 1, 1, 5, '000200', '20160303')
 ;
 
 INSERT INTO QuizStats VALUES
