@@ -1,18 +1,28 @@
 package user;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by scottparsons on 3/2/16.
+ * Created by scottparsons on 2/28/16.
  */
 @WebServlet(name = "CreatedQuizServlet")
-public class CreatedQuizServlet extends javax.servlet.http.HttpServlet {
-    protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+public class CreatedQuizServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        //String quizId = request.getParameter("quizid");
+        user.addCreatedQuiz("test");
 
+        RequestDispatcher dispatch = request.getRequestDispatcher("userhomepage.jsp");
+        dispatch.forward(request, response);
     }
 
-    protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
     }
 }

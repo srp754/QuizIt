@@ -22,16 +22,38 @@ public class LoginServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String signInButton = request.getParameter("signIn");
+        String registerButton = request.getParameter("register");
 
-        if(user.isCorrectLogin(username, password)) {
-            user.setUsername(username);
-            RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
-            dispatch.forward(request, response);
+        // Sign in button was clicked
+        if(signInButton != null) {
+            if(user.isCorrectLogin(username, password)) {
+                user.setUsername(username);
+                RequestDispatcher dispatch = request.getRequestDispatcher("userhomepage.jsp");
+                dispatch.forward(request, response);
+            }
+            else {
+                RequestDispatcher dispatch = request.getRequestDispatcher("Incorrect.html");
+                dispatch.forward(request, response);
+            }
         }
+        // Register button was clicked
         else {
-            RequestDispatcher dispatch = request.getRequestDispatcher("Incorrect.html");
-            dispatch.forward(request, response);
+            // If account successfully created
+            if(user.createNewUser(username, password, false)) {
+                request.getSession().setAttribute("createInfo","");
+                RequestDispatcher dispatch = request.getRequestDispatcher("userhomepage.jsp");
+                dispatch.forward(request, response);
+            }
+            else {
+                request.getSession().setAttribute("createInfo","Username already taken. Please try another.");
+                RequestDispatcher dispatch = request.getRequestDispatcher("userhomepage.jsp");
+                dispatch.forward(request, response);
+            }
         }
+
+
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

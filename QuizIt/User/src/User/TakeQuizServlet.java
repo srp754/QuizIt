@@ -15,15 +15,15 @@ import java.io.IOException;
 public class TakeQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        String quizId = request.getParameter("quizid");
-        Double score = Double.parseDouble(request.getParameter("score"));
-        user.addQuizScore(quizId, score);
+        //String quizId = request.getParameter("quizid");
+        //Double score = Double.parseDouble(request.getParameter("score"));
+        user.addQuizScore("test", 100.0);
 
-        RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
+        RequestDispatcher dispatch = request.getRequestDispatcher("userhomepage.jsp");
         dispatch.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doPost(request, response);
     }
 }

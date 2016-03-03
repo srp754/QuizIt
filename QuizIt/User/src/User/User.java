@@ -36,6 +36,9 @@ public class User {
         l.add(hexToString(generateHashValue(hexToString(salt), "pass")));
         dbUsersPasswords.put("scott", l);
         dbUsersAdmin.put("scott", false);
+
+        // Open database connection
+
     }
 
 
@@ -201,7 +204,7 @@ public class User {
             if(getNumberOfQuizzesCreated() == Achievement.PRODIGIOUS_AUTHOR.getThreshold()) {
                 addAchievement(Achievement.PRODIGIOUS_AUTHOR);
             }
-            else if(getNumberOfQuizzesCreated() == Achievement.PRODIGIOUS_AUTHOR.getThreshold()) {
+            else if(getNumberOfQuizzesCreated() == Achievement.PROLIFIC_AUTHOR.getThreshold()) {
                 addAchievement(Achievement.PROLIFIC_AUTHOR);
             }
         }
@@ -219,7 +222,7 @@ public class User {
      * Reads from DB: String username
      * @return
      */
-    public Integer getNumberOfQuizzesCreated() {
+    public int getNumberOfQuizzesCreated() {
         //TODO replace with DB when it's ready
         if(dbQuizzesCreated.get(username) == null) {
             return 0;
