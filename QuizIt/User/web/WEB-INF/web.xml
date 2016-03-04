@@ -4,23 +4,23 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
     <listener>
-        <listener-class>User.UserListener</listener-class>
+        <listener-class>user.UserListener</listener-class>
     </listener>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>User.LoginServlet</servlet-class>
+        <servlet-class>user.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>NewAccountServlet</servlet-name>
-        <servlet-class>User.NewAccountServlet</servlet-class>
+        <servlet-class>user.NewAccountServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreatedQuizServlet</servlet-name>
-        <servlet-class>User.CreatedQuizServlet</servlet-class>
+        <servlet-class>user.CreatedQuizServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TakeQuizServlet</servlet-name>
-        <servlet-class>User.TakeQuizServlet</servlet-class>
+        <servlet-class>user.TakeQuizServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>

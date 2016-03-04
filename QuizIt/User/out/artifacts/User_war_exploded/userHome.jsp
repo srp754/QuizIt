@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,User.*" %>
+         pageEncoding="UTF-8"%>
+<%@ page import="java.util.*,user.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <% User user = (User) session.getAttribute("user"); %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title><%= user.getUsername() %> Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title><%= user.getUsername() %> Home</title>
 </head>
 <body>
 <h1><%= user.getUsername() %> Home Page</h1>
@@ -14,7 +14,7 @@
     <% if(user.isAdmin()) {
         out.println("Admin User");
         out.println("<a href='admin.jsp'>Admin options</a>");
-        }
+    }
     else {
         out.println("Standard User");
     }
@@ -23,7 +23,7 @@
 <p>Create a new quiz</p>
 <form action="CreatedQuizServlet" method="post">
     <p>Quiz ID: <input type="text" name="quizid" /></p>
-        <input type="submit" value="CreateQuiz"/></p>
+    <input type="submit" value="CreateQuiz"/></p>
 </form>
 <p>Take a quiz</p>
 <form action="TakeQuizServlet" method="post">

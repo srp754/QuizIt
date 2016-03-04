@@ -1,7 +1,5 @@
 package user;
 
-import User.User;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,14 +15,14 @@ import java.io.IOException;
 public class CreatedQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        String quizId = request.getParameter("quizid");
-        user.addCreatedQuiz(quizId);
+        //String quizId = request.getParameter("quizid");
+        user.addCreatedQuiz("test");
 
-        RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
+        RequestDispatcher dispatch = request.getRequestDispatcher("userhomepage.jsp");
         dispatch.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doPost(request, response);
     }
 }
