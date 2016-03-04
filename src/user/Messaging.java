@@ -24,10 +24,10 @@ public class Messaging {
 	
 	public static Message getMessage(String id) {
 		// DB code
-		String sender = "";
-		String recipient = "";
-		String type = "";
-		String content = "";
+		String sender = messages.get(id).get(0);
+		String recipient = messages.get(id).get(1);
+		String type = "type";
+		String content = "content";
 		// DB code
 		return new Message(sender, recipient, type, content);
 	}

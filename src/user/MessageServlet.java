@@ -44,6 +44,7 @@ public class MessageServlet extends HttpServlet {
 			String content = request.getParameter("content");
 			if (type.equals("friend")) {
 				content = user.getUsername() + " would like to be friends.";
+				user.addFriendRequest(username);
 			} else if (type.equals("challenge")) {
 				content = user.getUsername() + " has challenged you to take a quiz!</p>" +
 								"<p><a href=\"quiz.jsp?id=\">" + content + "</a></p>" +
@@ -60,7 +61,7 @@ public class MessageServlet extends HttpServlet {
 		if (type.equals("friend")) {
 			dispatch = request.getRequestDispatcher("userView.jsp");
 		} else if (type.equals("challenge")) {
-			dispatch = request.getRequestDispatcher("???");
+			dispatch = request.getRequestDispatcher("quiz.jsp");
 		} else {
 			dispatch = request.getRequestDispatcher("messages.jsp");
 		}

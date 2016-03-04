@@ -36,12 +36,11 @@ public class FriendServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = (User) request.getSession().getAttribute("user");
 		String username = request.getParameter("username");
-		String id = request.getParameter("id");
 		String action = request.getParameter("action");
 		if (action.equals("Accept")) {
 			user.addFriend(username);
 		}
-		Messaging.removeMessage(id);
+		user.removeFriendRequest(username);
 	}
 
 }
