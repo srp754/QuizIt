@@ -18,9 +18,9 @@ public class User {
 
     private static Map<String, List> dbUsersPasswords;
     private static Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
-    private List<String> dbFriends = new ArrayList<String>(); // REMOVE when DB exists
-    private static Map<String, List<String>> dbFriendRequests = new HashMap<String, List<String>>();
-    private static Map<String, List<String>> dbMessages = new HashMap<String, List<String>>();
+    private static Map<String, Set<String>> dbFriends = new HashMap<String, Set<String>>(); // REMOVE when DB exists
+    private static Map<String, Set<String>> dbFriendRequests = new HashMap<String, Set<String>>();
+    private static Map<String, Set<String>> dbMessages = new HashMap<String, Set<String>>();
     private static Map<String, Double> dbQuizHistory = new LinkedHashMap<String, Double>(); // REMOVE when DB exists
     private List<Achievement> dbAchievements = new ArrayList<Achievement>(); // REMOVE when DB exists
     private Map<String, List<String>> dbQuizzesCreated = new LinkedHashMap<String, List<String>>(); // REMOVE when DB exists
@@ -29,8 +29,8 @@ public class User {
         dbUsersPasswords = new HashMap<String, List>(); //REMOVE when DB exists
         List l = new ArrayList();
         byte[] salt = generateSalt();
-        l.add(salt);
-        l.add(hexToString(generateHashValue(salt, "pass")));
+        l.add(hexToString(salt));
+        l.add(hexToString(generateHashValue(hexToString(salt), "pass")));
         dbUsersPasswords.put("scott", l);
         dbUsersAdmin.put("scott", false);
     }
@@ -52,7 +52,7 @@ public class User {
             byte[] salt = generateSalt();
             List l = new ArrayList();
             l.add(salt);
-            l.add(hexToString(generateHashValue(salt, password)));
+            l.add(hexToString(generateHashValue(hexToString(salt), password)));
             dbUsersPasswords.put(username, l);
             dbUsersAdmin.put(username, isAdmin);
             setUsername(username);
@@ -96,7 +96,8 @@ public class User {
     }
     
     public boolean isFriends(String friendUsername) {
-    	return dbFriends.contains(friendUsername);
+    	if (!dbFriends.containsKey(username)) return false;
+    	return dbFriends.get(username).contains(friendUsername);
     }
 
     /**
@@ -105,7 +106,14 @@ public class User {
      */
     public void addFriend(String friendUsername) {
         //TODO add to DB when it's ready
-        dbFriends.add(friendUsername);
+    	if (!dbFriends.containsKey(username)) {
+    		dbFriends.put(username, new HashSet<String>());
+    	}
+    	dbFriends.get(username).add(friendUsername);
+    	if (!dbFriends.containsKey(friendUsername)) {
+    		dbFriends.put(friendUsername, new HashSet<String>());
+    	}
+    	dbFriends.get(friendUsername).add(username);
     }
 
     /**
@@ -114,37 +122,56 @@ public class User {
      */
     public void removeFriend(String friendUsername) {
         //TODO remove from DB when it's ready
-        if(dbFriends.contains(friendUsername)) {
-            dbFriends.remove(friendUsername);
+        if(dbFriends.containsKey(username) &&
+        		dbFriends.get(username).contains(friendUsername)) {
+        	dbFriends.get(username).remove(friendUsername);
+        }
+        if (dbFriends.containsKey(friendUsername) &&
+        		dbFriends.get(friendUsername).contains(username)) {
+            dbFriends.get(friendUsername).remove(username);
         }
     }
     
     public boolean sentRequest(String friendUsername) {
-    	if (!dbFriendRequests.containsKey(username)) return false;
-    	return dbFriendRequests.get(username).contains(friendUsername);
+    	if (!dbFriendRequests.containsKey(friendUsername)) return false;
+    	return dbFriendRequests.get(friendUsername).contains(username);
     }
     
-    public List<String> getFriendRequests() {
+    public Set<String> getFriendRequests() {
     	//TODO get from DB when it's ready
     	if (dbFriendRequests.containsKey(username)) {
     		return dbFriendRequests.get(username);
     	} else {
-    		return new ArrayList<String>();
+    		return new HashSet<String>();
     	}
     }
     
-    public List<String> getMessages() {
+    public void addFriendRequest(String friendUsername) {
+    	if (!dbFriendRequests.containsKey(friendUsername)) {
+    		dbFriendRequests.put(friendUsername, new HashSet<String>());
+    	}
+    	dbFriendRequests.get(friendUsername).add(username);
+    }
+    
+    public void removeFriendRequest(String friendUsername) {
+    	if (dbFriendRequests.containsKey(username) && 
+    			dbFriendRequests.get(username).contains(friendUsername)) {
+    		dbFriendRequests.get(username).remove(friendUsername);
+    	}
+    }
+    
+    public Set<String> getMessages() {
     	//TODO get from DB when it's ready
     	if (dbMessages.containsKey(username)) {
     		return dbMessages.get(username);
     	} else {
-    		return new ArrayList<String>();
+    		return new HashSet<String>();
     	}
     }
     
     public static void addMessage(String username, String id) {
     	if (!dbMessages.containsKey(username)) {
-    		dbMessages.put(username, new ArrayList<String>());
+    		dbMessages.put(username, new HashSet<String>());
     	}
     	dbMessages.get(username).add(id);
     }
@@ -218,7 +245,7 @@ public class User {
             if(getNumberOfQuizzesCreated() == Achievement.PRODIGIOUS_AUTHOR.getThreshold()) {
                 addAchievement(Achievement.PRODIGIOUS_AUTHOR);
             }
-            else if(getNumberOfQuizzesCreated() == Achievement.PRODIGIOUS_AUTHOR.getThreshold()) {
+            else if(getNumberOfQuizzesCreated() == Achievement.PROLIFIC_AUTHOR.getThreshold()) {
                 addAchievement(Achievement.PROLIFIC_AUTHOR);
             }
         }
@@ -232,7 +259,7 @@ public class User {
     }
 
 
-    public Integer getNumberOfQuizzesCreated() {
+    public int getNumberOfQuizzesCreated() {
         //TODO replace with DB when it's ready
         if(dbQuizzesCreated.get(username) == null) {
             return 0;
@@ -324,7 +351,7 @@ public class User {
     // Checks if user login password matches the hash value stored in the database
     private boolean passwordMatches(String username, String password) {
         if (userExists(username)) {
-            byte[] salt = (byte[]) dbUsersPasswords.get(username).get(SALT_IDX);
+            String salt = (String) dbUsersPasswords.get(username).get(SALT_IDX);
             String dbPassword = (String) dbUsersPasswords.get(username).get(PW_IDX);
             String hashPassword = hexToString(generateHashValue(salt, password));
             return hashPassword.equals(dbPassword);
@@ -333,12 +360,12 @@ public class User {
     }
 
     // Generates the SHA hex hash value using the MessageDigest
-    private static byte[] generateHashValue(byte[] salt, String password) {
+    private static byte[] generateHashValue(String salt, String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA");
-            byte[] combined = new byte[salt.length + password.getBytes().length];
-            System.arraycopy(salt, 0, combined, 0, salt.length);
-            System.arraycopy(password.getBytes(), 0, combined, salt.length, password.getBytes().length);
+            byte[] combined = new byte[salt.getBytes().length + password.getBytes().length];
+            System.arraycopy(salt.getBytes(), 0, combined, 0, salt.getBytes().length);
+            System.arraycopy(password.getBytes(), 0, combined, salt.getBytes().length, password.getBytes().length);
             byte[] hash = md.digest(combined);
             return hash;
         }
