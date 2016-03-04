@@ -41,4 +41,8 @@ public class Quiz {
 	public List<Question> getQuestions() {
 		return questions; 
 	}
+	
+	public int getId(){
+		return quizId; 
+	}
 }
