@@ -6,14 +6,12 @@ public class FillBlank implements Question{
 	 * TODO: One design choice we can make is how to represent the question string. 
 	 * Could have it as two separate strings and separate on the blank or as one string. 
 	*/
-	private String firstHalfQ;
-	private String secondHalfQ; 
+	private String question; 
 	private Answer answer; 
 	private int questionId; 
 	
-	public FillBlank(String firstHalfQ, String secondHalfQ, Answer answer, int questionId) {
-		this.firstHalfQ = firstHalfQ;
-		this.secondHalfQ = secondHalfQ; 
+	public FillBlank(String question, Answer answer, int questionId) {
+		this.question = question; 
 		this.answer = answer;
 		this.questionId = questionId; 
 	}
@@ -31,8 +29,17 @@ public class FillBlank implements Question{
 		return false; 
 	}
 	
+	public boolean checkAnswer(String userResponse) {
+		String lowercaseResponse = userResponse.toLowerCase();
+		String lowercaseAnswer = answer.toString().toLowerCase();
+		if (lowercaseAnswer.equals(lowercaseResponse)) {
+			return true; 
+		}
+		return false; 
+	}
+	
 	public String toString() {
-		return firstHalfQ + "   " + secondHalfQ; 
+		return question; 
 	}
 	
 	public int getId() {

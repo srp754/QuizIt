@@ -34,6 +34,16 @@ public class MultipleChoice implements Question{
 		return false; 
 	}
 	
+	//Temporary implementation
+	public boolean checkAnswer(String userResponse) {
+		String lowercaseResponse = userResponse.toLowerCase();
+		String lowercaseAnswer = answer.toString().toLowerCase();
+		if (lowercaseAnswer.equals(lowercaseResponse)) {
+			return true; 
+		}
+		return false; 
+	}
+	
 	//Override of toString
 	public String toString() {
 		return question; 
