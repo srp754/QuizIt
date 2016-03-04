@@ -14,12 +14,12 @@ import java.io.IOException;
 @WebServlet(name = "NewAccountServlet")
 public class NewAccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute("user");
+        IUser userRepo = (UserRepository) request.getSession().getAttribute("user");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String adminCheckbox = request.getParameter("adminCheckbox");
 
-        if(user.createNewUser(username, password, adminCheckbox != null)) {
+        if(userRepo.createNewUser(username, password, adminCheckbox != null)) {
             request.getSession().setAttribute("createInfo",new String(""));
             RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
             dispatch.forward(request, response);

@@ -2,32 +2,43 @@ package User;
 
 import org.junit.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.Assert.*;
 
 /**
  * Created by scottparsons on 2/25/16.
  */
-public class UserTest {
-    User user;
+public class UserTest
+{
+    @org.junit.Test
+    public void Should_Get_Count_Of_Users() throws SQLException
+    {
+        IUser userRepository = new UserRepository();
+        int expectedCount = 5;
+        int actualCount = userRepository.getNumberOfUsers();
 
-    @org.junit.Before
-    public void setUp() throws Exception {
-        user = new User();
-        user.createNewUser("john", "password", false);
-        user.createNewUser("scott", "stanford", false);
+        assertEquals(expectedCount, actualCount);
     }
 
     @org.junit.Test
-    public void testCreateNewUser() throws Exception {
-        assertTrue(user.createNewUser("jay", "computer", false));
-        assertFalse(user.createNewUser("scott", "stanford", false));
+    public void testCreateNewUser()
+    {
+        IUser userRepo = new UserRepository();
+        userRepo.createNewUser("john", "password", false);
+        userRepo.createNewUser("scott", "stanford", false);
+
+        assertTrue(userRepo.createNewUser("jay", "computer", false));
+        assertFalse(userRepo.createNewUser("scott", "stanford", false));
     }
 
     @org.junit.Test
-    public void testIsCorrectLogin() throws Exception {
-        assertTrue(user.isCorrectLogin("john", "password"));
-        assertFalse(user.isCorrectLogin("alex", "password"));
-        assertFalse(user.isCorrectLogin("scott", "stanfords"));
+    public void testIsCorrectLogin()
+    {
+        IUser userRepo = new UserRepository();
+        assertTrue(userRepo.isCorrectLogin("john", "password"));
+        assertFalse(userRepo.isCorrectLogin("alex", "password"));
+        assertFalse(userRepo.isCorrectLogin("scott", "stanfords"));
     }
 
     @Test
