@@ -11,8 +11,8 @@
 <h1>Messages</h1>
 <%
 User user = (User) request.getSession().getAttribute("user");
-List<String> friendReqs = user.getFriendRequests();
-List<String> messages = user.getMessages();
+Set<String> friendReqs = user.getFriendRequests();
+Set<String> messages = user.getMessages();
 for (String id : friendReqs) {
 	Message req = Messaging.getMessage(id);
 %>

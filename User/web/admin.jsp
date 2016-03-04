@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*,User.*" %>
-<% User user = (User) session.getAttribute("user"); %>
+<% User.IUser IUser = (User.IUser) session.getAttribute("user"); %>
 <html>
 <head>
     <title>Admin Options</title>
@@ -17,7 +17,7 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1><%= user.getUsername() %> Admin Page</h1>
+<h1><%= IUser.getUsername() %> Admin Page</h1>
 <div class="container">
     <h2>Remove User</h2>
     <div class="dropdown">
@@ -25,7 +25,7 @@
             <span class="caret"></span></button>
         <ul class="dropdown-menu">
             <%
-                for(String s : user.getAllUsers()) {
+                for(String s : IUser.getAllUsers()) {
                     out.println("<li><a href=''>" + s + "</a></li>");
                 }
             %>
@@ -33,6 +33,6 @@
     </div>
 </div>
 <h2>Site Statistics</h2>
-<p>Number of users: <%= user.getNumberOfUsers() %></p>
+<p>Number of users: <%= IUser.getNumberOfUsers() %></p>
 </body>
 </html>

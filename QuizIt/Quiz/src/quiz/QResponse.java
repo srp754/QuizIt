@@ -32,6 +32,16 @@ public class QResponse implements Question {
 		return false; 
 	}
 	
+	// Checks answer given answer string as a parameter 
+	public boolean checkAnswer(String userResponse) {
+		String lowercaseResponse = userResponse.toLowerCase();
+		String lowercaseAnswer = answer.toString().toLowerCase();
+		if (lowercaseAnswer.equals(lowercaseResponse)) {
+			return true; 
+		}
+		return false; 
+	}
+	
 	public String toString() {
 		return question; 
 	}

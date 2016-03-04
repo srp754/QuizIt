@@ -1,7 +1,5 @@
 package User;
 
-import User.User;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,9 +14,9 @@ import java.io.IOException;
 @WebServlet(name = "CreatedQuizServlet")
 public class CreatedQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute("user");
+        IUser userRepo = (UserRepository) request.getSession().getAttribute("user");
         String quizId = request.getParameter("quizid");
-        user.addCreatedQuiz(quizId);
+        userRepo.addCreatedQuiz(quizId);
 
         RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
         dispatch.forward(request, response);

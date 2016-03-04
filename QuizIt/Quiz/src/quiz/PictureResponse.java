@@ -25,6 +25,15 @@ public class PictureResponse implements Question{
 		return false; 
 	}
 	
+	public boolean checkAnswer(String userResponse) {
+		String lowercaseResponse = userResponse.toLowerCase();
+		String lowercaseAnswer = answer.toString().toLowerCase();
+		if (lowercaseAnswer.equals(lowercaseResponse)) {
+			return true; 
+		}
+		return false; 
+	}
+	
 	public String toString() {
 		return imageURL; 
 	}
