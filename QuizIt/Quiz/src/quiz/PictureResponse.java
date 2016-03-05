@@ -1,11 +1,13 @@
 package quiz;
 
 public class PictureResponse implements Question{
+	private String question; 
 	private String imageURL; 
 	private Answer answer; 
 	private int questionId; 
 	
-	public PictureResponse(String imageURL, Answer answer, int questionId) {
+	public PictureResponse(String question, String imageURL, Answer answer, int questionId) {
+		this.question = question; 
 		this.imageURL = imageURL; 
 		this.answer = answer; 
 		this.questionId = questionId; 

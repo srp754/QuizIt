@@ -1,4 +1,5 @@
 package quiz;
+import java.util.*; 
 
 public class QResponse implements Question {
 	/*
@@ -7,27 +8,23 @@ public class QResponse implements Question {
 	 */
 
 	private String question;
-	private Answer answer;
+	//private Answer answer;
 	private int questionId; 
+	private Set<Answer> possibleAnswers; 
 	
-	public QResponse(String question, Answer answer, int questionId) {
+	public QResponse(String question, Set<Answer> possibleAnswers, int questionId) {
 		this.question = question;
-		this.answer = answer;
 		this.questionId = questionId; 
+		this.possibleAnswers = possibleAnswers; 
 	}
 	
-	public Answer getAnswer() {
-		return answer;
-	}  
-	
-	
 	// Current implementation: accepts any capitalization i.e. washington or Washington
-	// TODO: Consider adding a set of possible acceptable answers i.e. George Washington and Washignton 
 	public boolean checkAnswer(Answer userResponse) {
 		String lowercaseResponse = userResponse.toString().toLowerCase();
-		String lowercaseAnswer = answer.toString().toLowerCase();
-		if (lowercaseAnswer.equals(lowercaseResponse)) {
-			return true; 
+		for(Answer currAnswer: possibleAnswers) {
+			if(currAnswer.toString().toLowerCase().equals(lowercaseResponse)) {
+				return true; 
+			}
 		}
 		return false; 
 	}
@@ -35,9 +32,10 @@ public class QResponse implements Question {
 	// Checks answer given answer string as a parameter 
 	public boolean checkAnswer(String userResponse) {
 		String lowercaseResponse = userResponse.toLowerCase();
-		String lowercaseAnswer = answer.toString().toLowerCase();
-		if (lowercaseAnswer.equals(lowercaseResponse)) {
-			return true; 
+		for(Answer currAnswer: possibleAnswers) {
+			if(currAnswer.toString().toLowerCase().equals(lowercaseResponse)) {
+				return true; 
+			}
 		}
 		return false; 
 	}

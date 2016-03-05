@@ -3,7 +3,7 @@ package quiz;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
+import java.util.*; 
 public class FillBlankTest {
 
 	@Test
@@ -12,7 +12,9 @@ public class FillBlankTest {
 		String question = "The elephant is the largest land | ."; 
 		FillBlankAnswer fba1 = new FillBlankAnswer("mammal", 0);
 		FillBlankAnswer fba2 = new FillBlankAnswer("lizard", 1);
-		FillBlank fb1 = new FillBlank(question, fba1, 0);
+		Set<Answer> answers1 = new HashSet<Answer>(); 
+		answers1.add(fba1);
+		FillBlank fb1 = new FillBlank(question, answers1, 0);
 		assertTrue(fb1.checkAnswer(fba1));
 		assertTrue(!fb1.checkAnswer(fba2)); 
 	}
@@ -25,7 +27,9 @@ public class FillBlankTest {
 		FillBlankAnswer fba2 = new FillBlankAnswer("Blue Whale", 1);
 		FillBlankAnswer fba3 = new FillBlankAnswer("BLUE WHALE", 2);
 		FillBlankAnswer fba4 = new FillBlankAnswer("blu whale", 3);
-		FillBlank fb1 = new FillBlank(question, fba1, 0);
+		Set<Answer> answers1 = new HashSet<Answer>();
+		answers1.add(fba1);
+		FillBlank fb1 = new FillBlank(question, answers1, 0);
 		assertTrue(fb1.checkAnswer(fba1));
 		assertTrue(fb1.checkAnswer(fba2));
 		assertTrue(fb1.checkAnswer(fba3));
