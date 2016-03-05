@@ -8,24 +8,31 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <%
 List<Quiz> quizList = (List<Quiz>) getServletContext().getAttribute("quizlist");
-Quiz fillBlankQuiz = quizList.get(1);
+Quiz multipleChoiceQuiz = quizList.get(2);
 
 %>
-<title>Fill in the Blank</title>
+<title>Multiple Choice</title>
 </head>
 <body>
-<h1>Fill in the Blank</h1>
+<h1>Multiple Choice</h1>
 <form action="CheckAnswerServlet" method="post">
-<input type="hidden" name="quizid" value=<%=fillBlankQuiz.getId()%>/>
+<input type="hidden" name="quizid" value=<%=multipleChoiceQuiz.getId()%>/>
 <%
-List<Question> quizQuestions = fillBlankQuiz.getQuestions(); 
+List<Question> quizQuestions = multipleChoiceQuiz.getQuestions(); 
 for(Question currQuestion : quizQuestions) {
-	String unparsedQ = currQuestion.toString(); 
-	String parsedQ = unparsedQ.replace("|", "_____");
+	MultipleChoice mcq = (MultipleChoice) currQuestion; 
+	List<Answer> answerChoices = mcq.getAnswerChoices();
 %>	
-<%out.println(parsedQ);%>
+<%out.println(currQuestion.toString());
+for(Answer currAnswer: answerChoices) {
+	 currAnswer.toString();
+%>
 <br>
-<input type="text" name="<%=currQuestion.getId() %>">
+<input type="radio" name="<%=currQuestion.getId()%>" id="<%=currAnswer.getId()%>" value="<%=currAnswer.toString()%>"> <%out.println(currAnswer.toString()); %> <br> 
+<%
+}
+%>
+<br>
 <br>
 <%
 }
