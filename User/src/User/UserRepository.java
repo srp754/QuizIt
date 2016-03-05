@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Created by scottparsons on 2/25/16.
  */
-public class UserRepository implements IUser
+public class UserRepository implements IUserRepository
 {
     // Instance variables
     private String username;

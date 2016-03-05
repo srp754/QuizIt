@@ -15,7 +15,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Get_Count_Of_Users() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         int expectedCount = 5;
         int actualCount = userRepository.getNumberOfUsers();
 
@@ -25,7 +25,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Check_If_Name_Exists_In_Db() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         boolean isCorrectNameInDb = userRepository.userExists("Alex");
         boolean isIncorrectNameInDb = userRepository.userExists("Garcia");
 
@@ -36,7 +36,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Not_Add_Already_Existing_Record() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
 
         boolean isRecordedAdded = userRepository.createNewUser("Alex", "password", true);
         assertFalse(isRecordedAdded);
@@ -45,7 +45,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Add_And_Delete_User() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         userRepository.createNewUser("TestUserShouldNotExistInDatabaseEver", "password", true);
 
         boolean isRecordInDb = userRepository.userExists("TestUserShouldNotExistInDatabaseEver");
@@ -59,7 +59,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Create_Users_And_Check_If_They_Are_Admin() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         boolean isUserAdmin;
 
         userRepository.PopulateCurrentUser("Connie");
@@ -78,7 +78,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Add_Friend_One_Way() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         userRepository.PopulateCurrentUser("Connie");
 
         userRepository.addFriend(5);
@@ -92,7 +92,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Add_Friend_Two_Ways() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         userRepository.PopulateCurrentUser("John");
         userRepository.addFriend(4);
 
@@ -111,7 +111,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Add_And_Delete_Friend() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         userRepository.PopulateCurrentUser("Scott");
         userRepository.addFriend(4);
         boolean doesFriendshipExist = userRepository.FriendshipExists(4);
@@ -130,7 +130,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Add_And_Delete_Achievement() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         userRepository.PopulateCurrentUser("Scott");
         userRepository.addAchievement("QuizTaker", "You are the taker of quizzes.");
 
@@ -145,7 +145,7 @@ public class UserTest
     @org.junit.Test
     public void Should_Get_All_Users() throws SQLException
     {
-        IUser userRepository = new UserRepository();
+        IUserRepository userRepository = new UserRepository();
         List<User> userList = userRepository.getAllUsers();
 
         assertTrue(userList.size() >= 5);

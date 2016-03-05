@@ -18,7 +18,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        IUser userRepo = (UserRepository) request.getSession().getAttribute("user");
+        IUserRepository userRepo = (UserRepository) request.getSession().getAttribute("user");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
