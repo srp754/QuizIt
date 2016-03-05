@@ -17,7 +17,7 @@ public interface IUserRepository
     boolean createNewUser(String username, String password, Boolean isAdmin) throws SQLException; //XX
     String getUsername(); //XX
     public int getUserId(); //XX
-    boolean isCorrectLogin(String username, String password) throws SQLException;
+    boolean isCorrectLogin(String username, String password) throws SQLException; //XX
     boolean isAdmin() throws SQLException; //XX
     void addFriend(int friendUserId) throws SQLException; //XX
     void removeFriend(int friendUserId) throws SQLException; //XX
@@ -38,7 +38,7 @@ public interface IUserRepository
     void removeQuiz(String username, String quizId);
     Double getQuizScore(String quizId); //TO DELETE, you can have multiple attempts on same quiz, method doesnt make sense
     Integer getNumberOfQuizzesTaken();
-//    void addCreatedQuiz(String quizId);
+    void addCreatedQuiz(String quizId);
     Integer getNumberOfQuizzesCreated();
     List<String> getRecentlyCreatedQuizzes();
 

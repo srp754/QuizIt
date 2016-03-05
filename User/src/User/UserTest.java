@@ -150,4 +150,16 @@ public class UserTest
 
         assertTrue(userList.size() >= 5);
     }
+
+    @org.junit.Test
+    public void Should_Correctly_Check_Login() throws SQLException
+    {
+        IUserRepository userRepository = new UserRepository();
+        userRepository.createNewUser("PasswordTestUser", "password", true);
+
+        boolean isUserLoginCorrect = userRepository.isCorrectLogin("PasswordTestUser", "password");
+        userRepository.DeleteUser("PasswordTestUser");
+
+        assertTrue(isUserLoginCorrect);
+    }
 }

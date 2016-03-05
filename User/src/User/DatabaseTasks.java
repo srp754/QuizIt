@@ -233,6 +233,24 @@ public class DatabaseTasks
         return userList;
     }
 
+    public static HashedPassword GetPasswordInfo(String userName) throws SQLException
+    {
+        HashedPassword foundUser = null;
+        Connection con = (Connection) DriverManager.getConnection
+                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+        ResultSet rs = GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
+
+        if(rs.next())
+        {
+            String hashedPass = rs.getString("UserPassword");
+            String hashedSalt = rs.getString("UserSalt");
+            foundUser = new HashedPassword(hashedPass, hashedSalt);
+        }
+
+        return foundUser;
+    }
+
     public static User GetUser(String userName) throws SQLException
     {
         User foundUser = null;
