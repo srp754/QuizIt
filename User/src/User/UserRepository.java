@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Created by scottparsons on 2/25/16.
  */
-public class UserRepository implements IUser
+public class UserRepository implements IUserRepository
 {
     // Instance variables
     private String username;
@@ -31,7 +31,7 @@ public class UserRepository implements IUser
         dbUsersPasswords = new HashMap<String, List>(); //REMOVE when DB exists
         List l = new ArrayList();
         byte[] salt = generateSalt();
-        l.add(salt);
+        l.add(hexToString(salt));
         l.add(hexToString(generateHashValue(hexToString(salt), "pass")));
 
         l.clear();
@@ -80,7 +80,18 @@ public class UserRepository implements IUser
 
     public boolean isCorrectLogin(String username, String password) throws SQLException
     {
-        return userExists(username) && passwordMatches(username, password);
+        if (userExists(username))
+        {
+            HashedPassword passwordInfo = DatabaseTasks.GetPasswordInfo(username);
+            String dbPass = passwordInfo.hashedPass;
+            String dbSalt = passwordInfo.hashedSalt;
+
+            String hashPassword = hexToString(generateHashValue(dbSalt, password));
+            boolean isPasswordCorrect = hashPassword.equals(dbPass);
+            return isPasswordCorrect;
+        }
+        else
+            return false;
     }
 
     /**
@@ -155,29 +166,29 @@ public class UserRepository implements IUser
      * Adds a created quiz to the user's history and database. Checks for achievements every time a quiz is created.
      * @param quizId Quiz identifier
      */
-//    public void addCreatedQuiz(String quizId) {
-//        //TODO replace with DB when it's ready
-//        // If user has created a quiz before, add new quiz to the database
-//        if(dbQuizzesCreated.containsKey(username)) {
-//            List<String> quizList = dbQuizzesCreated.get(username);
-//            quizList.add(quizId);
-//
-//            // Check for achievements
+    public void addCreatedQuiz(String quizId) {
+        //TODO replace with DB when it's ready
+        // If user has created a quiz before, add new quiz to the database
+        if(dbQuizzesCreated.containsKey(username)) {
+            List<String> quizList = dbQuizzesCreated.get(username);
+            quizList.add(quizId);
+
+            // Check for achievements
 //            if(getNumberOfQuizzesCreated() == 5) {
 //                addAchievement(UserAchievements.Achievements.PRODIGIOUS_AUTHOR);
 //            }
 //            else if(getNumberOfQuizzesCreated() == 10) {
 //                addAchievement(UserAchievements.Achievements.PROLIFIC_AUTHOR);
 //            }
-//        }
-//        // Initialize created quiz list for user
-//        else {
-//            List<String> quizList = new ArrayList<String>();
-//            quizList.add(quizId);
-//            dbQuizzesCreated.put(username, quizList);
+        }
+        // Initialize created quiz list for user
+        else {
+            List<String> quizList = new ArrayList<String>();
+            quizList.add(quizId);
+            dbQuizzesCreated.put(username, quizList);
 //            addAchievement(UserAchievements.Achievements.AMATEUR_AUTHOR); // First created quiz achievement
-//        }
-//    }
+        }
+    }
 
 
     public Integer getNumberOfQuizzesCreated() {
@@ -185,7 +196,8 @@ public class UserRepository implements IUser
         if(dbQuizzesCreated.get(username) == null) {
             return 0;
         }
-        else {
+        else
+        {
             return dbQuizzesCreated.get(username).size();
         }
     }
@@ -258,19 +270,10 @@ public class UserRepository implements IUser
         System.out.println(dbUsersPasswords.get(username));
         return (String) dbUsersPasswords.get(username).get(PW_IDX);
     }
-    private boolean passwordMatches(String username, String password) throws SQLException
-    {
-        if (userExists(username)) {
-            byte[] salt = (byte[]) dbUsersPasswords.get(username).get(SALT_IDX);
-            String dbPassword = (String) dbUsersPasswords.get(username).get(PW_IDX);
-            String hashPassword = hexToString(generateHashValue(hexToString(salt), password));
-            return hashPassword.equals(dbPassword);
-        }
-        return false;
-    }
 
     // Generates the SHA hex hash value using the MessageDigest
-    private static byte[] generateHashValue(String salt, String password) {
+    private static byte[] generateHashValue(String salt, String password)
+    {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA");
             byte[] combined = new byte[salt.getBytes().length + password.getBytes().length];
@@ -284,6 +287,7 @@ public class UserRepository implements IUser
             return null;
         }
     }
+
     private static byte[] generateSalt() {
         final Random r = new SecureRandom();
         byte[] salt = new byte[32];
