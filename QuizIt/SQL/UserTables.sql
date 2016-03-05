@@ -5,8 +5,10 @@ CREATE TABLE IF NOT EXISTS UserDetail
 (
 	 UserId int AUTO_INCREMENT,
 	 UserName varchar(100),
-	 UserPassword varchar(40),
-	 UserSalt varchar(40),
+	 UserPassword varchar(100),
+	 UserSalt varchar(100),
+	 AdminFlag boolean,
+	 UserCreateDate datetime,
 	 UserEmail varchar(100),
 	 PRIMARY KEY (UserId)
  );
@@ -55,7 +57,8 @@ CREATE TABLE IF NOT EXISTS UserAchievements
 (
 	 AchievementId int AUTO_INCREMENT,
 	 UserId int,
-	 AchievementName varchar(100),
+	 AchievementName varchar(20),
+	 AchievementDescription varchar(100),
 	 AchievementDate datetime,
 	 AchievementToolTip varchar(100),
 	 PRIMARY KEY (AchievementId)

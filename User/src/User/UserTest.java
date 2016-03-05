@@ -3,6 +3,7 @@ package User;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -42,7 +43,7 @@ public class UserTest
     }
 
     @org.junit.Test
-    public void Should_Add_And_Delete_Record() throws SQLException
+    public void Should_Add_And_Delete_User() throws SQLException
     {
         IUser userRepository = new UserRepository();
         userRepository.createNewUser("TestUserShouldNotExistInDatabaseEver", "password", true);
@@ -81,8 +82,8 @@ public class UserTest
         userRepository.PopulateCurrentUser("Connie");
 
         userRepository.addFriend(5);
-        boolean doesFriendshipExist = userRepository.FriendsupExists(5);
-        boolean selfFriendshipShouldNotExist = userRepository.FriendsupExists(2);
+        boolean doesFriendshipExist = userRepository.FriendshipExists(5);
+        boolean selfFriendshipShouldNotExist = userRepository.FriendshipExists(2);
 
         assertTrue(doesFriendshipExist);
         assertFalse(selfFriendshipShouldNotExist);
@@ -95,15 +96,58 @@ public class UserTest
         userRepository.PopulateCurrentUser("John");
         userRepository.addFriend(4);
 
-        boolean doesFriendshipExist = userRepository.FriendsupExists(4);
+        boolean doesFriendshipExist = userRepository.FriendshipExists(4);
 
         userRepository.PopulateCurrentUser("Larry");
-        boolean doesFriendshipExistOtherWay = userRepository.FriendsupExists(5);
+        boolean doesFriendshipExistOtherWay = userRepository.FriendshipExists(5);
 
-        boolean selfFriendshipShouldNotExist = userRepository.FriendsupExists(4);
+        boolean selfFriendshipShouldNotExist = userRepository.FriendshipExists(4);
 
         assertTrue(doesFriendshipExist);
         assertTrue(doesFriendshipExistOtherWay);
         assertFalse(selfFriendshipShouldNotExist);
+    }
+
+    @org.junit.Test
+    public void Should_Add_And_Delete_Friend() throws SQLException
+    {
+        IUser userRepository = new UserRepository();
+        userRepository.PopulateCurrentUser("Scott");
+        userRepository.addFriend(4);
+        boolean doesFriendshipExist = userRepository.FriendshipExists(4);
+
+        userRepository.removeFriend(4);
+        boolean isScottFriendsWithLarry = userRepository.FriendshipExists(4);
+
+        userRepository.PopulateCurrentUser("Larry");
+        boolean isLarryFriendswithScott = userRepository.FriendshipExists(3);
+
+        assertTrue(doesFriendshipExist);
+        assertFalse(isScottFriendsWithLarry);
+        assertFalse(isLarryFriendswithScott);
+    }
+
+    @org.junit.Test
+    public void Should_Add_And_Delete_Achievement() throws SQLException
+    {
+        IUser userRepository = new UserRepository();
+        userRepository.PopulateCurrentUser("Scott");
+        userRepository.addAchievement("QuizTaker", "You are the taker of quizzes.");
+
+        boolean doesAchievementExist = userRepository.AchievementExists("QuizTaker");
+        assertTrue(doesAchievementExist);
+
+        userRepository.removeAchievement("QuizTaker");
+        doesAchievementExist = userRepository.AchievementExists("QuizTaker");
+        assertFalse(doesAchievementExist);
+    }
+
+    @org.junit.Test
+    public void Should_Get_All_Users() throws SQLException
+    {
+        IUser userRepository = new UserRepository();
+        List<User> userList = userRepository.getAllUsers();
+
+        assertTrue(userList.size() >= 5);
     }
 }

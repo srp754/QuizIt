@@ -20,23 +20,26 @@ public interface IUser
     public int getUserId(); //XX
     boolean isCorrectLogin(String username, String password) throws SQLException;
     boolean isAdmin() throws SQLException; //XX
-    void addFriend(int friendUserId) throws SQLException;
-    void removesFriend(int friendUserId);
-    void addAchievement(UserAchievements.Achievements achievement);
+    void addFriend(int friendUserId) throws SQLException; //XX
+    void removeFriend(int friendUserId) throws SQLException; //XX
+    public void addAchievement(String achievementName, String achievementDesc) throws SQLException; //XX
+    public void removeAchievement(String achievementName) throws SQLException; //XX
+    public boolean  AchievementExists(String achievementName) throws SQLException; //XX
     Integer getNumberOfUsers() throws SQLException; //XX
-    boolean FriendsupExists(int userId) throws SQLException;
+    boolean FriendshipExists(int userId) throws SQLException; //XX
+    public List<User> getAllUsers() throws SQLException; //XX
 
     //AdminTasks
     void promoteToAdmin(String userToPromote);
     void DeleteUser(String userName) throws SQLException; //XX
-    Set<String> getAllUsers();
+
 
     //QuizTasks
     void addQuizScore(String quizId, Double grade);
     void removeQuiz(String username, String quizId);
     Double getQuizScore(String quizId); //TO DELETE, you can have multiple attempts on same quiz, method doesnt make sense
     Integer getNumberOfQuizzesTaken();
-    void addCreatedQuiz(String quizId);
+//    void addCreatedQuiz(String quizId);
     Integer getNumberOfQuizzesCreated();
     List<String> getRecentlyCreatedQuizzes();
 

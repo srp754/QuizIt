@@ -16,7 +16,7 @@ public class CreatedQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         IUser userRepo = (UserRepository) request.getSession().getAttribute("user");
         String quizId = request.getParameter("quizid");
-        userRepo.addCreatedQuiz(quizId);
+//        userRepo.addCreatedQuiz(quizId);
 
         RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
         dispatch.forward(request, response);
