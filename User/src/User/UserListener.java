@@ -38,7 +38,7 @@ public class UserListener implements ServletContextListener,
     // -------------------------------------------------------
     public void sessionCreated(HttpSessionEvent se) {
         HttpSession session = se.getSession();
-        session.setAttribute("user", new User());
+        session.setAttribute("user", new UserRepository());
         session.setAttribute("createInfo",new String(""));
     }
 
