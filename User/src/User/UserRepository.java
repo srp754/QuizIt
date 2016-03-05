@@ -1,5 +1,6 @@
 package User;
 
+import javax.xml.crypto.Data;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -101,13 +102,14 @@ public class UserRepository implements IUser
 
     public void addFriend(int friendUserId) throws SQLException
     {
-        if(!FriendsupExists(friendUserId))
-            DatabaseTasks.InsertUserSocial(_currentUser.userId, friendUserId);
+        if(!FriendshipExists(friendUserId))
+            DatabaseTasks.InsertUserFriend(_currentUser.userId, friendUserId);
     }
 
-    public void removesFriend(int friendUserId)
+    public void removeFriend(int friendUserId) throws SQLException
     {
-
+        if(FriendshipExists(friendUserId))
+            DatabaseTasks.DeleteUserFriendship(_currentUser.userId, friendUserId);
     }
 
     /**
@@ -153,29 +155,29 @@ public class UserRepository implements IUser
      * Adds a created quiz to the user's history and database. Checks for achievements every time a quiz is created.
      * @param quizId Quiz identifier
      */
-    public void addCreatedQuiz(String quizId) {
-        //TODO replace with DB when it's ready
-        // If user has created a quiz before, add new quiz to the database
-        if(dbQuizzesCreated.containsKey(username)) {
-            List<String> quizList = dbQuizzesCreated.get(username);
-            quizList.add(quizId);
-
-            // Check for achievements
-            if(getNumberOfQuizzesCreated() == 5) {
-                addAchievement(UserAchievements.Achievements.PRODIGIOUS_AUTHOR);
-            }
-            else if(getNumberOfQuizzesCreated() == 10) {
-                addAchievement(UserAchievements.Achievements.PROLIFIC_AUTHOR);
-            }
-        }
-        // Initialize created quiz list for user
-        else {
-            List<String> quizList = new ArrayList<String>();
-            quizList.add(quizId);
-            dbQuizzesCreated.put(username, quizList);
-            addAchievement(UserAchievements.Achievements.AMATEUR_AUTHOR); // First created quiz achievement
-        }
-    }
+//    public void addCreatedQuiz(String quizId) {
+//        //TODO replace with DB when it's ready
+//        // If user has created a quiz before, add new quiz to the database
+//        if(dbQuizzesCreated.containsKey(username)) {
+//            List<String> quizList = dbQuizzesCreated.get(username);
+//            quizList.add(quizId);
+//
+//            // Check for achievements
+//            if(getNumberOfQuizzesCreated() == 5) {
+//                addAchievement(UserAchievements.Achievements.PRODIGIOUS_AUTHOR);
+//            }
+//            else if(getNumberOfQuizzesCreated() == 10) {
+//                addAchievement(UserAchievements.Achievements.PROLIFIC_AUTHOR);
+//            }
+//        }
+//        // Initialize created quiz list for user
+//        else {
+//            List<String> quizList = new ArrayList<String>();
+//            quizList.add(quizId);
+//            dbQuizzesCreated.put(username, quizList);
+//            addAchievement(UserAchievements.Achievements.AMATEUR_AUTHOR); // First created quiz achievement
+//        }
+//    }
 
 
     public Integer getNumberOfQuizzesCreated() {
@@ -209,13 +211,16 @@ public class UserRepository implements IUser
         }
     }
 
-    /**
-     * Adds the user's achievement to the database
-     * @param achievement
-     */
-    public void addAchievement(UserAchievements.Achievements achievement) {
-        //TODO add to DB when it's ready
-        dbAchievements.add(achievement.toString());
+    public void addAchievement(String achievementName, String achievementDesc) throws SQLException
+    {
+        if(!AchievementExists(achievementName))
+            DatabaseTasks.InsertAchievement(getUserId(), achievementName, achievementDesc);
+    }
+
+    public void removeAchievement(String achievementName) throws SQLException
+    {
+        if(AchievementExists(achievementName))
+            DatabaseTasks.DeleteAchievement(getUserId(), achievementName);
     }
 
     public List<String> getAchievements() {
@@ -228,17 +233,21 @@ public class UserRepository implements IUser
         return DatabaseTasks.GetCountRecordsFromTable("UserDetail");
     }
 
-    public Set<String> getAllUsers() {
-        return dbUsersPasswords.keySet();
+    public List<User> getAllUsers() throws SQLException
+    {
+        return DatabaseTasks.GetUsers();
     }
 
-    //agree this should be private, made public for testing
-    public boolean FriendsupExists(int userId) throws SQLException
+    public boolean  AchievementExists(String achievementName) throws SQLException
+    {
+        return DatabaseTasks.CheckIfRecordExistsWithParametersIntString("UserAchievements", "UserId",  Integer.toString(getUserId()), "AchievementName", achievementName);
+    }
+
+    public boolean FriendshipExists(int userId) throws SQLException
     {
         return DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserFriends", "UserId",  Integer.toString(getUserId()), "FriendId", Integer.toString(userId));
     }
 
-    //agree this should be private, made public for testing
     public boolean userExists(String username) throws SQLException
     {
         return DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);

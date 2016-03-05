@@ -1,15 +1,15 @@
 USE c_cs108_ashavsky
 
 INSERT INTO UserDetail VALUES
-  (null,'Alex','SomeHashValueHere','SomeSaltValueHere', 'email@somewhere.com'),
-  (null,'Connie','SomeHashValueHere','SomeSaltValueHere', 'email@somewhere.com'),
-  (null,'Scott','SomeHashValueHere','SomeSaltValueHere', 'email@somewhere.com'),
-  (null,'Larry','SomeHashValueHere','SomeSaltValueHere', 'email@somewhere.com'),
-  (null,'John','SomeHashValueHere','SomeSaltValueHere', 'email@somewhere.com')
+  (null,'Alex','SomeHashValueHere','SomeSaltValueHere', true, '20130523', 'email@somewhere.com'),
+  (null,'Connie','SomeHashValueHere','SomeSaltValueHere', true, '20130523', 'email@somewhere.com'),
+  (null,'Scott','SomeHashValueHere','SomeSaltValueHere', false, '20130523', 'email@somewhere.com'),
+  (null,'Larry','SomeHashValueHere','SomeSaltValueHere', false, '20130523', 'email@somewhere.com'),
+  (null,'John','SomeHashValueHere','SomeSaltValueHere', false, '20130523', 'email@somewhere.com')
 ;
 
 INSERT INTO UserFriends VALUES
-  (1, 2, '20130102'),
+  (1, 2, '20130102'),Sc
   (1, 3, '20130102'),
   (1, 4, '20130102'),
   (1, 5, '20130102'),  
@@ -19,7 +19,7 @@ INSERT INTO UserFriends VALUES
   (5, 1, '20130102')
 ;
 
-INSERT INTO UserSocial VALUES
+INSERT INTO UserSocial VALUES 
   (null, 1, 2, 'Note'),
   (null, 1, 3, 'Note'),
   (null, 4, 5, 'Note'),
@@ -46,11 +46,11 @@ INSERT INTO UserFriendRequests VALUES
 ;
 
 INSERT INTO UserAchievements VALUES
-  (null, 1, 'QuizTaker', '20130523', 'sometooltip.jpg'),
-  (null, 4, 'LoneWolf', '20130129', 'sometooltip.jpg'),
-  (null, 3, 'MasterQuizTaker', '20130513', 'sometooltip.jpg'),
-  (null, 2, 'TestWriter', '20130423', 'sometooltip.jpg'),
-  (null, 5, 'KingOfTheQuizzes', '20120523', 'sometooltip.jpg')
+  (null, 1, 'QuizTaker', 'You are the take of quizzes', '20130523', 'sometooltip.jpg'),
+  (null, 4, 'LoneWolf', 'A lone wolf rides alone' '20130129', 'sometooltip.jpg'),
+  (null, 3, 'MasterQuizTaker', 'Master of All', '20130513', 'sometooltip.jpg'),
+  (null, 2, 'TestWriter', 'you wrote a test!', '20130423', 'sometooltip.jpg'),
+  (null, 5, 'KingOfTheQuizzes', 'Not the master, but the king is cool too', '20120523', 'sometooltip.jpg')
 ;
 
 
