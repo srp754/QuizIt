@@ -17,4 +17,8 @@ public interface Question {
 	//Returns the question ID
 	public int getId();
 	
+	// Return Question Type
+	/*
+	public int getQuestionType();
+	*/
 }

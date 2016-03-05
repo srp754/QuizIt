@@ -9,14 +9,15 @@ public class MultipleChoiceTest {
 	@Test
 	public void testMultipleChoice() {
 		// For now, we'll just store the letter as the choice strings
-		String question = "Which of these organisms is considered a fungus?";
-		List<String> choices = new ArrayList<String>();
-		choices.add("A");
-		choices.add("B");
-		choices.add("C");
-		MultipleChoiceAnswer correctChoice = new MultipleChoiceAnswer("B", 0);
-		MultipleChoiceAnswer wrongChoice = new MultipleChoiceAnswer("C", 1);
-		MultipleChoice mc1 = new MultipleChoice(question, correctChoice, choices, 0);
+		String question = "What year is John Carlo?";
+		List<Answer> answerChoices = new ArrayList<Answer>(); 
+		MultipleChoiceAnswer correctChoice = new MultipleChoiceAnswer("Junior", 0);
+		MultipleChoiceAnswer wrongChoice = new MultipleChoiceAnswer("Sophomore", 1);
+		MultipleChoiceAnswer wrongChoice2 = new MultipleChoiceAnswer("Freshman", 2);
+		answerChoices.add(correctChoice);
+		answerChoices.add(wrongChoice);
+		answerChoices.add(wrongChoice2);
+		MultipleChoice mc1 = new MultipleChoice(question, correctChoice, answerChoices, 0);
 		assertTrue(mc1.checkAnswer(correctChoice));
 		assertTrue(!mc1.checkAnswer(wrongChoice));
 	}

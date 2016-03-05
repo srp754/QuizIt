@@ -1,39 +1,39 @@
 package quiz;
-
+import java.util.*; 
 public class FillBlank implements Question{
 	/* Pretty much identical to QResponse
-	 *
-	 * TODO: One design choice we can make is how to represent the question string. 
-	 * Could have it as two separate strings and separate on the blank or as one string. 
-	*/
+	 * However, the question string will represent the blank as the '|' character
+	 * i.e. "The | is the largest animal ever known to have lived."
+	 */
+	
 	private String question; 
-	private Answer answer; 
+	private Set<Answer> possibleAnswers; 
 	private int questionId; 
 	
-	public FillBlank(String question, Answer answer, int questionId) {
+	public FillBlank(String question, Set<Answer> possibleAnswers, int questionId) {
 		this.question = question; 
-		this.answer = answer;
+		this.possibleAnswers = possibleAnswers;
 		this.questionId = questionId; 
 	}
 	
-	public Answer getAnswer() {
-		return answer;
-	}  
-	
+	// Current implementation: accepts any capitalization i.e. washington or Washington
 	public boolean checkAnswer(Answer userResponse) {
 		String lowercaseResponse = userResponse.toString().toLowerCase();
-		String lowercaseAnswer = answer.toString().toLowerCase();
-		if (lowercaseAnswer.equals(lowercaseResponse)) {
-			return true; 
+		for(Answer currAnswer: possibleAnswers) {
+			if(currAnswer.toString().toLowerCase().equals(lowercaseResponse)) {
+				return true; 
+			}
 		}
 		return false; 
 	}
 	
+	// Checks answer given answer string as a parameter 
 	public boolean checkAnswer(String userResponse) {
 		String lowercaseResponse = userResponse.toLowerCase();
-		String lowercaseAnswer = answer.toString().toLowerCase();
-		if (lowercaseAnswer.equals(lowercaseResponse)) {
-			return true; 
+		for(Answer currAnswer: possibleAnswers) {
+			if(currAnswer.toString().toLowerCase().equals(lowercaseResponse)) {
+				return true; 
+			}
 		}
 		return false; 
 	}
