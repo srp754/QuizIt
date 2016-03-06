@@ -22,24 +22,19 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("userName");
         String password = request.getParameter("password");
 
-        try
+        if(userRepo.isCorrectLogin(username, password))
         {
-            if(userRepo.isCorrectLogin(username, password))
-            {
-                userRepo.PopulateCurrentUser(username); //will be just userId and populate the currentUser object the repo will have
-                request.getSession().setAttribute("loginError","");
-                RequestDispatcher dispatch = request.getRequestDispatcher("docs/userhomepage/userhomepage.jsp");
-                dispatch.forward(request, response);
-            }
-            else {
-                request.getSession().setAttribute("loginError","Invalid username or password. Please try again.");
-                RequestDispatcher dispatch = request.getRequestDispatcher("docs/homepage/index.jsp");
-                dispatch.forward(request, response);
-            }
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
+            userRepo.PopulateCurrentUser(username); //will be just userId and populate the currentUser object the repo will have
+            request.getSession().setAttribute("loginError","");
+            RequestDispatcher dispatch = request.getRequestDispatcher("docs/userhomepage/userhomepage.jsp");
+            dispatch.forward(request, response);
         }
+        else {
+            request.getSession().setAttribute("loginError","Invalid username or password. Please try again.");
+            RequestDispatcher dispatch = request.getRequestDispatcher("docs/homepage/index.jsp");
+            dispatch.forward(request, response);
+        }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

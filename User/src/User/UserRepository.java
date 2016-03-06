@@ -1,6 +1,5 @@
 package User;
 
-import javax.xml.crypto.Data;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -31,7 +30,7 @@ public class UserRepository implements IUserRepository
      * @param password New password to create
      * @return true if successful, false if not
      */
-    public boolean createNewUser(String username, String email, String password, Boolean isAdmin) throws SQLException
+    public boolean createNewUser(String username, String email, String password, Boolean isAdmin)
     {
         if(userExists(username))
         {
@@ -47,13 +46,13 @@ public class UserRepository implements IUserRepository
         }
     }
 
-    public void DeleteUser(String userName) throws SQLException
+    public void DeleteUser(String userName)
     {
         if(userExists(userName))
             DatabaseTasks.DeleteUserDetail(userName);
     }
 
-    public void PopulateCurrentUser(String userName) throws SQLException
+    public void PopulateCurrentUser(String userName)
     {
         if(userExists(userName))
             _currentUser = DatabaseTasks.GetUser(userName);
@@ -65,8 +64,10 @@ public class UserRepository implements IUserRepository
 
     public String getUsername() { return _currentUser.userName; }
     public int getUserId() { return _currentUser.userId; }
+    public int usernameToId(String username) { return username.hashCode(); }
+    public String idToUsername(int userId) { return String.valueOf(userId); }
 
-    public boolean isCorrectLogin(String username, String password) throws SQLException
+    public boolean isCorrectLogin(String username, String password)
     {
         if (userExists(username))
         {
@@ -99,13 +100,13 @@ public class UserRepository implements IUserRepository
             return false;
     }
 
-    public void addFriend(int friendUserId) throws SQLException
+    public void addFriend(int friendUserId)
     {
         if(!FriendshipExists(friendUserId))
             DatabaseTasks.InsertUserFriend(_currentUser.userId, friendUserId);
     }
 
-    public void removeFriend(int friendUserId) throws SQLException
+    public void removeFriend(int friendUserId)
     {
         if(FriendshipExists(friendUserId))
             DatabaseTasks.DeleteUserFriendship(_currentUser.userId, friendUserId);
@@ -139,6 +140,11 @@ public class UserRepository implements IUserRepository
     public Double getQuizScore(String quizId) {
         //TODO get from DB when it's ready
         return dbQuizHistory.get(quizId);
+    }
+    
+    public Double getQuizHighScore(String quizId) {
+    	//TODO get from DB when it's ready
+    	return 100.0;
     }
 
     /**
@@ -182,13 +188,13 @@ public class UserRepository implements IUserRepository
         }
     }
 
-    public void addAchievement(String achievementName, String achievementDesc) throws SQLException
+    public void addAchievement(String achievementName, String achievementDesc)
     {
         if(!AchievementExists(achievementName))
             DatabaseTasks.InsertAchievement(getUserId(), achievementName, achievementDesc);
     }
 
-    public void removeAchievement(String achievementName) throws SQLException
+    public void removeAchievement(String achievementName)
     {
         if(AchievementExists(achievementName))
             DatabaseTasks.DeleteAchievement(getUserId(), achievementName);
@@ -199,27 +205,27 @@ public class UserRepository implements IUserRepository
         return dbAchievements;
     }
 
-    public Integer getNumberOfUsers() throws SQLException
+    public Integer getNumberOfUsers()
     {
         return DatabaseTasks.GetCountRecordsFromTable("UserDetail");
     }
 
-    public List<User> getAllUsers() throws SQLException
+    public List<User> getAllUsers()
     {
         return DatabaseTasks.GetUsers();
     }
 
-    public boolean  AchievementExists(String achievementName) throws SQLException
+    public boolean  AchievementExists(String achievementName)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParametersIntString("UserAchievements", "UserId",  Integer.toString(getUserId()), "AchievementName", achievementName);
     }
 
-    public boolean FriendshipExists(int userId) throws SQLException
+    public boolean FriendshipExists(int userId)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserFriends", "UserId",  Integer.toString(getUserId()), "FriendId", Integer.toString(userId));
     }
 
-    public boolean userExists(String username) throws SQLException
+    public boolean userExists(String username)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);
     }
