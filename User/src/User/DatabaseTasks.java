@@ -55,7 +55,7 @@ public class DatabaseTasks
         }
     }
 
-    public static void InsertUserDetail(String userName, String password, String salt, boolean isAdmin)
+    public static void InsertUserDetail(String userName, String email, String password, String salt, boolean isAdmin)
     {
         try
         {
@@ -67,7 +67,6 @@ public class DatabaseTasks
             stmt.executeQuery("SET @@auto_increment_increment=1; ");
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-            String tempEmail = "'email@somewhere.com'";
 
             StringBuilder sb = new StringBuilder();
             sb.append("INSERT INTO UserDetail VALUES(");
@@ -77,7 +76,7 @@ public class DatabaseTasks
             sb.append("'" + salt + "',");
             sb.append(String.valueOf(isAdmin) + ",");
             sb.append("'" + formatter.format(new Date()) + "',");
-            sb.append(tempEmail + ");");
+            sb.append("'" + email + "');");
 
             stmt.executeUpdate(sb.toString());
             con.close();
@@ -211,6 +210,29 @@ public class DatabaseTasks
         }
     }
 
+    public static void PromoteUserToAdmin(String userName) {
+        Connection con = null;
+        try {
+            con = (Connection) DriverManager.getConnection
+                    ("jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME, MyDBInfo.MYSQL_PASSWORD);
+
+            Class.forName("com.mysql.jdbc.Driver");
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " + MyDBInfo.MYSQL_DATABASE_NAME);
+
+            String query = String.format("UPDATE UserDetail SET AdminFlag='1' WHERE UserName = %1$s;", "'" + userName + "'");
+
+            stmt.executeUpdate(query.toString());
+            con.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<User> GetUsers() throws SQLException
     {
         List<User> userList = new ArrayList<>();
@@ -274,6 +296,12 @@ public class DatabaseTasks
 
     public static boolean CheckIfRecordExistsWithParameterString(String tableName, String parameterName, String parameterValue) throws SQLException
     {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         Connection con = (Connection) DriverManager.getConnection
                 ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
@@ -407,7 +435,6 @@ public class DatabaseTasks
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
             Class.forName("com.mysql.jdbc.Driver");
             Statement stmt = (Statement) con.createStatement();
             stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);

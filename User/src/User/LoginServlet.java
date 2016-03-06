@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         IUserRepository userRepo = (UserRepository) request.getSession().getAttribute("user");
-        String username = request.getParameter("username");
+        String username = request.getParameter("userName");
         String password = request.getParameter("password");
 
         try
@@ -27,11 +27,13 @@ public class LoginServlet extends HttpServlet {
             if(userRepo.isCorrectLogin(username, password))
             {
                 userRepo.PopulateCurrentUser(username); //will be just userId and populate the currentUser object the repo will have
-                RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
+                request.getSession().setAttribute("loginError","");
+                RequestDispatcher dispatch = request.getRequestDispatcher("docs/userhomepage/userhomepage.jsp");
                 dispatch.forward(request, response);
             }
             else {
-                RequestDispatcher dispatch = request.getRequestDispatcher("Incorrect.html");
+                request.getSession().setAttribute("loginError","Invalid username or password. Please try again.");
+                RequestDispatcher dispatch = request.getRequestDispatcher("docs/homepage/index.jsp");
                 dispatch.forward(request, response);
             }
         } catch (SQLException e)

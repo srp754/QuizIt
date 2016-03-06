@@ -14,7 +14,8 @@ public interface IUserRepository
     List<String> getAchievements(); //This needs to return a list of achievements not names
 
     boolean userExists(String username) throws SQLException; //XX
-    boolean createNewUser(String username, String password, Boolean isAdmin) throws SQLException; //XX
+    boolean createNewUser(String username, String email, String password, Boolean isAdmin) throws SQLException; //XX
+    void removeCurrentUser(); //XX
     String getUsername(); //XX
     public int getUserId(); //XX
     boolean isCorrectLogin(String username, String password) throws SQLException; //XX
@@ -33,13 +34,14 @@ public interface IUserRepository
     void DeleteUser(String userName) throws SQLException; //XX
 
 
+
     //QuizTasks
-    void addQuizScore(String quizId, Double grade);
-    void removeQuiz(String username, String quizId);
-    Double getQuizScore(String quizId); //TO DELETE, you can have multiple attempts on same quiz, method doesnt make sense
-    Integer getNumberOfQuizzesTaken();
-    void addCreatedQuiz(String quizId);
-    Integer getNumberOfQuizzesCreated();
-    List<String> getRecentlyCreatedQuizzes();
+    //void addQuizScore(String quizId, Double grade);
+    //void removeQuiz(String username, String quizId);
+    //Double getQuizScore(String quizId); //TO DELETE, you can have multiple attempts on same quiz, method doesnt make sense
+    //Integer getNumberOfQuizzesTaken();
+    //void addCreatedQuiz(String quizId);
+    //Integer getNumberOfQuizzesCreated();
+    //List<String> getRecentlyCreatedQuizzes();
 
 }

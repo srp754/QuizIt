@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*,User.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<% User.IUser IUser = (User.IUser) session.getAttribute("user"); %>
+<% IUserRepository IUser = (IUserRepository) session.getAttribute("user"); %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -35,11 +35,7 @@
 </ul>
 <h1>Recently Created Quizzes</h1>
 <ul>
-    <%
-        for(String s : IUser.getRecentlyCreatedQuizzes()) {
-            out.println("<li>" + s + "</li>");
-        }
-    %>
+
 </ul>
 </body>
 </html>
