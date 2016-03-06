@@ -13,5 +13,6 @@ int numPossible = (int) request.getAttribute("possible");
 %>
 <h1>Quiz Results</h1>
 <p> You got <%out.println(totalCorrect); %> correct out of <%out.println(numPossible); %> </p>
+<a href="quizhomepage.jsp">Return to homepage</a>
 </body>
 </html>

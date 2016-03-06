@@ -13,7 +13,8 @@ public interface IUserRepository
     List<String> getAchievements(); //This needs to return a list of achievements not names
 
     boolean userExists(String username); //XX
-    boolean createNewUser(String username, String password, Boolean isAdmin); //XX
+    boolean createNewUser(String username, String email, String password, Boolean isAdmin); //XX
+    void removeCurrentUser(); //XX
     String getUsername(); //XX
     public int getUserId(); //XX
     public int usernameToId(String username); //temporary method
@@ -34,14 +35,15 @@ public interface IUserRepository
     void DeleteUser(String userName); //XX
 
 
+
     //QuizTasks
-    void addQuizScore(String quizId, Double grade);
-    void removeQuiz(String username, String quizId);
-    Double getQuizScore(String quizId); //TO DELETE, you can have multiple attempts on same quiz, method doesnt make sense
+//    void addQuizScore(String quizId, Double grade);
+//    void removeQuiz(String username, String quizId);
+//    Double getQuizScore(String quizId); //TO DELETE, you can have multiple attempts on same quiz, method doesnt make sense
     Double getQuizHighScore(String quizId);
-    Integer getNumberOfQuizzesTaken();
-    void addCreatedQuiz(String quizId);
-    Integer getNumberOfQuizzesCreated();
-    List<String> getRecentlyCreatedQuizzes();
+//    Integer getNumberOfQuizzesTaken();
+//    void addCreatedQuiz(String quizId);
+//    Integer getNumberOfQuizzesCreated();
+//    List<String> getRecentlyCreatedQuizzes();
 
 }

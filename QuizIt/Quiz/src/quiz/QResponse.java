@@ -11,8 +11,10 @@ public class QResponse implements Question {
 	//private Answer answer;
 	private int questionId; 
 	private Set<Answer> possibleAnswers; 
+	private String questionType; 
 	
 	public QResponse(String question, Set<Answer> possibleAnswers, int questionId) {
+		this.questionType = "qresponse";
 		this.question = question;
 		this.questionId = questionId; 
 		this.possibleAnswers = possibleAnswers; 
@@ -46,6 +48,10 @@ public class QResponse implements Question {
 	
 	public int getId() {
 		return questionId; 
+	}
+	
+	public String getQuestionType() {
+		return questionType; 
 	}
 	
 }

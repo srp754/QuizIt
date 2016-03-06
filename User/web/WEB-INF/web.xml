@@ -18,6 +18,10 @@
         <servlet-name>CreatedQuizServlet</servlet-name>
         <servlet-class>User.CreatedQuizServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SignOutServlet</servlet-name>
+        <servlet-class>User.SignOutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -29,5 +33,9 @@
     <servlet-mapping>
         <servlet-name>CreatedQuizServlet</servlet-name>
         <url-pattern>/CreatedQuizServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SignOutServlet</servlet-name>
+        <url-pattern>/SignOutServlet</url-pattern>
     </servlet-mapping>
 </web-app>

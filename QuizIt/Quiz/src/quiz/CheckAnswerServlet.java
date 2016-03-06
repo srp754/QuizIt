@@ -43,9 +43,32 @@ public class CheckAnswerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// Handles scoring for text/string based answers
 		// Iterate through the list of questions to return a score
+		String attemptIdStr = request.getParameter("attemptid"); 
+		String parsedAttemptId = attemptIdStr.replaceAll("\\/", "");
+		int attemptId = Integer.parseInt(parsedAttemptId);
+		List<QuizAttemptHistory> quizAttemptHistoryTable = (ArrayList<QuizAttemptHistory>) getServletContext().getAttribute("quizattempts");
+		QuizAttemptHistory wantedAttempt = null; 
+		for(QuizAttemptHistory currentAttempt : quizAttemptHistoryTable) {
+			if(currentAttempt.getAttemptId() == attemptId) {
+				wantedAttempt = currentAttempt; 
+			}
+		}
+		wantedAttempt.endAttempt();
+		
 		String idStr = request.getParameter("quizid");
 		String parsedId = idStr.replaceAll("\\/", "");
 		int quizid = Integer.parseInt(parsedId);
+		
+		List<QuizStats> quizStatsTable = (ArrayList<QuizStats>) getServletContext().getAttribute("quizstats");
+		QuizStats wantedStats = null; 
+		for(QuizStats currStats: quizStatsTable) {
+			if(currStats.getQuizId() == quizid) {
+				wantedStats = currStats; 
+			}
+		}
+		wantedStats.incrementQuizAttempts();
+		//wantedStats.incrementUserAttempts(); IMPLEMENT WHEN USER GETS INTEGRATED 
+		
 		List<Quiz> quizList = (ArrayList<Quiz>) getServletContext().getAttribute("quizlist");
 		Quiz quiz = quizList.get(quizid);
 		List<Question> questions = quiz.getQuestions();
@@ -59,6 +82,9 @@ public class CheckAnswerServlet extends HttpServlet {
 			}
 
 		}
+		wantedAttempt.setAttemptScore(totalCorrect);
+		wantedStats.addSumActualScores(totalCorrect);
+		wantedStats.addSumPossibleScores(numPossible);
 		request.setAttribute("possible", numPossible);
 		request.setAttribute("correct", totalCorrect);
 		RequestDispatcher rd = request.getRequestDispatcher("quizresults.jsp");

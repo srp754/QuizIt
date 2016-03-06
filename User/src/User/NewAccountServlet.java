@@ -16,20 +16,22 @@ import java.sql.SQLException;
 public class NewAccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         IUserRepository userRepo = (UserRepository) request.getSession().getAttribute("user");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = request.getParameter("inputUserName");
+        String password = request.getParameter("inputPassword");
         String adminCheckbox = request.getParameter("adminCheckbox");
+        String email = request.getParameter("inputEmail");
 
-        if(userRepo.createNewUser(username, password, adminCheckbox != null)) {
-		    request.getSession().setAttribute("createInfo",new String(""));
-		    RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
-		    dispatch.forward(request, response);
-		}
-		else {
-		    request.getSession().setAttribute("createInfo",new String("Username already taken. Please try another."));
-		    RequestDispatcher dispatch = request.getRequestDispatcher("createAccount.jsp");
-		    dispatch.forward(request, response);
-		}
+        if(userRepo.createNewUser(username, email, password, adminCheckbox != null)) {
+            request.getSession().setAttribute("registerError","");
+            RequestDispatcher dispatch = request.getRequestDispatcher("docs/userhomepage/userhomepage.jsp");
+            dispatch.forward(request, response);
+        }
+        else {
+            request.getSession().setAttribute("registerError","Username already taken. Please try another.");
+            //RequestDispatcher dispatch = request.getRequestDispatcher("docs/register/register.html");
+            response.sendRedirect("docs/register/register.jsp");
+            //dispatch.forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

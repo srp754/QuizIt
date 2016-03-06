@@ -9,8 +9,10 @@ public class MultipleChoice implements Question{
 	private String question; 
 	private Answer correctAnswer; 
 	private int questionId; 
+	private String questionType; 
 	
 	public MultipleChoice(String question, Answer correctAnswer, List<Answer> answerChoices, int questionId) {
+		this.questionType = "multiplechoice"; 
 		this.question = question; 
 		this.correctAnswer = correctAnswer; 
 		this.answerChoices = answerChoices; 
@@ -52,6 +54,10 @@ public class MultipleChoice implements Question{
 	
 	public List<Answer> getAnswerChoices() {
 		return answerChoices; 
+	}
+	
+	public String getQuestionType() {
+		return questionType; 
 	}
 	
 }
