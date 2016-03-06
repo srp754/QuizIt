@@ -21,22 +21,16 @@ public class NewAccountServlet extends HttpServlet {
         String adminCheckbox = request.getParameter("adminCheckbox");
         String email = request.getParameter("inputEmail");
 
-        try
-        {
-            if(userRepo.createNewUser(username, email, password, adminCheckbox != null)) {
-                request.getSession().setAttribute("registerError","");
-                RequestDispatcher dispatch = request.getRequestDispatcher("docs/userhomepage/userhomepage.jsp");
-                dispatch.forward(request, response);
-            }
-            else {
-                request.getSession().setAttribute("registerError","Username already taken. Please try another.");
-                //RequestDispatcher dispatch = request.getRequestDispatcher("docs/register/register.html");
-                response.sendRedirect("docs/register/register.jsp");
-                //dispatch.forward(request, response);
-            }
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
+        if(userRepo.createNewUser(username, email, password, adminCheckbox != null)) {
+            request.getSession().setAttribute("registerError","");
+            RequestDispatcher dispatch = request.getRequestDispatcher("docs/userhomepage/userhomepage.jsp");
+            dispatch.forward(request, response);
+        }
+        else {
+            request.getSession().setAttribute("registerError","Username already taken. Please try another.");
+            //RequestDispatcher dispatch = request.getRequestDispatcher("docs/register/register.html");
+            response.sendRedirect("docs/register/register.jsp");
+            //dispatch.forward(request, response);
         }
     }
 
