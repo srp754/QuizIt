@@ -1,6 +1,5 @@
 package User;
 
-import javax.xml.crypto.Data;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -14,30 +13,16 @@ public class UserRepository implements IUserRepository
 {
     // Instance variables
     private String username;
-    private final static int SALT_IDX = 0;
-    private final static int PW_IDX = 1;
     private final static int MAX_RECENT_CREATED_QUIZZES = 5;
 
     private User _currentUser = null;
 
-    private Map<String, List> dbUsersPasswords;
     private Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
-    private List<String> dbFriends = new ArrayList<String>(); // REMOVE when DB exists
     private Map<String, Double> dbQuizHistory = new HashMap<String, Double>(); // REMOVE when DB exists
     private List<String> dbAchievements = new ArrayList<String>(); // REMOVE when DB exists
     private Map<String, List<String>> dbQuizzesCreated = new HashMap<String, List<String>>(); // REMOVE when DB exists
 
     public UserRepository() {
-        dbUsersPasswords = new HashMap<String, List>(); //REMOVE when DB exists
-        List l = new ArrayList();
-        byte[] salt = generateSalt();
-        l.add(hexToString(salt));
-        l.add(hexToString(generateHashValue(hexToString(salt), "pass")));
-
-        l.clear();
-        salt = generateSalt();
-        l.add(salt);
-        l.add(hexToString(generateHashValue(hexToString(salt), "test")));
     }
 
     /**
@@ -46,7 +31,7 @@ public class UserRepository implements IUserRepository
      * @param password New password to create
      * @return true if successful, false if not
      */
-    public boolean createNewUser(String username, String password, Boolean isAdmin) throws SQLException
+    public boolean createNewUser(String username, String password, Boolean isAdmin)
     {
         if(userExists(username))
         {
@@ -63,13 +48,13 @@ public class UserRepository implements IUserRepository
         }
     }
 
-    public void DeleteUser(String userName) throws SQLException
+    public void DeleteUser(String userName)
     {
         if(userExists(userName))
             DatabaseTasks.DeleteUserDetail(userName);
     }
 
-    public void PopulateCurrentUser(String userName) throws SQLException
+    public void PopulateCurrentUser(String userName)
     {
         if(userExists(userName))
             _currentUser = DatabaseTasks.GetUser(userName);
@@ -77,8 +62,10 @@ public class UserRepository implements IUserRepository
 
     public String getUsername() { return _currentUser.userName; }
     public int getUserId() { return _currentUser.userId; }
+    public int usernameToId(String username) { return username.hashCode(); }
+    public String idToUsername(int userId) { return String.valueOf(userId); }
 
-    public boolean isCorrectLogin(String username, String password) throws SQLException
+    public boolean isCorrectLogin(String username, String password)
     {
         if (userExists(username))
         {
@@ -111,13 +98,13 @@ public class UserRepository implements IUserRepository
             return false;
     }
 
-    public void addFriend(int friendUserId) throws SQLException
+    public void addFriend(int friendUserId)
     {
         if(!FriendshipExists(friendUserId))
             DatabaseTasks.InsertUserFriend(_currentUser.userId, friendUserId);
     }
 
-    public void removeFriend(int friendUserId) throws SQLException
+    public void removeFriend(int friendUserId)
     {
         if(FriendshipExists(friendUserId))
             DatabaseTasks.DeleteUserFriendship(_currentUser.userId, friendUserId);
@@ -151,6 +138,11 @@ public class UserRepository implements IUserRepository
     public Double getQuizScore(String quizId) {
         //TODO get from DB when it's ready
         return dbQuizHistory.get(quizId);
+    }
+    
+    public Double getQuizHighScore(String quizId) {
+    	//TODO get from DB when it's ready
+    	return 100.0;
     }
 
     /**
@@ -223,13 +215,13 @@ public class UserRepository implements IUserRepository
         }
     }
 
-    public void addAchievement(String achievementName, String achievementDesc) throws SQLException
+    public void addAchievement(String achievementName, String achievementDesc)
     {
         if(!AchievementExists(achievementName))
             DatabaseTasks.InsertAchievement(getUserId(), achievementName, achievementDesc);
     }
 
-    public void removeAchievement(String achievementName) throws SQLException
+    public void removeAchievement(String achievementName)
     {
         if(AchievementExists(achievementName))
             DatabaseTasks.DeleteAchievement(getUserId(), achievementName);
@@ -240,36 +232,31 @@ public class UserRepository implements IUserRepository
         return dbAchievements;
     }
 
-    public Integer getNumberOfUsers() throws SQLException
+    public Integer getNumberOfUsers()
     {
         return DatabaseTasks.GetCountRecordsFromTable("UserDetail");
     }
 
-    public List<User> getAllUsers() throws SQLException
+    public List<User> getAllUsers()
     {
         return DatabaseTasks.GetUsers();
     }
 
-    public boolean  AchievementExists(String achievementName) throws SQLException
+    public boolean  AchievementExists(String achievementName)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParametersIntString("UserAchievements", "UserId",  Integer.toString(getUserId()), "AchievementName", achievementName);
     }
 
-    public boolean FriendshipExists(int userId) throws SQLException
+    public boolean FriendshipExists(int userId)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserFriends", "UserId",  Integer.toString(getUserId()), "FriendId", Integer.toString(userId));
     }
 
-    public boolean userExists(String username) throws SQLException
+    public boolean userExists(String username)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);
     }
 
-    // Returns the hash'd password from the database.  Assumes the username exists.
-    private String getPasswordFromDB(String username) {
-        System.out.println(dbUsersPasswords.get(username));
-        return (String) dbUsersPasswords.get(username).get(PW_IDX);
-    }
 
     // Generates the SHA hex hash value using the MessageDigest
     private static byte[] generateHashValue(String salt, String password)

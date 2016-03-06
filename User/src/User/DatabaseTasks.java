@@ -211,102 +211,129 @@ public class DatabaseTasks
         }
     }
 
-    public static List<User> GetUsers() throws SQLException
+    public static List<User> GetUsers()
     {
         List<User> userList = new ArrayList<>();
 
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+		try {
+			Connection con = (Connection) DriverManager.getConnection
+			        ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
-        ResultSet rs = GetResultSet(con, "*", "UserDetail");
-
-        while(rs.next())
-        {
-            User foundUser = new User();
-            foundUser.userName = rs.getString("UserName");
-            foundUser.userId = Integer.parseInt(rs.getString("UserId"));
-            String isAdminst = rs.getString("AdminFlag");
-            foundUser.isAdmin = isAdminst.equals("1");
-            userList.add(foundUser);
-        }
-
+	        ResultSet rs = GetResultSet(con, "*", "UserDetail");
+	
+	        while(rs.next())
+	        {
+	            User foundUser = new User();
+	            foundUser.userName = rs.getString("UserName");
+	            foundUser.userId = Integer.parseInt(rs.getString("UserId"));
+	            String isAdminst = rs.getString("AdminFlag");
+	            foundUser.isAdmin = isAdminst.equals("1");
+	            userList.add(foundUser);
+	        }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
         return userList;
     }
 
-    public static HashedPassword GetPasswordInfo(String userName) throws SQLException
+    public static HashedPassword GetPasswordInfo(String userName)
     {
         HashedPassword foundUser = null;
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+		try {
+			Connection con = (Connection) DriverManager.getConnection
+			        ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
-        ResultSet rs = GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
-
-        if(rs.next())
-        {
-            String hashedPass = rs.getString("UserPassword");
-            String hashedSalt = rs.getString("UserSalt");
-            foundUser = new HashedPassword(hashedPass, hashedSalt);
-        }
+	        ResultSet rs = GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
+	
+	        if(rs.next())
+	        {
+	            String hashedPass = rs.getString("UserPassword");
+	            String hashedSalt = rs.getString("UserSalt");
+	            foundUser = new HashedPassword(hashedPass, hashedSalt);
+	        }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         return foundUser;
     }
 
-    public static User GetUser(String userName) throws SQLException
+    public static User GetUser(String userName)
     {
         User foundUser = null;
 
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+		try {
+			Connection con = (Connection) DriverManager.getConnection
+			        ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
-        ResultSet rs = GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
-
-        if(rs.next())
-        {
-            foundUser = new User();
-            foundUser.userName = rs.getString("UserName");
-            foundUser.userId = Integer.parseInt(rs.getString("UserId"));
-            String isAdminst = rs.getString("AdminFlag");
-            foundUser.isAdmin = isAdminst.equals("1");
-        }
+	        ResultSet rs = GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
+	
+	        if(rs.next())
+	        {
+	            foundUser = new User();
+	            foundUser.userName = rs.getString("UserName");
+	            foundUser.userId = Integer.parseInt(rs.getString("UserId"));
+	            String isAdminst = rs.getString("AdminFlag");
+	            foundUser.isAdmin = isAdminst.equals("1");
+	        }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         return foundUser;
     }
 
-    public static boolean CheckIfRecordExistsWithParameterString(String tableName, String parameterName, String parameterValue) throws SQLException
+    public static boolean CheckIfRecordExistsWithParameterString(String tableName, String parameterName, String parameterValue)
     {
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+    	boolean doesRecordExist = false;
+		try {
+			Connection con = (Connection) DriverManager.getConnection
+			        ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
-        ResultSet rs = GetResultSetWithParameter(con, tableName, parameterName, "'" + parameterValue + "'");
-
-        boolean doesRecordExist = rs.next(); //if row exists, record is found, can return true
-        con.close();
+	        ResultSet rs = GetResultSetWithParameter(con, tableName, parameterName, "'" + parameterValue + "'");
+	
+	        doesRecordExist = rs.next(); //if row exists, record is found, can return true
+	        con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         return doesRecordExist;
     }
 
-    public static boolean CheckIfRecordExistsWithParameterInt(String tableName, String parameterName, String parameterValue) throws SQLException
+    public static boolean CheckIfRecordExistsWithParameterInt(String tableName, String parameterName, String parameterValue)
     {
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+    	boolean doesRecordExist = false;
+		try {
+			Connection con = (Connection) DriverManager.getConnection
+			        ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
-        ResultSet rs = GetResultSetWithParameter(con, tableName, parameterName, parameterValue);
-
-        boolean doesRecordExist = rs.next(); //if row exists, record is found, can return true
-        con.close();
+	        ResultSet rs = GetResultSetWithParameter(con, tableName, parameterName, parameterValue);
+	
+	        doesRecordExist = rs.next(); //if row exists, record is found, can return true
+	        con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         return doesRecordExist;
     }
 
-    public static boolean CheckIfRecordExistsWithParametersIntInt(String tableName, String parameterName, String parameterValue, String parameterName2, String paramaterValue2) throws SQLException
+    public static boolean CheckIfRecordExistsWithParametersIntInt(String tableName, String parameterName, String parameterValue, String parameterName2, String paramaterValue2)
     {
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
         boolean doesRecordExist = false;
 
         try
         {
+	        Connection con = (Connection) DriverManager.getConnection
+	                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+	
             Class.forName("com.mysql.jdbc.Driver");
             Statement stmt = (Statement) con.createStatement();
             stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
@@ -330,16 +357,16 @@ public class DatabaseTasks
         return doesRecordExist;
     }
 
-    public static boolean CheckIfRecordExistsWithParametersIntString(String tableName, String parameterName, String parameterValue, String parameterName2, String paramaterValue2) throws SQLException
+    public static boolean CheckIfRecordExistsWithParametersIntString(String tableName, String parameterName, String parameterValue, String parameterName2, String paramaterValue2)
     {
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
         boolean doesRecordExist = false;
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
+	         Connection con = (Connection) DriverManager.getConnection
+	                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+	
+           Class.forName("com.mysql.jdbc.Driver");
             Statement stmt = (Statement) con.createStatement();
             stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
 
@@ -362,16 +389,24 @@ public class DatabaseTasks
         return doesRecordExist;
     }
 
-    public static int GetCountRecordsFromTable(String tableName) throws SQLException
+    public static int GetCountRecordsFromTable(String tableName)
     {
-        Connection con = (Connection) DriverManager.getConnection
-                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-        ResultSet rs = GetResultSet(con, "Count(*)", tableName);
-
-        rs.next(); // exactly one result so allowed
-        int count = rs.getInt(1);
-        con.close();
+    	int count = 0;
+    	try
+    	{
+	        Connection con = (Connection) DriverManager.getConnection
+	                ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+	
+	        ResultSet rs = GetResultSet(con, "Count(*)", tableName);
+	
+	        rs.next(); // exactly one result so allowed
+	        count = rs.getInt(1);
+	        con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
 
         return count;
     }

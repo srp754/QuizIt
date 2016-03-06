@@ -20,22 +20,16 @@ public class NewAccountServlet extends HttpServlet {
         String password = request.getParameter("password");
         String adminCheckbox = request.getParameter("adminCheckbox");
 
-        try
-        {
-            if(userRepo.createNewUser(username, password, adminCheckbox != null)) {
-                request.getSession().setAttribute("createInfo",new String(""));
-                RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
-                dispatch.forward(request, response);
-            }
-            else {
-                request.getSession().setAttribute("createInfo",new String("Username already taken. Please try another."));
-                RequestDispatcher dispatch = request.getRequestDispatcher("createAccount.jsp");
-                dispatch.forward(request, response);
-            }
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
+        if(userRepo.createNewUser(username, password, adminCheckbox != null)) {
+		    request.getSession().setAttribute("createInfo",new String(""));
+		    RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
+		    dispatch.forward(request, response);
+		}
+		else {
+		    request.getSession().setAttribute("createInfo",new String("Username already taken. Please try another."));
+		    RequestDispatcher dispatch = request.getRequestDispatcher("createAccount.jsp");
+		    dispatch.forward(request, response);
+		}
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

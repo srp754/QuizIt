@@ -22,22 +22,17 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        try
+        if(userRepo.isCorrectLogin(username, password))
         {
-            if(userRepo.isCorrectLogin(username, password))
-            {
-                userRepo.PopulateCurrentUser(username); //will be just userId and populate the currentUser object the repo will have
-                RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
-                dispatch.forward(request, response);
-            }
-            else {
-                RequestDispatcher dispatch = request.getRequestDispatcher("Incorrect.html");
-                dispatch.forward(request, response);
-            }
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
+            userRepo.PopulateCurrentUser(username); //will be just userId and populate the currentUser object the repo will have
+            RequestDispatcher dispatch = request.getRequestDispatcher("userHome.jsp");
+            dispatch.forward(request, response);
         }
+        else {
+            RequestDispatcher dispatch = request.getRequestDispatcher("Incorrect.html");
+            dispatch.forward(request, response);
+        }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
