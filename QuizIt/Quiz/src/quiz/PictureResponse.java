@@ -5,8 +5,10 @@ public class PictureResponse implements Question{
 	private String imageURL; 
 	private Answer answer; 
 	private int questionId; 
+	private String questionType; 
 	
 	public PictureResponse(String question, String imageURL, Answer answer, int questionId) {
+		this.questionType = "pictureresponse";
 		this.question = question; 
 		this.imageURL = imageURL; 
 		this.answer = answer; 
@@ -42,5 +44,9 @@ public class PictureResponse implements Question{
 	
 	public int getId() {
 		return questionId; 
+	}
+	
+	public String getQuestionType() {
+		return questionType; 
 	}
 }

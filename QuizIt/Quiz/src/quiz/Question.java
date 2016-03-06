@@ -4,10 +4,6 @@ public interface Question {
 	//Override of toString(): Returns the question in a String format 
 	public String toString(); 
 	
-	// Returns the correct answer to the question  
-	// TODO: Decide if getAnswer() is needed or not 
-	//public Answer getAnswer();
-	
 	// Checks if the user's response to the question is the correct answer 
 	public boolean checkAnswer(Answer answer);
 	
@@ -17,8 +13,10 @@ public interface Question {
 	//Returns the question ID
 	public int getId();
 	
-	// Return Question Type
-	/*
-	public int getQuestionType();
-	*/
+	// Return Question Type 
+	/* "qresponse", "fillblank", "pictureresponse", "multiplechoice"
+	 * 
+	 */
+	public String getQuestionType();
+	
 }
