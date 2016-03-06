@@ -9,8 +9,9 @@ public class FillBlank implements Question{
 	private String question; 
 	private Set<Answer> possibleAnswers; 
 	private int questionId; 
-	
+	private String questionType; 
 	public FillBlank(String question, Set<Answer> possibleAnswers, int questionId) {
+		this.questionType = "fillblank";
 		this.question = question; 
 		this.possibleAnswers = possibleAnswers;
 		this.questionId = questionId; 
@@ -44,5 +45,9 @@ public class FillBlank implements Question{
 	
 	public int getId() {
 		return questionId; 
+	}
+	
+	public String getQuestionType() {
+		return questionType; 
 	}
 }
