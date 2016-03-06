@@ -13,31 +13,16 @@ import java.util.*;
 public class UserRepository implements IUserRepository
 {
     // Instance variables
-    private String username;
-    private final static int SALT_IDX = 0;
-    private final static int PW_IDX = 1;
     private final static int MAX_RECENT_CREATED_QUIZZES = 5;
-
     private User _currentUser = null;
 
-    private Map<String, List> dbUsersPasswords;
     private Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
-    private List<String> dbFriends = new ArrayList<String>(); // REMOVE when DB exists
     private Map<String, Double> dbQuizHistory = new HashMap<String, Double>(); // REMOVE when DB exists
     private List<String> dbAchievements = new ArrayList<String>(); // REMOVE when DB exists
     private Map<String, List<String>> dbQuizzesCreated = new HashMap<String, List<String>>(); // REMOVE when DB exists
 
+    // Constructor
     public UserRepository() {
-        dbUsersPasswords = new HashMap<String, List>(); //REMOVE when DB exists
-        List l = new ArrayList();
-        byte[] salt = generateSalt();
-        l.add(hexToString(salt));
-        l.add(hexToString(generateHashValue(hexToString(salt), "pass")));
-
-        l.clear();
-        salt = generateSalt();
-        l.add(salt);
-        l.add(hexToString(generateHashValue(hexToString(salt), "test")));
     }
 
     /**
@@ -46,19 +31,18 @@ public class UserRepository implements IUserRepository
      * @param password New password to create
      * @return true if successful, false if not
      */
-    public boolean createNewUser(String username, String password, Boolean isAdmin) throws SQLException
+    public boolean createNewUser(String username, String email, String password, Boolean isAdmin) throws SQLException
     {
         if(userExists(username))
         {
-            System.out.println("Username already exists");
             return false;
         }
         else
         {
             byte[] salt = generateSalt();
             byte[] hashSaltPassword = generateHashValue(hexToString(salt), password);
-            DatabaseTasks.InsertUserDetail(username, hexToString(hashSaltPassword), hexToString(salt), isAdmin);
-            System.out.println("User added successfully");
+            DatabaseTasks.InsertUserDetail(username, email, hexToString(hashSaltPassword), hexToString(salt), isAdmin);
+            PopulateCurrentUser(username);
             return true;
         }
     }
@@ -73,6 +57,10 @@ public class UserRepository implements IUserRepository
     {
         if(userExists(userName))
             _currentUser = DatabaseTasks.GetUser(userName);
+    }
+
+    public void removeCurrentUser() {
+        _currentUser = null;
     }
 
     public String getUsername() { return _currentUser.userName; }
@@ -99,8 +87,8 @@ public class UserRepository implements IUserRepository
      * @param userToPromote Username to promote to admin
      */
     public void promoteToAdmin(String userToPromote) {
-        //TODO replace with DB code
-        dbUsersAdmin.put(userToPromote, true);
+        DatabaseTasks.PromoteUserToAdmin(userToPromote);
+        _currentUser.isAdmin = true;
     }
 
     public boolean isAdmin()
@@ -162,43 +150,14 @@ public class UserRepository implements IUserRepository
         return dbQuizHistory.size();
     }
 
-    /**
-     * Adds a created quiz to the user's history and database. Checks for achievements every time a quiz is created.
-     * @param quizId Quiz identifier
-     */
-    public void addCreatedQuiz(String quizId) {
-        //TODO replace with DB when it's ready
-        // If user has created a quiz before, add new quiz to the database
-        if(dbQuizzesCreated.containsKey(username)) {
-            List<String> quizList = dbQuizzesCreated.get(username);
-            quizList.add(quizId);
-
-            // Check for achievements
-//            if(getNumberOfQuizzesCreated() == 5) {
-//                addAchievement(UserAchievements.Achievements.PRODIGIOUS_AUTHOR);
-//            }
-//            else if(getNumberOfQuizzesCreated() == 10) {
-//                addAchievement(UserAchievements.Achievements.PROLIFIC_AUTHOR);
-//            }
-        }
-        // Initialize created quiz list for user
-        else {
-            List<String> quizList = new ArrayList<String>();
-            quizList.add(quizId);
-            dbQuizzesCreated.put(username, quizList);
-//            addAchievement(UserAchievements.Achievements.AMATEUR_AUTHOR); // First created quiz achievement
-        }
-    }
-
-
     public Integer getNumberOfQuizzesCreated() {
         //TODO replace with DB when it's ready
-        if(dbQuizzesCreated.get(username) == null) {
+        if(dbQuizzesCreated.get(_currentUser.userName) == null) {
             return 0;
         }
         else
         {
-            return dbQuizzesCreated.get(username).size();
+            return dbQuizzesCreated.get(_currentUser.userName).size();
         }
     }
 
@@ -217,7 +176,7 @@ public class UserRepository implements IUserRepository
         else {
             List<String> quizList = new ArrayList<String>();
             for (int i = numQuizzesCreated-1; i >= Math.max(numQuizzesCreated - MAX_RECENT_CREATED_QUIZZES, 0); i--) {
-                quizList.add(dbQuizzesCreated.get(username).get(i));
+                quizList.add(dbQuizzesCreated.get(_currentUser.userName).get(i));
             }
             return quizList;
         }
@@ -263,12 +222,6 @@ public class UserRepository implements IUserRepository
     public boolean userExists(String username) throws SQLException
     {
         return DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);
-    }
-
-    // Returns the hash'd password from the database.  Assumes the username exists.
-    private String getPasswordFromDB(String username) {
-        System.out.println(dbUsersPasswords.get(username));
-        return (String) dbUsersPasswords.get(username).get(PW_IDX);
     }
 
     // Generates the SHA hex hash value using the MessageDigest

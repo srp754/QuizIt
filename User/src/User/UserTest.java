@@ -38,7 +38,7 @@ public class UserTest
     {
         IUserRepository userRepository = new UserRepository();
 
-        boolean isRecordedAdded = userRepository.createNewUser("Alex", "password", true);
+        boolean isRecordedAdded = userRepository.createNewUser("Alex", "alex@stanford.edu", "password", true);
         assertFalse(isRecordedAdded);
     }
 
@@ -46,7 +46,7 @@ public class UserTest
     public void Should_Add_And_Delete_User() throws SQLException
     {
         IUserRepository userRepository = new UserRepository();
-        userRepository.createNewUser("TestUserShouldNotExistInDatabaseEver", "password", true);
+        userRepository.createNewUser("TestUserShouldNotExistInDatabaseEver", "test@stanford.edu", "password", true);
 
         boolean isRecordInDb = userRepository.userExists("TestUserShouldNotExistInDatabaseEver");
         assertTrue(isRecordInDb);
@@ -155,11 +155,25 @@ public class UserTest
     public void Should_Correctly_Check_Login() throws SQLException
     {
         IUserRepository userRepository = new UserRepository();
-        userRepository.createNewUser("PasswordTestUser", "password", true);
+        userRepository.createNewUser("PasswordTestUser", "test@stanford.edu", "password", true);
 
         boolean isUserLoginCorrect = userRepository.isCorrectLogin("PasswordTestUser", "password");
         userRepository.DeleteUser("PasswordTestUser");
 
         assertTrue(isUserLoginCorrect);
+    }
+
+    @org.junit.Test
+    public void Should_Promote_Standard_User_To_Admin() throws SQLException
+    {
+        IUserRepository userRepository = new UserRepository();
+        userRepository.DeleteUser("AdminTestUser");
+        userRepository.createNewUser("AdminTestUser", "test@stanford.edu", "password", false);
+        userRepository.PopulateCurrentUser("AdminTestUser");
+        assertFalse(userRepository.isAdmin());
+
+        userRepository.promoteToAdmin("AdminTestUser");
+        assertTrue(userRepository.isAdmin());
+        userRepository.DeleteUser("AdminTestUser");
     }
 }
