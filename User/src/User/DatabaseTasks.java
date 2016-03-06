@@ -247,6 +247,8 @@ public class DatabaseTasks
             User foundUser = new User();
             foundUser.userName = rs.getString("UserName");
             foundUser.userId = Integer.parseInt(rs.getString("UserId"));
+            foundUser.email = rs.getString("UserEmail");
+            foundUser.dateCreated = rs.getString("UserCreateDate");
             String isAdminst = rs.getString("AdminFlag");
             foundUser.isAdmin = isAdminst.equals("1");
             userList.add(foundUser);
@@ -287,6 +289,8 @@ public class DatabaseTasks
             foundUser = new User();
             foundUser.userName = rs.getString("UserName");
             foundUser.userId = Integer.parseInt(rs.getString("UserId"));
+            foundUser.email = rs.getString("UserEmail");
+            foundUser.dateCreated = rs.getString("UserCreateDate");
             String isAdminst = rs.getString("AdminFlag");
             foundUser.isAdmin = isAdminst.equals("1");
         }
