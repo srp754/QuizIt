@@ -18,11 +18,8 @@ public class RemoveAccountServlet extends HttpServlet {
         IUserRepository userRepo = (UserRepository) request.getSession().getAttribute("user");
         String username = request.getParameter("inputUserName");
 
-        try {
-            if(userRepo.userExists(username)) {
-                DatabaseTasks.DeleteUserDetail(username);
-            }
-        } catch (SQLException e) {
+        if(userRepo.userExists(username)) {
+            DatabaseTasks.DeleteUserDetail(username);
         }
 
         response.sendRedirect("docs/admin/remove_user.jsp");
