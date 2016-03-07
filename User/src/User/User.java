@@ -13,6 +13,8 @@ public class User
     public int userId;
     public String userName;
     public boolean isAdmin;
+    public String email;
+    public String dateCreated;
 
     public User()
     {
