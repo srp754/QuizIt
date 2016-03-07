@@ -112,81 +112,7 @@ public class UserRepository implements IUserRepository
             DatabaseTasks.DeleteUserFriendship(_currentUser.userId, friendUserId);
     }
 
-    /**
-     * Adds a user's quiz ID and score to the database
-     * @param quizId
-     * @param grade
-     */
-    public void addQuizScore(String quizId, Double grade) {
-        //TODO add to DB when it's ready
-        dbQuizHistory.put(quizId, grade);
-    }
 
-    /**
-     * Removes a particular quiz history from a user
-     * @param username
-     * @param quizId
-     */
-    public void removeQuiz(String username, String quizId) {
-        //TODO replace with DB when ready
-        dbQuizHistory.remove(quizId);
-    }
-
-    /**
-     * Returns the user's score for a particular quiz
-     * @param quizId
-     * @return
-     */
-    public Double getQuizScore(String quizId) {
-        //TODO get from DB when it's ready
-        return dbQuizHistory.get(quizId);
-    }
-    
-    public Double getQuizHighScore(String quizId) {
-    	//TODO get from DB when it's ready
-    	return 100.0;
-    }
-
-    /**
-     * Returns the number of quizzes a user has taken
-     * @return number of quizzes taken
-     */
-    public Integer getNumberOfQuizzesTaken() {
-        //TODO replace with DB when it's ready
-        return dbQuizHistory.size();
-    }
-
-    public Integer getNumberOfQuizzesCreated() {
-        //TODO replace with DB when it's ready
-        if(dbQuizzesCreated.get(_currentUser.userName) == null) {
-            return 0;
-        }
-        else
-        {
-            return dbQuizzesCreated.get(_currentUser.userName).size();
-        }
-    }
-
-    /**
-     * Returns the 5 most recently created quizzes for the user or empty list if user has not
-     * created a quiz.
-     * @return
-     */
-    public List<String> getRecentlyCreatedQuizzes() {
-        //TODO pull from DB when it's ready
-        int numQuizzesCreated = getNumberOfQuizzesCreated();
-
-        if (numQuizzesCreated== 0) {
-            return new ArrayList<String>();
-        }
-        else {
-            List<String> quizList = new ArrayList<String>();
-            for (int i = numQuizzesCreated-1; i >= Math.max(numQuizzesCreated - MAX_RECENT_CREATED_QUIZZES, 0); i--) {
-                quizList.add(dbQuizzesCreated.get(_currentUser.userName).get(i));
-            }
-            return quizList;
-        }
-    }
 
     public void addAchievement(String achievementName, String achievementDesc)
     {
@@ -270,4 +196,82 @@ public class UserRepository implements IUserRepository
         return buff.toString();
     }
 
+
+    //*********************** PROBABLY WILL BE DELETED, QUIZ METHODS ***************************
+
+    /**
+     * Adds a user's quiz ID and score to the database
+     * @param quizId
+     * @param grade
+     */
+    public void addQuizScore(String quizId, Double grade) {
+        //TODO add to DB when it's ready
+        dbQuizHistory.put(quizId, grade);
+    }
+
+    /**
+     * Removes a particular quiz history from a user
+     * @param username
+     * @param quizId
+     */
+    public void removeQuiz(String username, String quizId) {
+        //TODO replace with DB when ready
+        dbQuizHistory.remove(quizId);
+    }
+
+    /**
+     * Returns the user's score for a particular quiz
+     * @param quizId
+     * @return
+     */
+    public Double getQuizScore(String quizId) {
+        //TODO get from DB when it's ready
+        return dbQuizHistory.get(quizId);
+    }
+
+    public Double getQuizHighScore(String quizId) {
+        //TODO get from DB when it's ready
+        return 100.0;
+    }
+
+    /**
+     * Returns the number of quizzes a user has taken
+     * @return number of quizzes taken
+     */
+    public Integer getNumberOfQuizzesTaken() {
+        //TODO replace with DB when it's ready
+        return dbQuizHistory.size();
+    }
+
+    public Integer getNumberOfQuizzesCreated() {
+        //TODO replace with DB when it's ready
+        if(dbQuizzesCreated.get(_currentUser.userName) == null) {
+            return 0;
+        }
+        else
+        {
+            return dbQuizzesCreated.get(_currentUser.userName).size();
+        }
+    }
+
+    /**
+     * Returns the 5 most recently created quizzes for the user or empty list if user has not
+     * created a quiz.
+     * @return
+     */
+    public List<String> getRecentlyCreatedQuizzes() {
+        //TODO pull from DB when it's ready
+        int numQuizzesCreated = getNumberOfQuizzesCreated();
+
+        if (numQuizzesCreated== 0) {
+            return new ArrayList<String>();
+        }
+        else {
+            List<String> quizList = new ArrayList<String>();
+            for (int i = numQuizzesCreated-1; i >= Math.max(numQuizzesCreated - MAX_RECENT_CREATED_QUIZZES, 0); i--) {
+                quizList.add(dbQuizzesCreated.get(_currentUser.userName).get(i));
+            }
+            return quizList;
+        }
+    }
 }
