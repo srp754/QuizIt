@@ -2,7 +2,8 @@ package User;
 
 import java.util.*;
 
-public class Messaging {
+public class Messaging implements IMessaging
+{
 	private static Map<Integer, List<Integer>> messages = new HashMap<Integer, List<Integer>>();
     private static Map<Integer, Set<Integer>> dbFriendRequests = new HashMap<Integer, Set<Integer>>();
     private static Map<Integer, Set<Integer>> dbMessages = new HashMap<Integer, Set<Integer>>();
