@@ -89,7 +89,7 @@ public class UserRepository implements IUserRepository
      */
     public void promoteToAdmin(String userToPromote) {
         DatabaseTasks.PromoteUserToAdmin(userToPromote);
-        _currentUser.isAdmin = true;
+        //_currentUser.isAdmin = true;
     }
 
     public boolean isAdmin()
