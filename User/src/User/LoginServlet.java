@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 /**
@@ -30,9 +31,10 @@ public class LoginServlet extends HttpServlet {
             dispatch.forward(request, response);
         }
         else {
-            request.getSession().setAttribute("loginError","Invalid username or password. Please try again.");
-            RequestDispatcher dispatch = request.getRequestDispatcher("docs/homepage/index.jsp");
-            dispatch.forward(request, response);
+            response.setContentType("text/plain");
+            response.setHeader("Cache-Control", "no-cache");
+            PrintWriter out = response.getWriter();
+            out.print("Invalid username or password. Please try again.");
         }
 
     }
