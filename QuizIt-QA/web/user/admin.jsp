@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*,user.*" %>
-<% User user = (User) session.getAttribute("user"); %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <html>
 <head>
     <title>Admin Options</title>
@@ -25,7 +25,8 @@
             <span class="caret"></span></button>
         <ul class="dropdown-menu">
             <%
-                for(String s : user.getAllUsers()) {
+                for(User u : user.getAllUsers()) {
+                   	String s = u.userName;
                     out.println("<li><a href=''>" + s + "</a></li>");
                 }
             %>
