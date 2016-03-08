@@ -26,6 +26,10 @@
         <servlet-name>RemoveAccountServlet</servlet-name>
         <servlet-class>User.RemoveAccountServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PromoteUserServlet</servlet-name>
+        <servlet-class>User.PromoteUserServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -45,5 +49,9 @@
     <servlet-mapping>
         <servlet-name>RemoveAccountServlet</servlet-name>
         <url-pattern>/RemoveAccountServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PromoteUserServlet</servlet-name>
+        <url-pattern>/PromoteUserServlet</url-pattern>
     </servlet-mapping>
 </web-app>

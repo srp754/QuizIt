@@ -53,7 +53,7 @@
             <li><a href="#quizzes">Quizzes</a></li>
             <li><a href="#feed">Feed</a></li>
             <% if(user.isAdmin()) {
-              out.println("<li><a href='docs/admin/dashboard.html'>Admin</a></li>");
+              out.println("<li><a href='/docs/admin/dashboard.html'>Admin</a></li>");
             }
             %>
             <li><a href="#notifications">&#128276;</a></li>
