@@ -1,35 +1,53 @@
 package quiz;
-
+import java.util.*; 
 public class FillBlank implements Question{
 	/* Pretty much identical to QResponse
-	 *
-	 * TODO: One design choice we can make is how to represent the question string. 
-	 * Could have it as two separate strings and separate on the blank or as one string. 
-	*/
-	private String firstHalfQ;
-	private String secondHalfQ; 
-	private Answer answer; 
+	 * However, the question string will represent the blank as the '|' character
+	 * i.e. "The | is the largest animal ever known to have lived."
+	 */
 	
-	public FillBlank(String firstHalfQ, String secondHalfQ, Answer answer) {
-		this.firstHalfQ = firstHalfQ;
-		this.secondHalfQ = secondHalfQ; 
-		this.answer = answer;
+	private String question; 
+	private Set<Answer> possibleAnswers; 
+	private int questionId; 
+	private String questionType; 
+	public FillBlank(String question, Set<Answer> possibleAnswers, int questionId) {
+		this.questionType = "fillblank";
+		this.question = question; 
+		this.possibleAnswers = possibleAnswers;
+		this.questionId = questionId; 
 	}
 	
-	public Answer getAnswer() {
-		return answer;
-	}  
-	
+	// Current implementation: accepts any capitalization i.e. washington or Washington
 	public boolean checkAnswer(Answer userResponse) {
 		String lowercaseResponse = userResponse.toString().toLowerCase();
-		String lowercaseAnswer = answer.toString().toLowerCase();
-		if (lowercaseAnswer.equals(lowercaseResponse)) {
-			return true; 
+		for(Answer currAnswer: possibleAnswers) {
+			if(currAnswer.toString().toLowerCase().equals(lowercaseResponse)) {
+				return true; 
+			}
+		}
+		return false; 
+	}
+	
+	// Checks answer given answer string as a parameter 
+	public boolean checkAnswer(String userResponse) {
+		String lowercaseResponse = userResponse.toLowerCase();
+		for(Answer currAnswer: possibleAnswers) {
+			if(currAnswer.toString().toLowerCase().equals(lowercaseResponse)) {
+				return true; 
+			}
 		}
 		return false; 
 	}
 	
 	public String toString() {
-		return firstHalfQ + "   " + secondHalfQ; 
+		return question; 
+	}
+	
+	public int getId() {
+		return questionId; 
+	}
+	
+	public String getQuestionType() {
+		return questionType; 
 	}
 }
