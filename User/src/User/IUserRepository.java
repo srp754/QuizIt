@@ -8,7 +8,6 @@ import java.util.Set;
  */
 public interface IUserRepository
 {
-
     void PopulateCurrentUser(String userName); //XX
     List<String> getAchievements(); //This needs to return a list of achievements not names
 
