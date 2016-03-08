@@ -1,4 +1,5 @@
-USE c_cs108_ashavsky
+USE c_cs108_ashavsky;
+SET @@auto_increment_increment=1;
 
 INSERT INTO UserDetail VALUES
   (null,'Alex','SomeHashValueHere','SomeSaltValueHere', true, '20130523', 'email@somewhere.com'),
@@ -18,17 +19,17 @@ INSERT INTO UserFriends VALUES
   (4, 1, '20130102'),
   (5, 1, '20130102')
 ;
-
+SET @@auto_increment_increment=1;
 INSERT INTO UserSocial VALUES 
-  (null, 1, 2, 'Note'),
-  (null, 1, 3, 'Note'),
-  (null, 4, 5, 'Note'),
-  (null, 1, 3, 'UserChallenge'),
-  (null, 1, 2, 'UserChallenge'),
-  (null, 2, 3, 'UserFriendRequest'),
-  (null, 4, 5, 'UserFriendRequest')
+  (null, 1, 2, 'note', '20120126'),
+  (null, 1, 3, 'note', '20120126'),
+  (null, 4, 5, 'note', '20120126'),
+  (null, 1, 3, 'challenge', '20120126'),
+  (null, 1, 2, 'challenge', '20120126'),
+  (null, 2, 3, 'friend', '20120126'),
+  (null, 4, 5, 'friend', '20120126')
 ;
-
+SET @@auto_increment_increment=1;
 INSERT INTO UserNotes VALUES
   (1, 'Note 1 with a lot of extra text to make sure it can store a lot.'),
   (2, 'Note 2 with a lot of extra text to make sure it can store a lot.'),
@@ -47,7 +48,7 @@ INSERT INTO UserFriendRequests VALUES
 
 INSERT INTO UserAchievements VALUES
   (null, 1, 'QuizTaker', 'You are the take of quizzes', '20130523', 'sometooltip.jpg'),
-  (null, 4, 'LoneWolf', 'A lone wolf rides alone' '20130129', 'sometooltip.jpg'),
+  (null, 4, 'LoneWolf', 'A lone wolf rides alone', '20130129', 'sometooltip.jpg'),
   (null, 3, 'MasterQuizTaker', 'Master of All', '20130513', 'sometooltip.jpg'),
   (null, 2, 'TestWriter', 'you wrote a test!', '20130423', 'sometooltip.jpg'),
   (null, 5, 'KingOfTheQuizzes', 'Not the master, but the king is cool too', '20120523', 'sometooltip.jpg')

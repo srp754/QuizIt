@@ -8,27 +8,52 @@ public class Messaging implements IMessaging
     private static Map<Integer, Set<Integer>> dbFriendRequests = new HashMap<Integer, Set<Integer>>();
     private static Map<Integer, Set<Integer>> dbMessages = new HashMap<Integer, Set<Integer>>();
 	
-	public static void addMessage(Message msg) {
+	public static int addMessage(Message msg) //may throw MySqlException that duplicate entry, this is OK - SQL prevent duplicate entries which is good
+	{
+		int newMessageId = DatabaseTasks.InsertUserMessage(msg);
+		msg.setMessageId(newMessageId);
+
+		if(msg.getType().equals("friend"))
+			DatabaseTasks.InsertUserFriendRequest(msg);
+		else if(msg.getType().equals("note"))
+			DatabaseTasks.InsertUserNote(msg);
+		else
+			DatabaseTasks.InsertUserChallenge(msg);
+
 		int id = messages.size();
 		messages.put(id, Arrays.asList(msg.getSender(), msg.getRecipient()));
-		addMessageToDB(msg.getSender(), id);
-		addMessageToDB(msg.getRecipient(), id);
+		return newMessageId;
 	}
-	
-	public static void removeMessage(int id) {
-		if (messages.containsKey(id)) {
-			removeMessageFromDB(messages.get(id).get(0), id);
-			removeMessageFromDB(messages.get(id).get(1), id);
-			messages.remove(id);
+
+	public static boolean MessageExists(int messageId)
+	{
+		return DatabaseTasks.CheckIfRecordExistsWithParameterInt("UserSocial", "MessageId",  Integer.toString(messageId));
+	}
+
+	public static void removeMessage(int messageId)
+	{
+		if(MessageExists(messageId))
+		{
+			Message msg = getMessage(messageId);
+
+			if(msg.getType().equals("friend"))
+				DatabaseTasks.DeleteUserMessage(messageId, "UserFriendRequests");
+			else if(msg.getType().equals("note"))
+				DatabaseTasks.DeleteUserMessage(messageId, "UserNotes");
+			else
+				DatabaseTasks.DeleteUserMessage(messageId, "UserChallenges");
 		}
+
 	}
-	
-	public static Message getMessage(int id) {
-		int sender = messages.get(id).get(0);
-		int recipient = messages.get(id).get(1);
-		String type = "type";
-		String content = "content";
-		return new Message(sender, recipient, type, content);
+
+	public static Message getMessage(int id)
+	{
+		Message msg = null;
+
+		if(MessageExists(id))
+			msg = DatabaseTasks.GetMessage(id);
+
+		return msg;
 	}
     
     public static Set<Integer> getMessages(int userId) {
@@ -67,17 +92,4 @@ public class Messaging implements IMessaging
     		dbFriendRequests.get(recipient).remove(sender);
     	}
     }
-
-    private static void addMessageToDB(int userId, int id) {
-    	if (!dbMessages.containsKey(userId)) {
-    		dbMessages.put(userId, new HashSet<Integer>());
-    	}
-    	dbMessages.get(userId).add(id);
-    }
-    
-    private static void removeMessageFromDB(int userId, int id) {
-    	//TODO error checking
-    	dbMessages.get(userId).remove(id);
-    }
-
 }
