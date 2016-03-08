@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS UserSocial
 	 UserId int,
 	 FriendId int,
 	 MessageType varchar(20),
+	 MessageDate datetime,
 	 PRIMARY KEY (MessageId)
  );
  

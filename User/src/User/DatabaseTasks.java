@@ -132,6 +132,139 @@ public class DatabaseTasks
         }
     }
 
+
+    public static  int InsertUserMessage(Message msg)
+    {
+        int msgId = 0;
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            stmt.executeQuery("SET @@auto_increment_increment=1; ");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO UserSocial VALUES(");
+            sb.append("null,");
+            sb.append(msg.getRecipient()+ ",");
+            sb.append(msg.getSender() + ",");
+            sb.append("'" + msg.getType() + "',");
+            sb.append("'" + formatter.format(new Date()) + "');");
+            stmt.executeUpdate(sb.toString());
+
+            String query = String.format("Select * from UserSocial WHERE %1$s = %2$s order by MessageId desc LIMIT 1;", "UserId", msg.getRecipient());
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next(); // exactly one result so allowed
+            msgId = rs.getInt(1);
+
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        return msgId;
+    }
+
+    public static void InsertUserFriendRequest(Message msg)
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            stmt.executeQuery("SET @@auto_increment_increment=1; ");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO UserFriendRequests VALUES(");
+            sb.append(msg.getMessageId()+ ",");
+            sb.append("'" + "Sent" + "',");
+            sb.append("false" + ");");
+
+            stmt.executeUpdate(sb.toString());
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void InsertUserNote(Message msg)
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            stmt.executeQuery("SET @@auto_increment_increment=1; ");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO UserNotes VALUES(");
+            sb.append(msg.getMessageId()+ ",");
+            sb.append("'" + msg.getContent() + "');");
+
+            stmt.executeUpdate(sb.toString());
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void InsertUserChallenge(Message msg) //Need info from quizzes here!
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            stmt.executeQuery("SET @@auto_increment_increment=1; ");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO UserChallenges VALUES(");
+            sb.append(msg.getMessageId()+ ",");
+            sb.append("'" + msg.getContent() + "',");
+            sb.append("'" + "Need to get info from quiz here" + "',");
+            sb.append(-1 + ");");
+
+            stmt.executeUpdate(sb.toString());
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static void DeleteAchievement(int userId, String achievementName)
     {
         try
@@ -143,6 +276,34 @@ public class DatabaseTasks
             stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
 
             String query = String.format("Delete from UserAchievements WHERE UserId = %1$s and AchievementName = '%2$s';", userId, achievementName);
+            stmt.executeUpdate(query.toString());
+
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void DeleteUserMessage(int messageId, String tableName)
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+
+            String query = String.format("Delete from UserSocial WHERE MessageId = %1$s;", messageId);
+            stmt.executeUpdate(query.toString());
+
+            query = String.format("Delete from %1$s WHERE MessageId = %2$s;", tableName, messageId);
             stmt.executeUpdate(query.toString());
 
             con.close();
@@ -310,6 +471,74 @@ public class DatabaseTasks
         }
 
         return foundUser;
+    }
+
+
+    public static Message GetMessage(int messageId)
+    {
+        Message foundMessage = null;
+        int userId = 0;
+        int friendId = 0;
+        String messageType = "";
+        String messageDate = "";
+        String content = "";
+        boolean friendAccepted = false;
+        int quizChallengeId = 0;
+        String quizChallengeScore = "";
+
+        try
+        {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = GetResultSetWithParameter(con, "UserSocial", "MessageId", Integer.toString(messageId));
+
+            if(rs.next())
+            {
+                userId = Integer.parseInt(rs.getString("UserId"));
+                friendId = Integer.parseInt(rs.getString("FriendId"));
+                messageType = rs.getString("MessageType");
+                messageDate =  rs.getString("MessageDate");
+            }
+
+            if(messageType.equals("note"))
+            {
+                rs = GetResultSetWithParameter(con, "UserNotes", "MessageId", Integer.toString(messageId));
+                if(rs.next())
+                {
+                    content = rs.getString("MessageText");
+                    foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate);
+                }
+            }
+            else if(messageType.equals("friend"))
+            {
+                rs = GetResultSetWithParameter(con, "UserFriendRequests", "MessageId", Integer.toString(messageId));
+                if(rs.next())
+                {
+                    content = rs.getString("RequestStatus");
+                    friendAccepted = Boolean.parseBoolean(rs.getString("FriendAccepted"));
+                    foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate, friendAccepted);
+                }
+            }
+            else
+            {
+                rs = GetResultSetWithParameter(con, "UserChallenges", "MessageId", Integer.toString(messageId));
+                if(rs.next())
+                {
+                    content = rs.getString("ChallengerNote");
+                    quizChallengeScore = rs.getString("ChallengeScore");
+                    foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate, quizChallengeScore, quizChallengeId);
+                }
+            }
+
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return foundMessage;
     }
 
     public static boolean CheckIfRecordExistsWithParameterString(String tableName, String parameterName, String parameterValue)
