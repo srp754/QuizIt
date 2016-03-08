@@ -1,6 +1,7 @@
 package User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -29,9 +30,7 @@ public class UserSocialTest
     @org.junit.Test
     public void Should_Add_And_Delete_A_Friend_Request()
     {
-        int messageId = Messaging.addMessage(
-                new Message(3,4, "friend", "this is a friend request sent from 4 to recipient 3")
-        );
+        int messageId = Messaging.addFriendRequest(3,4);
 
         boolean doesMessageExist = Messaging.MessageExists(messageId);
         assertTrue(doesMessageExist);
@@ -84,5 +83,48 @@ public class UserSocialTest
         String actual = msg.getContent();
 
         assertEquals(expected, actual);
+    }
+
+    @org.junit.Test
+    public void Should_Get_List_Of_Notes()
+    {
+        List<Message> messages = Messaging.getMessages(1, "note");
+
+        assertTrue(messages.size() > 1);
+    }
+
+    @org.junit.Test
+    public void Should_Get_List_Of_FriendRequests()
+    {
+        List<Message> messages = Messaging.getMessages(2, "friend");
+
+        assertTrue(messages.size() == 1);
+        assertEquals(messages.get(0).getContent(), "Sent");
+    }
+
+    @org.junit.Test
+    public void Should_Get_List_Of_Challenges()
+    {
+        List<Message> messages = Messaging.getMessages(1, "challenge");
+
+        assertTrue(messages.size() > 1);
+    }
+
+    @org.junit.Test
+    public void Should_Get_List_Of_All_Messages()
+    {
+        List<Message> messages = Messaging.getMessages(1);
+
+        assertTrue(messages.size() > 3);
+    }
+
+    @org.junit.Test
+    public void Can_Determine_If_Friend_Request_Exists()
+    {
+        boolean friendRequestShouldExist = Messaging.requestExists(3, 2);
+        boolean friendRequestShouldNotExist = Messaging.requestExists(1, 2);
+
+        assertTrue(friendRequestShouldExist);
+        assertFalse(friendRequestShouldNotExist);
     }
 }
