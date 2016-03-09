@@ -74,12 +74,12 @@
         <%
             List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
             for (QuizSummary currentSummary: quizSummaries) {
-
         %>
         <li><a href="quizsummary.jsp?id=<%=currentSummary.getQuizId() %>"><%out.println(currentSummary.getQuizName());%></a></li>
         <%
             }
         %>
+        <h2><a href="createquiz.jsp"> Create your own quiz!</a></h2>
     </div>
 
 </div><!-- /.container -->
