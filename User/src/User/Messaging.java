@@ -20,8 +20,6 @@ public class Messaging implements IMessaging
 		else
 			DatabaseTasks.InsertUserChallenge(msg);
 
-		int id = messages.size();
-		messages.put(id, Arrays.asList(msg.getSender(), msg.getRecipient()));
 		return newMessageId;
 	}
 
@@ -43,7 +41,6 @@ public class Messaging implements IMessaging
 			else
 				DatabaseTasks.DeleteUserMessage(messageId, "UserChallenges");
 		}
-
 	}
 
 	public static Message getMessage(int id)
@@ -55,38 +52,55 @@ public class Messaging implements IMessaging
 
 		return msg;
 	}
-    
-    public static Set<Integer> getMessages(int userId) {
-    	//TODO get from DB when it's ready
-    	if (dbMessages.containsKey(userId)) {
-    		return dbMessages.get(userId);
-    	} else {
-    		return new HashSet<Integer>();
-    	}
+
+	public static List<Message> getFriendRequests(int userId)
+	{
+		List<Message> messageList = null;
+		messageList = getMessages(userId, "friend");
+		return messageList;
+	}
+
+	public static List<Message> getChallenges(int userId)
+	{
+		List<Message> messageList = null;
+		messageList = getMessages(userId, "challenge");
+		return messageList;
+	}
+
+	public static List<Message> getNotes(int userId)
+	{
+		List<Message> messageList = null;
+		messageList = getMessages(userId, "note");
+		return messageList;
+	}
+
+	public static List<Message> getMessages(int userId)
+	{
+		List<Message> messageList = null;
+		messageList = getMessages(userId, "");
+		return messageList;
+	}
+
+    public static List<Message> getMessages(int userId, String messageType)
+	{
+		List<Message> messageList = null;
+		messageList = DatabaseTasks.GetMessages(userId, messageType);
+		return messageList;
     }
     
-    public static boolean requestExists(int sender, int recipient) {
-    	if (!dbFriendRequests.containsKey(recipient)) return false;
-    	return dbFriendRequests.get(recipient).contains(sender);
+    public static boolean requestExists(int sender, int recipient)
+	{
+    	return DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserSocial us inner join UserFriendRequests uf on us.MessageId = uf.MessageId", "UserId", Integer.toString(recipient), "FriendId", Integer.toString(sender));
     }
     
-    public static Set<Integer> getFriendRequests(int userId) {
-    	//TODO get from DB when it's ready
-    	if (dbFriendRequests.containsKey(userId)) {
-    		return dbFriendRequests.get(userId);
-    	} else {
-    		return new HashSet<Integer>();
-    	}
+    public static int addFriendRequest(int sender, int recipient)
+	{
+    	Message msg = new Message(1,2,"friend", "text doesn't matter here");
+		return addMessage(msg);
     }
     
-    public static void addFriendRequest(int sender, int recipient) {
-    	if (!dbFriendRequests.containsKey(recipient)) {
-    		dbFriendRequests.put(recipient, new HashSet<Integer>());
-    	}
-    	dbFriendRequests.get(recipient).add(sender);
-    }
-    
-    public static void removeFriendRequest(int sender, int recipient) {
+    public static void removeFriendRequest(int sender, int recipient)
+	{
     	if (dbFriendRequests.containsKey(recipient) && 
     			dbFriendRequests.get(recipient).contains(sender)) {
     		dbFriendRequests.get(recipient).remove(sender);

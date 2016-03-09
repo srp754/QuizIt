@@ -398,6 +398,7 @@ public class DatabaseTasks
         List<User> userList = new ArrayList<>();
 
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             Connection con = (Connection) DriverManager.getConnection
                     ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
@@ -416,6 +417,9 @@ public class DatabaseTasks
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
             e.printStackTrace();
         }
 
@@ -473,6 +477,136 @@ public class DatabaseTasks
         return foundUser;
     }
 
+    public static List<Message> GetMessages(int userId, String messageType)
+    {
+        List<Message> foundMessages = new ArrayList<>();
+        int messageId = 0;
+        int friendId = 0;
+        String messageDate = "";
+        String content = "";
+        boolean friendAccepted = false;
+        int quizChallengeId = 0;
+        String quizChallengeScore = "";
+        ResultSet rs;
+
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+
+            if(messageType.equals("note"))
+            {
+                String query = String.format("Select us.MessageId, UserId, FriendId, MessageType, MessageDate, MessageText as Content " +
+                        "from UserSocial us inner join UserNotes un on us.MessageId = un.MessageId " +
+                        "where UserId = 1;", userId);
+                rs = stmt.executeQuery(query);
+                while(rs.next())
+                {
+                    messageId = Integer.parseInt(rs.getString("MessageId"));
+                    userId = Integer.parseInt(rs.getString("UserId"));
+                    friendId = Integer.parseInt(rs.getString("FriendId"));
+                    messageType = rs.getString("MessageType");
+                    messageDate =  rs.getString("MessageDate");
+                    content = rs.getString("Content");
+                    Message foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate);
+                    foundMessages.add(foundMessage);
+                }
+            }
+            else if(messageType.equals("friend"))
+            {
+                String query = String.format("Select us.MessageId, UserId, FriendId, MessageType, MessageDate, RequestStatus as Content, FriendAccepted " +
+                                             "from UserSocial us inner join UserFriendRequests uf on us.MessageId = uf.MessageId " +
+                                             "where UserId = %1$s;", userId);
+                    rs = stmt.executeQuery(query);
+                while(rs.next())
+                {
+                    messageId = Integer.parseInt(rs.getString("MessageId"));
+                    userId = Integer.parseInt(rs.getString("UserId"));
+                    friendId = Integer.parseInt(rs.getString("FriendId"));
+                    messageType = rs.getString("MessageType");
+                    messageDate =  rs.getString("MessageDate");
+                    content = rs.getString("Content");
+                    friendAccepted = Boolean.parseBoolean(rs.getString("FriendAccepted"));
+                    Message foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate, friendAccepted);
+                    foundMessages.add(foundMessage);
+                }
+            }
+            else if(messageType.equals("challenge"))
+            {
+                String query = String.format("Select us.MessageId, UserId, FriendId, MessageType, MessageDate, ChallengerNote as Content, ChallengeScore, ChallengerQuizId " +
+                        "from UserSocial us inner join UserChallenges uc on us.MessageId = uc.MessageId " +
+                        "where UserId = %1$s;", userId);
+                rs = stmt.executeQuery(query);
+                while(rs.next())
+                {
+                    messageId = Integer.parseInt(rs.getString("MessageId"));
+                    userId = Integer.parseInt(rs.getString("UserId"));
+                    friendId = Integer.parseInt(rs.getString("FriendId"));
+                    messageType = rs.getString("MessageType");
+                    messageDate =  rs.getString("MessageDate");
+                    content = rs.getString("Content");
+                    quizChallengeScore = rs.getString("ChallengeScore");
+                    quizChallengeId = Integer.parseInt(rs.getString("ChallengerQuizId"));
+                    Message foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate, quizChallengeScore, quizChallengeId);
+                    foundMessages.add(foundMessage);
+                }
+            }
+            else
+            {
+                String query = String.format("Select us.MessageId, UserId, FriendId, MessageType, MessageDate, MessageText, RequestStatus, FriendAccepted, " +
+                        "ChallengerNote, ChallengeScore, ChallengerQuizId from UserSocial us " +
+                        "left join UserChallenges uc on us.MessageId = uc.MessageId left join UserNotes un on us.MessageId = un.MessageId " +
+                        "left join UserFriendRequests uf on us.MessageId = uf.MessageId " +
+                        "where UserId = %1$s;", userId);
+                rs = stmt.executeQuery(query);
+
+                while(rs.next())
+                {
+                    messageId = Integer.parseInt(rs.getString("MessageId"));
+                    userId = Integer.parseInt(rs.getString("UserId"));
+                    friendId = Integer.parseInt(rs.getString("FriendId"));
+                    messageType = rs.getString("MessageType");
+                    messageDate =  rs.getString("MessageDate");
+                    Message foundMessage = null;
+
+                    if(messageType.equals("note"))
+                    {
+                        content = rs.getString("MessageText");
+                        foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate);
+                    }
+                    else if(messageType.equals("friend"))
+                    {
+                        content = rs.getString("RequestStatus");
+                        friendAccepted = Boolean.parseBoolean(rs.getString("FriendAccepted"));
+                        foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate, friendAccepted);
+                    }
+                    else
+                    {
+                        content = rs.getString("ChallengerNote");
+                        quizChallengeScore = rs.getString("ChallengeScore");
+                        quizChallengeId = Integer.parseInt(rs.getString("ChallengerQuizId"));
+                        foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate, quizChallengeScore, quizChallengeId);
+                    }
+
+                    foundMessages.add(foundMessage);
+                }
+            }
+
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        return foundMessages;
+    }
 
     public static Message GetMessage(int messageId)
     {
@@ -488,6 +622,7 @@ public class DatabaseTasks
 
         try
         {
+            Class.forName("com.mysql.jdbc.Driver");
             Connection con = (Connection) DriverManager.getConnection
                     ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
@@ -536,6 +671,9 @@ public class DatabaseTasks
         catch (SQLException e)
         {
             e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
         }
 
         return foundMessage;
@@ -567,6 +705,7 @@ public class DatabaseTasks
     {
         boolean doesRecordExist = false;
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             Connection con = (Connection) DriverManager.getConnection
                     ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
@@ -576,6 +715,9 @@ public class DatabaseTasks
             con.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
             e.printStackTrace();
         }
 
@@ -674,7 +816,6 @@ public class DatabaseTasks
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
             Statement stmt = (Statement) con.createStatement();
             stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
 
@@ -682,10 +823,6 @@ public class DatabaseTasks
             rs = stmt.executeQuery(query);
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }
