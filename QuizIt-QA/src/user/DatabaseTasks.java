@@ -91,6 +91,37 @@ public class DatabaseTasks
         }
     }
 
+    public static void InsertAnnouncement(String text)
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            stmt.executeQuery("SET @@auto_increment_increment=1; ");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO Announcements VALUES(");
+            sb.append("'" + text + "',");
+            sb.append("'" + formatter.format(new Date()) + "');");
+
+            stmt.executeUpdate(sb.toString());
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static void InsertUserFriend(int userId, int friendUserId)
     {
         try
@@ -420,6 +451,33 @@ public class DatabaseTasks
         }
 
         return userList;
+    }
+
+    public static List<Announcement> GetAnnouncments()
+    {
+        List<Announcement> announcementList = new ArrayList<>();
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = GetResultSet(con, "*", "Announcements");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            while(rs.next())
+            {
+                String date = rs.getString("AnnouncementCreateDate");
+                String text = rs.getString("AnnouncementText");
+                Announcement a = new Announcement(text, date);
+                announcementList.add(a);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return announcementList;
     }
 
     public static HashedPassword GetPasswordInfo(String userName)

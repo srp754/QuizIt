@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 /**
  * Created by scottparsons on 3/7/16.
  */
-@WebServlet(name = "PromoteUserServlet")
+@WebServlet("/PromoteUserServlet")
 public class PromoteUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");

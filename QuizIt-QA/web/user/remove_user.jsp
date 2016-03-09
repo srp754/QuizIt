@@ -52,9 +52,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="#">Profile</a></li>
-                <form class="navbar-form navbar-right" action="../../SignOutServlet" method="post">
+                <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
                     <button type="submit" class="btn btn-primary">Sign Out</button>
                 </form>
             </ul>
@@ -69,11 +69,11 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="dashboard.html">Overview</a></li>
-                <li><a href="create_announcement.jsp">Create Announcement</a></li>
-                <li class="active"><a href="remove_user.jsp">Remove User Account</a><span class="sr-only">(current)</span></li>
+                <li><a href="/user/dashboard.jsp">Overview</a></li>
+                <li><a href="/user/create_announcement.jsp">Create Announcement</a></li>
+                <li class="active"><a href="/user/remove_user.jsp">Remove User Account</a><span class="sr-only">(current)</span></li>
                 <li><a href="remove_quiz.jsp">Remove Quiz</a></li>
-                <li><a href="promote_user.jsp">Promote User</a></li>
+                <li><a href="/user/promote_user.jsp">Promote User</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -127,7 +127,7 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script src="../../dist/js/bootstrap.min.js"></script>
 <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 <script src="../../assets/js/vendor/holder.min.js"></script>

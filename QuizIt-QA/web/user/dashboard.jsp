@@ -1,14 +1,7 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: scottparsons
-  Date: 3/7/16
-  Time: 5:50 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <%@ page import="java.util.*,user.*" %>
 <% IUserRepository user = (IUserRepository) session.getAttribute("user"); %>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -52,7 +45,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="dashboard.jsp">QuizIt Admin Dashboard</a>
+            <a class="navbar-brand" href="/user/dashboard.jsp">QuizIt Admin Dashboard</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -73,22 +66,44 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="/user/dashboard.jsp">Overview</a></li>
-                <li class="active"><a href="/user/create_announcement.jsp">Create Announcement</a><span class="sr-only">(current)</span></li>
+                <li class="active"><a href="/user/dashboard.jsp">Overview <span class="sr-only">(current)</span></a></li>
+                <li><a href="/user/create_announcement.jsp">Create Announcement</a></li>
                 <li><a href="/user/remove_user.jsp">Remove User Account</a></li>
-                <li><a href="remove_quiz.jsp">Remove Quiz</a></li>
+                <li><a href="/user/remove_quiz.jsp">Remove Quiz</a></li>
                 <li><a href="/user/promote_user.jsp">Promote User</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">Create Announcement</h1>
-            <div class="form-group">
-                <label for="announcement">Announcement:</label>
-                <textarea class="form-control" rows="5" id="announcement" name="announcement"></textarea>
-                <button type="button" class="btn btn-default" onclick="sendAnnouncement()">Submit</button>
-                <p id="announcementText"></p>
-            </div>
+            <h1 class="page-header">Dashboard</h1>
 
+            <h2 class="sub-header">Site Statistics</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                        List<User> users = user.getAllUsers();
+                        int numUsers = users.size();
+                        int numAdmin = 0;
+                        for(User u : users) {
+                            if(u.isAdmin) {
+                                numAdmin++;
+                            }
+                        }
+                        int numStandard = numUsers - numAdmin;
+                        out.println("<tr><td>Number of standard users" + "</td><td>" + numStandard + "</td>");
+                        out.println("<tr><td>Number of admin users" + "</td><td>" + numAdmin + "</td>");
+                        out.println("<tr><td>Number of total users" + "</td><td>" + numUsers + "</td>");
+
+                    %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -103,24 +118,6 @@
 <script src="../assets/js/vendor/holder.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
-
-<script>
-    function sendAnnouncement() {
-
-        var text = document.getElementById("announcement").value;
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (xhttp.readyState == 4 && xhttp.status == 200) {
-                document.getElementById("announcementText").innerHTML = "Announcement successfully created";
-                document.getElementById("announcement").value = "";
-            }
-        };
-        xhttp.open("POST", "/CreateAnnouncementServlet", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        xhttp.send("announcement=" + text);
-
-    }
-</script>
 </body>
 </html>
 
