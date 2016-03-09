@@ -1,4 +1,4 @@
-package User;
+package user;
 
 
 import com.mysql.jdbc.Connection;
