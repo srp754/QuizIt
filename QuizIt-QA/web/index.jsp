@@ -105,7 +105,7 @@
                     document.getElementById("password").value = "";
                 }
                 else {
-                location.href = "/docs/userhomepage/userhomepage.jsp";
+                    location.href = "/user/userHomePage.jsp";
                 }
             }
         };
