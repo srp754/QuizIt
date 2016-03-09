@@ -1,5 +1,5 @@
 <%@ page import="quiz.*, user.*, java.util.*" %>
-<% IUserRepository user = (IUserRepository) session.getAttribute("user"); %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <!DOCTYPE html>
 
 <html lang="en">

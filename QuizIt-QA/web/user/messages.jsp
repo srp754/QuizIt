@@ -70,23 +70,21 @@
 	<div class="starter-template">
 		<h1>Messages</h1>
 		<%
-			Set<Integer> friendReqs = Messaging.getFriendRequests(user.getUserId());
-			Set<Integer> messages = Messaging.getMessages(user.getUserId());
-			for (int id : friendReqs) {
-				Message req = Messaging.getMessage(id);
+			List<Message> friendReqs = Messaging.getFriendRequests(user.getUserId());
+			List<Message> messages = Messaging.getMessages(user.getUserId());
+			for (Message req : friendReqs) {
 		%>
 		<p><%= req.getContent() %></p>
 		<form action="../FriendServlet" method="post">
 			<input name="userId" type="hidden" value="<%= req.getSender() %>"/>
-			<input name="id" type="hidden" value="<%= id %>"/>
+			<input name="id" type="hidden" value="<%= req.getMessageId() %>"/>
 			<p><input name="action" type="submit" value="Accept" />
 				<input name="action" type="submit" value="Deny" /></p>
 		</form>
 		<%
 			}
 
-			for (int id : messages) {
-				Message msg = Messaging.getMessage(id);
+			for (Message msg : messages) {
 				if (msg.getSender() == user.getUserId()) {
 		%>
 		<p><b>To: <%= user.idToUsername(msg.getRecipient()) %></b></p>

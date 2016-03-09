@@ -1,5 +1,5 @@
 <%@ page import="quiz.*, user.*, java.util.*" %>
-<% IUserRepository userRepository = (IUserRepository) session.getAttribute("user"); %>
+<% IUserRepository userRepository = (UserRepository) session.getAttribute("user"); %>
 <%
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);

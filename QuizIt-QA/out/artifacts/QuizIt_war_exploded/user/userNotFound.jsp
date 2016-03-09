@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <%@ page import="java.util.*,user.*" %>
-<% IUserRepository user = (IUserRepository) session.getAttribute("user"); %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
