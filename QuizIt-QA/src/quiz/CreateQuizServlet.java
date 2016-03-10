@@ -52,7 +52,6 @@ public class CreateQuizServlet extends HttpServlet {
 			rd.forward(request, response);
 			return; 
 		} */
-
 		int placeholderQuizId = quizTable.size(); // Will have to get the auto-increment quiz id from database
 		int placeholderCreatorId = 4; // Replace this with the userId that's currently logged in 
 		Quiz newQuiz = new Quiz(createQuizQuestions, placeholderQuizId);

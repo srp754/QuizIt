@@ -1,22 +1,33 @@
 package quiz;
 
-public interface Question {
-	//Override of toString(): Returns the question in a String format 
-	public String toString(); 
-	
-	// Checks if the user's response to the question is the correct answer 
-	public boolean checkAnswer(Answer answer);
-	
-	// If the expected answer is a string, checks answer (Return null if a string is unexpected!) 
-	public boolean checkAnswer(String answer); 
-	
-	//Returns the question ID
-	public int getId();
-	
-	// Return Question Type 
-	/* "qresponse", "fillblank", "pictureresponse", "multiplechoice"
-	 * 
-	 */
-	public String getQuestionType();
-	
+public class Question
+{
+	private int questionId = 0;
+	private int quizzId;
+	private String questionType;
+	private String questionText;
+
+	public Question(int quizzId, String questionType, String questionText)
+	{
+		this.quizzId = quizzId;
+		this.questionType = questionType;
+		this.questionText = questionText;
+	}
+	public Question(int questionId,int quizzId, String questionType, String questionText)
+	{
+		this.quizzId = quizzId;
+		this.questionType = questionType;
+		this.questionText = questionText;
+	}
+
+	public int getQuestionId() {return questionId;}
+	public int getQuizId() {return quizzId;}
+	public String getQuestionType() {return questionType;}
+	public String getQuestionText() {return questionText;}
+	public void setQuestionId(int id) {questionId = id;}
+
+	public boolean checkAnswer(String currAnswer)
+	{
+		return false;
+	}
 }

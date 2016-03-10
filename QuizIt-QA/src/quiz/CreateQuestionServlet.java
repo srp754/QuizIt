@@ -53,13 +53,15 @@ public class CreateQuestionServlet extends HttpServlet {
 			// Access persistent list of questions that we add to
 			if (lastQuestionType.equals("qresponse")) {
 				String questionStr = request.getParameter("question");
-				String answerStr = request.getParameter("answer");
+				String answerStr = request.getParameter("answer").toLowerCase();
 				//System.out.println("Question: "+questionStr);
 				//System.out.println("Answer: "+answerStr);
-				Set<Answer> possibleAnswers = new HashSet<Answer>();
-				QResponseAnswer qra = new QResponseAnswer(answerStr, placeholderId);
+				Set<String> answerAlternatives = new HashSet<String>(Arrays.asList(answerStr));
+				List<Answer> possibleAnswers = new ArrayList<Answer>(); 
+				QResponseAnswer qra = new QResponseAnswer(answerAlternatives, placeholderId);
 				possibleAnswers.add(qra);
-				QResponse newQuestion = new QResponse(questionStr, possibleAnswers, placeholderId);
+				// TODO add checkbox to toggle ordered option
+				QResponse newQuestion = new QResponse(questionStr, possibleAnswers, 1, false, placeholderId);
 				createQuizQuestions.add(newQuestion);
 			} else if (lastQuestionType.equals("fillblank")) {
                 String questionStr = request.getParameter("question");
@@ -74,13 +76,14 @@ public class CreateQuestionServlet extends HttpServlet {
 			    String answerStr = request.getParameter("answer");
                 List<Answer> choices = new ArrayList<Answer>();
                 MultipleChoiceAnswer correctChoice = new MultipleChoiceAnswer(answerStr, 0);
+                Set<Answer> correctAnswers = new HashSet<Answer>(Arrays.asList(correctChoice));
                 choices.add(correctChoice);
                 int wrongChoices = 3; // Magic number defined in js file/design (decides how many more choices to include)
                 for(int i = 0; i < wrongChoices; i++) {
                     String wrongStr = request.getParameter("wrong"+i);
                     choices.add(new MultipleChoiceAnswer(wrongStr, i+1));
                 }
-                MultipleChoice multipleChoiceQ = new MultipleChoice(questionStr, correctChoice, choices, placeholderId);
+                MultipleChoice multipleChoiceQ = new MultipleChoice(questionStr, correctAnswers, choices, false, placeholderId);
                 createQuizQuestions.add(multipleChoiceQ);
 			} else if (lastQuestionType.equals("pictureresponse")) {
                 String questionStr = request.getParameter("question");

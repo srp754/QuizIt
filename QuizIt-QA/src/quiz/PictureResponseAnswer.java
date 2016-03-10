@@ -1,19 +1,16 @@
 package quiz;
 
-public class PictureResponseAnswer implements Answer{
-	private String answer; 
-	private int answerId; 
-	
-	public PictureResponseAnswer(String answer, int answerId) {
-		this.answer = answer; 
-		this.answerId = answerId; 
+public class PictureResponseAnswer extends Answer
+{
+	public PictureResponseAnswer(String answer, int answerId)
+	{
+		super(answerId, 1, "pictureresponse", answer, false);
+
 	}
 	
 	public String toString(){
-		return answer; 
+		return super.getAnswerText();
 	}
 	
-	public int getId() {
-		return answerId; 
-	}
+	public int getId() {return super.getAnswerId();}
 }
