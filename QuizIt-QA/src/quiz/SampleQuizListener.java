@@ -32,7 +32,7 @@ public class SampleQuizListener implements ServletContextListener {
     	List<Quiz> quizList = new ArrayList<Quiz>(); 
     	List<QuizStats> quizStatsTable = new ArrayList<QuizStats>(); // Simulates the quizStats table
     	List<QuizSummary> quizSummaryTable = new ArrayList<QuizSummary>();
-    	List<QuizAttemptHistory> quizAttemptTable = new ArrayList<QuizAttemptHistory>(); 
+    	List<QuizAttempt> quizAttemptTable = new ArrayList<QuizAttempt>();
     	
     	List<Question> questions = new ArrayList<Question>();
     	String q1 = "What is 2+2?"; 

@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 public class CreateAnnouncementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String text = request.getParameter("announcement");
-        DatabaseTasks.InsertAnnouncement(text);
+        db.UserPersistence.InsertAnnouncement(text);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

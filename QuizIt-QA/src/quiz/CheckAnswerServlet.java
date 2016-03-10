@@ -46,9 +46,9 @@ public class CheckAnswerServlet extends HttpServlet {
 		String attemptIdStr = request.getParameter("attemptid"); 
 		String parsedAttemptId = attemptIdStr.replaceAll("\\/", "");
 		int attemptId = Integer.parseInt(parsedAttemptId);
-		List<QuizAttemptHistory> quizAttemptHistoryTable = (ArrayList<QuizAttemptHistory>) getServletContext().getAttribute("quizattempts");
-		QuizAttemptHistory wantedAttempt = null; 
-		for(QuizAttemptHistory currentAttempt : quizAttemptHistoryTable) {
+		List<QuizAttempt> quizAttemptHistoryTable = (ArrayList<QuizAttempt>) getServletContext().getAttribute("quizattempts");
+		QuizAttempt wantedAttempt = null;
+		for(QuizAttempt currentAttempt : quizAttemptHistoryTable) {
 			if(currentAttempt.getAttemptId() == attemptId) {
 				wantedAttempt = currentAttempt; 
 			}

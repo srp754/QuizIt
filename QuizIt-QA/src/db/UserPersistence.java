@@ -3,6 +3,7 @@ package db;
 import com.mysql.fabric.xmlrpc.base.Data;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
+import user.Announcement;
 import user.HashedPassword;
 import user.MyDBInfo;
 import user.User;
@@ -10,6 +11,7 @@ import user.User;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +77,17 @@ public class UserPersistence
         DatabaseTasks.ExecuteUpdate(sb2.toString());
     }
 
+    public static void InsertAnnouncement(String text)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO Announcements VALUES(");
+        sb.append("'" + text + "',");
+        sb.append("'" + formatter.format(new Date()) + "');");
+        DatabaseTasks.ExecuteUpdate(sb.toString());
+    }
+
     public static void PromoteUserToAdmin(String userName)
     {
             String query = String.format("UPDATE UserDetail SET AdminFlag='1' WHERE UserName = %1$s;", "'" + userName + "'");
@@ -109,6 +122,38 @@ public class UserPersistence
     {
         String query = String.format("Delete from UserDetail WHERE UserName = %1$s;", "'" + userName + "'");
         DatabaseTasks.ExecuteUpdate(query);
+    }
+
+    public static List<Announcement> GetAnnouncments()
+    {
+        List<Announcement> announcementList = new ArrayList<>();
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "Announcements");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            //DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG);
+
+            while(rs.next())
+            {
+                Date date = null;
+                try {
+                    date = formatter.parse(rs.getString("AnnouncementCreateDate"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String text = rs.getString("AnnouncementText");
+                Announcement a = new Announcement(text, formatter.format(date));
+                announcementList.add(a);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return announcementList;
     }
 
     public static List<User> GetUsers()
