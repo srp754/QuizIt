@@ -1,14 +1,14 @@
 <%--
   Created by IntelliJ IDEA.
   User: scottparsons
-  Date: 3/7/16
-  Time: 5:50 PM
+  Date: 3/6/16
+  Time: 2:40 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <%@ page import="java.util.*,user.*" %>
 <% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -30,10 +30,6 @@
     <!-- Custom styles for this template -->
     <link href="../css/dashboard.css" rel="stylesheet">
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../assets/js/ie-emulation-modes-warning.js"></script>
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -52,19 +48,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="dashboard.jsp">QuizIt Admin Dashboard</a>
+            <a class="navbar-brand" href="#">QuizIt Admin Dashboard</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/user/userHomePage.jsp">Home</a></li>
-                <li><a href="#">Profile</a></li>
+                <li><a class="btn btn-success" href="/user/userHomePage.jsp" role="button">Home</a></li>
                 <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
                     <button type="submit" class="btn btn-primary">Sign Out</button>
                 </form>
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
         </div>
     </div>
 </nav>
@@ -73,22 +65,56 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="/user/dashboard.jsp">Overview</a></li>
-                <li class="active"><a href="/user/create_announcement.jsp">Create Announcement</a><span class="sr-only">(current)</span></li>
-                <li><a href="/user/remove_user.jsp">Remove User Account</a></li>
+                <li><a href="/admin/dashboard.jsp">Overview</a></li>
+                <li><a href="/admin/create_announcement.jsp">Create Announcement</a></li>
+                <li class="active"><a href="/admin/remove_user.jsp">Remove User Account</a><span class="sr-only">(current)</span></li>
                 <li><a href="remove_quiz.jsp">Remove Quiz</a></li>
-                <li><a href="/user/promote_user.jsp">Promote User</a></li>
+                <li><a href="/admin/promote_user.jsp">Promote User</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">Create Announcement</h1>
-            <div class="form-group">
-                <label for="announcement">Announcement:</label>
-                <textarea class="form-control" rows="5" id="announcement" name="announcement"></textarea>
-                <button type="button" class="btn btn-default" onclick="sendAnnouncement()">Submit</button>
-                <p id="announcementText"></p>
-            </div>
+            <h1 class="page-header">Remove User</h1>
 
+            <form onsubmit="event.preventDefault(); remove_user()">
+                <div class="form-group">
+                    <label for="inputUserName">Remove User</label>
+                    <input type="name" class="form-control" id="inputUserName" placeholder="Username" name="inputUserName" required>
+                    <p id="removeUserText"></p>
+                </div>
+            </form>
+
+            <h2 class="sub-header">Users</h2>
+            <div class="table-responsive" id="userTable">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>UserId</th>
+                        <th>Username</th>
+                        <th>E-mail</th>
+                        <th>Date Created</th>
+                        <th>User Type</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                        List<User> users = user.getAllUsers();
+                        for(User u : users) {
+                            out.println("<tr>");
+                            out.println("<td>" + u.userId + "</td>");
+                            out.println("<td>" + u.userName + "</td>");
+                            out.println("<td>" + u.email + "</td>");
+                            out.println("<td>" + u.dateCreated + "</td>");
+                            if(u.isAdmin) {
+                                out.println("<td>Admin</td>");
+                            }
+                            else {
+                                out.println("<td>Standard</td>");
+                            }
+                        }
+                    %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -98,29 +124,26 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="../dist/js/bootstrap.min.js"></script>
+<script src="../../dist/js/bootstrap.min.js"></script>
 <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-<script src="../assets/js/vendor/holder.min.js"></script>
+<script src="../../assets/js/vendor/holder.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 
-<script>
-    function sendAnnouncement() {
-
-        var text = document.getElementById("announcement").value;
+<script type="text/javascript">
+    function remove_user() {
+        var username = document.getElementById("inputUserName").value;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
-                document.getElementById("announcementText").innerHTML = "Announcement successfully created";
-                document.getElementById("announcement").value = "";
+                document.getElementById("removeUserText").innerHTML = xhttp.responseText;
             }
         };
-        xhttp.open("POST", "/CreateAnnouncementServlet", true);
+        xhttp.open("POST", "/RemoveAccountServlet", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        xhttp.send("announcement=" + text);
-
+        xhttp.send("inputUserName=" + username);
     }
 </script>
+
 </body>
 </html>
-
