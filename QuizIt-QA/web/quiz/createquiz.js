@@ -4,6 +4,7 @@ function increment() {
 	i+=1; // Increments the counter when "add a question" is pressed
 	var numQuestions = document.getElementById("numquestions");
 	numQuestions.value = i; 
+}
 } */
 
 // TODO: Consider validateData method 
