@@ -7,11 +7,20 @@ public class QuizStats {
 	private int sumPossibleScores; 
 	private int userAttempts; // count by unique users 
 	
-	public QuizStats(int quizId) {
+	public QuizStats(int quizId)
+	{
 		this.quizId = quizId; 
 		this.quizAttempts = 0; 
-		this.sumActualScores = 0; 
-		
+		this.sumActualScores = 0;
+	}
+
+	public QuizStats(int quizId, int quizAttempts, int sumActualScores, int sumPossibleScores, int userAttempts)
+	{
+		this.quizId = quizId;
+		this.quizAttempts = quizAttempts;
+		this.sumActualScores = sumActualScores;
+		this.sumPossibleScores = sumPossibleScores;
+		this.userAttempts = userAttempts;
 	}
 	
 	public void incrementQuizAttempts() {

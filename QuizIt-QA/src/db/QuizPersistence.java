@@ -6,6 +6,7 @@ import user.Activity;
 import user.MyDBInfo;
 =======
 import quiz.QuizAttempt;
+import quiz.QuizStats;
 import quiz.QuizSummary;
 >>>>>>> Ashavsky/master
 
@@ -174,6 +175,29 @@ public class QuizPersistence
         DatabaseTasks.ExecuteUpdate(sb.toString());
     }
 
+    public static void UpdateQuizStats(QuizAttempt attempt)
+    {
+        boolean isUniqueUser = IsUniqueAttempt(attempt.getUserId(), attempt.getQuizId());
+        int userAttempt = isUniqueUser ? 1 : 0;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Update QuizStats SET ");
+        sb.append("QuizAttempts = QuizAttempts + 1, ");
+        sb.append("SumActualScore = SumActualScore + " + attempt.getAttemptScore() + ", ");
+        sb.append("SumPossibleScore = SumPossibleScore + " + attempt.getAttemptPossible() + ", ");
+        sb.append("UserAttempts = UserAttempts + " + userAttempt);
+        sb.append(" WHERE QuizId = " + attempt.getQuizId() + ";");
+
+        DatabaseTasks.ExecuteUpdate(sb.toString());
+    }
+
+    public static boolean IsUniqueAttempt(int userId, int quizId)
+    {
+        String query = String.format("Select * from %1$s WHERE %2$s = %3$s and %4$s = %5$s;","QuizHistory", "UserId", Integer.toString(userId), "QuizId", Integer.toString(quizId));
+        boolean doesRecordExist = DatabaseTasks.CheckIfMultipleRecordsExists(query);
+        return !doesRecordExist;
+    }
+
     public static void DeleteQuiz(int quizId)
     {
         String query = String.format("Delete from QuizSummary WHERE QuizId = %1$s;", quizId);
@@ -191,5 +215,31 @@ public class QuizPersistence
         String query = String.format("Delete from QuizStats WHERE QuizId = %1$s;", quizId);
         DatabaseTasks.ExecuteUpdate(query);
 >>>>>>> Ashavsky/master
+    }
+
+    public static QuizStats GetQuizStats(int quizId)
+    {
+        QuizStats qStats = null;
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "QuizStats", "QuizId", "" + quizId + "");
+
+            if(rs.next())
+            {
+                int quizAttempts = Integer.parseInt(rs.getString("QuizAttempts"));
+                int totalScore = Integer.parseInt(rs.getString("SumActualScore"));
+                int totalPossible = Integer.parseInt(rs.getString("SumPossibleScore"));
+                int userAttempts = Integer.parseInt(rs.getString("UserAttempts"));
+
+                qStats = new QuizStats(quizId, quizAttempts, totalScore, totalPossible, userAttempts);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return qStats;
     }
 }

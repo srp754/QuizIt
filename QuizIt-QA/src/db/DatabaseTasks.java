@@ -3,6 +3,7 @@ package db;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
+import quiz.QuizAttempt;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -90,6 +91,28 @@ public class DatabaseTasks
         return doesRecordExist;
     }
 
+    public static boolean CheckIfMultipleRecordsExists(String query)
+    {
+        boolean doesRecordExist = false;
+
+        try
+        {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = GetResultSet(con, query);
+            rs.next();
+            doesRecordExist = rs.next(); //if 2nd row exists, can return true
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return doesRecordExist;
+    }
+
     public static int GetCountRecordsFromTable(String tableName)
     {
         int count = 0;
@@ -151,4 +174,6 @@ public class DatabaseTasks
 
         return rs;
     }
+
+
 }
