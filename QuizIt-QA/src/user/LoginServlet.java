@@ -28,8 +28,7 @@ public class LoginServlet extends HttpServlet {
         if(userRepo.isCorrectLogin(username, password))
         {
             userRepo.PopulateCurrentUser(username); //will be just userId and populate the currentUser object the repo will have
-            request.getSession().setAttribute("loginError","");
-            RequestDispatcher dispatch = request.getRequestDispatcher("user/userHomePage.jsp");
+            RequestDispatcher dispatch = request.getRequestDispatcher("/user/userHomePage.jsp");
             dispatch.forward(request, response);
         }
         else {
@@ -38,7 +37,6 @@ public class LoginServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             out.print("Invalid username or password. Please try again.");
         }
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -22,13 +22,13 @@
     <title>Welcome to QuizIt</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../css/homepage.css" rel="stylesheet">
+    <link href="/css/homepage.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -48,7 +48,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">QuizIt</a>
+            <a class="navbar-brand" href="/index.jsp">QuizIt</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <form class="navbar-form navbar-right" onsubmit="event.preventDefault(); loginUser()">
@@ -70,7 +70,7 @@
     <div class="container">
         <h1>Welcome to QuizIt!</h1>
         <p>Are you ready for a challenge? Great at trivia? Join a community of awesome quiztakers at QuizIt.</p>
-        <p><a class="btn btn-primary btn-lg" href="user/register.jsp" role="button">Sign Up</a>
+        <p><a class="btn btn-primary btn-lg" href="/user/register.jsp" role="button">Sign Up</a>
 
     </div>
 </div>
@@ -87,10 +87,10 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="../../dist/js/bootstrap.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/dist/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
 <script type="text/javascript">
     function loginUser() {
         var username = document.getElementById("userName").value;

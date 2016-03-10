@@ -50,7 +50,11 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+<<<<<<< HEAD
+                <li><a href="#feed">Feed</a></li>
+=======
                 <li><a href="/user/userFeed.jsp">Feed</a></li>
+>>>>>>> Ashavsky/master
                 <% if(user.isAdmin()) {
                     out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
@@ -85,7 +89,7 @@
         <%
         } else {
         %>
-        <form action="../MessageServlet" method="post">
+        <form action="/MessageServlet" method="post">
             <input name="username" type="hidden" value="<%= username %>"/>
             <input name="messagetype" type="hidden" value="friend"/>
             <input name="content" type="hidden" value=""/>

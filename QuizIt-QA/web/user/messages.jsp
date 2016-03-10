@@ -44,6 +44,16 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
+<<<<<<< HEAD
+				<li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
+				<li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+				<li><a href="#feed">Feed</a></li>
+				<% if(user.isAdmin()) {
+					out.println("<li><a href='/user/dashboard.html'>Admin</a></li>");
+				}
+				%>
+				<li><a href="/user/messages.jsp">&#128172;</a></li>
+=======
 				<li><a href="/user/userHomePage.jsp">Home</a></li>
 				<li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
 				<li><a href="/user/userFeed.jsp">Feed</a></li>
@@ -52,6 +62,7 @@
 				}
 				%>
 				<li class="active"><a href="/user/messages.jsp">&#128172;</a></li>
+>>>>>>> Ashavsky/master
 			</ul>
 			<form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
 				<button type="submit" class="btn btn-primary">Sign Out</button>
@@ -76,7 +87,7 @@
 			for (Message req : friendReqs) {
 		%>
 		<p><%= req.getContent() %></p>
-		<form action="../FriendServlet" method="post">
+		<form action="/FriendServlet" method="post">
 			<input name="userId" type="hidden" value="<%= req.getSender() %>"/>
 			<input name="id" type="hidden" value="<%= req.getMessageId() %>"/>
 			<p><input name="action" type="submit" value="Accept" />
@@ -101,7 +112,7 @@
 		<%
 			}
 		%>
-		<form action="../MessageServlet" method="post">
+		<form action="/MessageServlet" method="post">
 			<p>To: <input name="username" type="text"/>
 					<% if (request.getAttribute("status") != null) { %>
 			<p><%= (String) request.getAttribute("status") %></p>

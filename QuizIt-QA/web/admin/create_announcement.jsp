@@ -104,17 +104,21 @@
     function sendAnnouncement() {
 
         var text = document.getElementById("announcement").value;
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (xhttp.readyState == 4 && xhttp.status == 200) {
-                document.getElementById("announcementText").innerHTML = "Announcement successfully created";
-                document.getElementById("announcement").value = "";
-            }
-        };
-        xhttp.open("POST", "/CreateAnnouncementServlet", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        xhttp.send("announcement=" + text);
-
+        if (text == "") {
+            document.getElementById("announcementText").innerHTML = "Announcement not created. Please enter non-empty text."
+        }
+        else {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    document.getElementById("announcementText").innerHTML = "Announcement successfully created";
+                    document.getElementById("announcement").value = "";
+                }
+            };
+            xhttp.open("POST", "/CreateAnnouncementServlet", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+            xhttp.send("announcement=" + text);
+        }
     }
 </script>
 </body>
