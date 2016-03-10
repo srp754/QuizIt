@@ -12,6 +12,15 @@ import java.util.List;
  */
 public class QuizRepository
 {
+    public static Quiz GetQuiz(int quizId)
+    {
+        QuizSummary summary = GetQuizSummary(quizId);
+        QuizStats stats = GetQuizStats(quizId);
+        List<Question> questions = GetQuestions(quizId);
+
+        return new Quiz(quizId, summary, stats, questions);
+    }
+
     public static int AddQuizHeader(QuizSummary qz) //this is not complete, needs to add more places + take in quiz
     {
         int quizId = AddQuizSummary(qz);
@@ -19,9 +28,10 @@ public class QuizRepository
         return quizId;
     }
 
-    public static void AddQuizContent(Quiz qz)
+    public static void AddQuizContent(List<Question> questions, List<Answer> answers)
     {
-
+        AddQuestions(questions);
+        AddAnswers(answers);
     }
 
     public static void AddQuestions(List<Question> questions)
@@ -106,9 +116,14 @@ public class QuizRepository
         return qStats;
     }
 
-    public static Quiz GetQuiz(int userId)
+    public static QuizSummary GetQuizSummary(int quizId)
     {
-        return null;
+        QuizSummary qSummary = null;
+
+        if(QuizExists(quizId))
+            qSummary = db.QuizPersistence.GetQuizSummary(quizId);
+
+        return qSummary;
     }
 
     public static List<Question> GetQuestions(int quizId)
@@ -123,9 +138,15 @@ public class QuizRepository
         return answers;
     }
 
-    public static List<Answer> GetAllAnswersForQuiz(int quizId)
+    public static List<Answer> GetAllAnswersForQuiz(int quizId) //Note sure this is needed, only if DB perf still bad
     {
 //        List<Answer> answers = db.QuizPersistence.GetAllAnswersForQuiz(quizId);
+        return null;
+    }
+
+    public static List<QuizSummary> GetAllQuizSummaries()
+    {
+        //may need this for quiz summary page?
         return null;
     }
 }
