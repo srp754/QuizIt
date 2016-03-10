@@ -1,5 +1,7 @@
 package test;
 
+import db.DBConnection;
+import org.junit.AfterClass;
 import user.Message;
 import user.SocialRepository;
 
@@ -129,6 +131,11 @@ public class SocialTests
 
         assertTrue(friendRequestShouldExist);
         assertFalse(friendRequestShouldNotExist);
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        DBConnection.closeConnection();
     }
 }
 

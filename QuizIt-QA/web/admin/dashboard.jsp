@@ -87,7 +87,7 @@
                         int numUsers = users.size();
                         int numAdmin = 0;
                         for(User u : users) {
-                            if(u.isAdmin) {
+                            if(user.isAdmin(u.userName)) {
                                 numAdmin++;
                             }
                         }

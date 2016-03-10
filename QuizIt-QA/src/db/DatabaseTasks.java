@@ -19,14 +19,13 @@ public class DatabaseTasks
         try
         {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
             Statement stmt = (Statement) con.createStatement();
             stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
             stmt.executeQuery("SET @@auto_increment_increment=1; ");
 
             stmt.executeUpdate(sql);
-            con.close();
+            
         }
 
         catch (SQLException e)
@@ -74,12 +73,11 @@ public class DatabaseTasks
         try
         {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = GetResultSet(con, query);
             doesRecordExist = rs.next(); //if row exists, record is found, can return true
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -97,13 +95,12 @@ public class DatabaseTasks
 
         try
         {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = GetResultSet(con, query);
             rs.next();
             doesRecordExist = rs.next(); //if 2nd row exists, can return true
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -119,14 +116,13 @@ public class DatabaseTasks
 
         try
         {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = GetResultSet(con, "Count(*)", tableName);
 
             rs.next(); // exactly one result so allowed
             count = rs.getInt(1);
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -143,7 +139,7 @@ public class DatabaseTasks
         return rs;
     }
 
-    public static ResultSet GetResultSet(Connection con,String selectionType, String tableName)
+    public static ResultSet GetResultSet(Connection con, String selectionType, String tableName)
     {
         ResultSet rs = null;
         String query = String.format("Select " + selectionType + " from %1$s;", tableName);

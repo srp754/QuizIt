@@ -47,8 +47,8 @@
                 <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
                 <li><a href="#feed">Feed</a></li>
-                <% if(user.isAdmin(user.getUsername())) {
-                    out.println("<li><a href='/user/dashboard.jsp'>Admin</a></li>");
+                <% if(user.isAdmin()) {
+                    out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
                 %>
                 <li><a href="/user/messages.jsp">&#128172;</a></li>

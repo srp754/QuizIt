@@ -1,7 +1,6 @@
 package db;
 
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 import user.*;
 import user.Announcement;
 import user.HashedPassword;
@@ -173,8 +172,7 @@ public class UserPersistence
         List<Achievement> achievementsList = new ArrayList<>();
 
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserAchievements", "UserId", "'" + userId + "'");
 
@@ -205,8 +203,7 @@ public class UserPersistence
         List<Activity> activityList = new ArrayList<>();
 
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserActivity", "UserId", "'" + userId + "'");
 
@@ -236,10 +233,7 @@ public class UserPersistence
         List<User> userList = new ArrayList<>();
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
+            Connection con = db.DBConnection.getConnection();
             ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserDetail");
 
             while(rs.next())
@@ -254,9 +248,6 @@ public class UserPersistence
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
         }
 
         return userList;
@@ -266,8 +257,7 @@ public class UserPersistence
     {
         HashedPassword foundUser = null;
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
 
@@ -290,8 +280,7 @@ public class UserPersistence
         User foundUser = null;
 
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
 
@@ -314,8 +303,7 @@ public class UserPersistence
     {
         boolean isAdmin = false;
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Connection con = db.DBConnection.getConnection();
 
             ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
 
