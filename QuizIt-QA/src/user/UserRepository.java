@@ -92,12 +92,9 @@ public class UserRepository implements IUserRepository
         //_currentUser.isAdmin = true;
     }
 
-    public boolean isAdmin()
+    public boolean isAdmin(String username)
     {
-        if(_currentUser != null)
-            return _currentUser.isAdmin;
-        else
-            return false;
+        return db.UserPersistence.isAdmin(username);
     }
 
     public void addFriend(int friendUserId)

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@ page import="java.util.*,user.*" %>
+<%@ page import="java.util.*,user.*,db.*" %>
 <% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <html lang="en">
 <head>
@@ -47,7 +47,7 @@
                 <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
                 <li><a href="#feed">Feed</a></li>
-                <% if(user.isAdmin()) {
+                <% if(user.isAdmin(user.getUsername())) {
                     out.println("<li><a href='/user/dashboard.jsp'>Admin</a></li>");
                 }
                 %>
@@ -83,7 +83,7 @@
             <h2>Announcements</h2>
             <ul class="list-group">
                 <%
-                    List<Announcement> announcementList = DatabaseTasks.GetAnnouncments();
+                    List<Announcement> announcementList = db.UserPersistence.GetAnnouncements();
                     for(int i=announcementList.size()-1; i >= 0; i--) {
                         out.println("<li class='list-group-item'>" + announcementList.get(i).date + ": " + announcementList.get(i).text + "</li>");
                     }
@@ -92,17 +92,102 @@
         </div>
         <div class="col-md-4">
             <h2>Quiz History</h2>
-            <p>See the latest quizzes you took. </p>
+            <%
+                List<Activity> activityList = db.QuizPersistence.GetCreatedQuizzes();
+                if(activityList.size() > 0) {
+                    out.println("<ul class='list-group'>");
+
+                    for(int i=activityList.size()-1; i >= 0; i--) {
+                        if(activityList.get(i).type.equals("QuizCreated") || activityList.get(i).type.equals("QuizTaken") ) {
+                            out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
+                                    "TODO" + "'>" + activityList.get(i).date + ": " + activityList.get(i).type + "</li>");
+                        }
+                    }
+                    out.println("</ul>");
+                }
+            %>
             <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>Popular Quizzes</h2>
-            <p>Try your luck with the latest and greatest.</p>
+            <%
+                List<Activity> quizList = db.QuizPersistence.GetTakenQuizzes();
+                if(quizList.size() > 0) {
+                    out.println("<ul class='list-group'>");
+
+                    int count = 0;
+                    for(int i=activityList.size()-1; i >= 0; i--) {
+                        out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
+                                "TODO" + "'>" + quizList.get(i).date + ": " + quizList.get(i).type + "</li>");
+
+                        if(count >= 5) {
+                            break;
+                        }
+                    }
+                    out.println("</ul>");
+                }
+            %>
+            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Recently Created Quizzes</h2>
+            <%
+                quizList = db.QuizPersistence.GetCreatedQuizzes();
+                if(quizList.size() > 0) {
+                    out.println("<ul class='list-group'>");
+
+                    int count = 0;
+                    for(int i=activityList.size()-1; i >= 0; i--) {
+                        out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
+                                "TODO" + "'>" + quizList.get(i).date + ": " + quizList.get(i).type + "</li>");
+
+                        if(count >= 5) {
+                            break;
+                        }
+                    }
+                    out.println("</ul>");
+                }
+            %>
             <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>Achievements</h2>
-            <p>See your Hall of Fame.</p>
+            <ul class="list-group">
+                <%
+                    List<Achievement> achievementsListList = db.UserPersistence.GetAchievements(user.getUserId());
+                    for(int i=achievementsListList.size()-1; i >= 0; i--) {
+                        out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
+                                achievementsListList.get(i).description + "'>" + achievementsListList.get(i).date + ": " + achievementsListList.get(i).name + "</li>");
+                    }
+                %>
+            </ul>
+            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+
+        <div class="col-md-4">
+            <h2>Messages</h2>
+            <ul class="list-group">
+            <%
+                List<Message> notes = db.SocialPersistence.GetMessages(user.getUserId(), "note");
+                List<Message> friends = db.SocialPersistence.GetMessages(user.getUserId(), "friend");
+                List<Message> challenge = db.SocialPersistence.GetMessages(user.getUserId(), "challenge");
+                out.println("<li class='list-group-item'>Notes: " + notes.size() + "</li>");
+                out.println("<li class='list-group-item'>Friend Requests: " + friends.size() + "</li>");
+                out.println("<li class='list-group-item'>Challenges: " + challenge.size() + "</li>");
+            %>
+            </ul>
+            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Friend's Activities</h2>
+
             <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
     </div>
@@ -123,5 +208,10 @@
 <script src="../dist/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
 </html>

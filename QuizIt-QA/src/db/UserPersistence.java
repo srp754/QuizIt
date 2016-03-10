@@ -3,10 +3,7 @@ package db;
 import com.mysql.fabric.xmlrpc.base.Data;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
-import user.Announcement;
-import user.HashedPassword;
-import user.MyDBInfo;
-import user.User;
+import user.*;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -88,6 +85,20 @@ public class UserPersistence
         DatabaseTasks.ExecuteUpdate(sb.toString());
     }
 
+    public static void InsertUserActivity(int userId, String ActivityType, int ActivityLinkId)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO UserActivity VALUES(");
+        sb.append("null,");
+        sb.append("'" + userId + "',");
+        sb.append("'" + ActivityType + "',");
+        sb.append("'" + ActivityLinkId + "',");
+        sb.append("'" + formatter.format(new Date()) + "');");
+        DatabaseTasks.ExecuteUpdate(sb.toString());
+    }
+
     public static void PromoteUserToAdmin(String userName)
     {
             String query = String.format("UPDATE UserDetail SET AdminFlag='1' WHERE UserName = %1$s;", "'" + userName + "'");
@@ -124,7 +135,7 @@ public class UserPersistence
         DatabaseTasks.ExecuteUpdate(query);
     }
 
-    public static List<Announcement> GetAnnouncments()
+    public static List<Announcement> GetAnnouncements()
     {
         List<Announcement> announcementList = new ArrayList<>();
 
@@ -135,7 +146,6 @@ public class UserPersistence
             ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "Announcements");
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            //DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG);
 
             while(rs.next())
             {
@@ -156,6 +166,69 @@ public class UserPersistence
         return announcementList;
     }
 
+    public static List<Achievement> GetAchievements(int userId)
+    {
+        List<Achievement> achievementsList = new ArrayList<>();
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserAchievements", "UserId", "'" + userId + "'");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            while(rs.next())
+            {
+                Date date = null;
+                try {
+                    date = formatter.parse(rs.getString("AchievementDate"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String name = rs.getString("AchievementName");
+                String description = rs.getString("AchievementDescription");
+                Achievement achievement = new Achievement(name, description, formatter.format(date));
+                achievementsList.add(achievement);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return achievementsList;
+    }
+
+    public static List<Activity> GetActivities(int userId)
+    {
+        List<Activity> activityList = new ArrayList<>();
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserActivity", "UserId", "'" + userId + "'");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            while(rs.next())
+            {
+                Date date = null;
+                try {
+                    date = formatter.parse(rs.getString("ActivityDate"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String type = rs.getString("ActivityType");
+                Activity activity = new Activity(type, formatter.format(date));
+                activityList.add(activity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return activityList;
+    }
+
     public static List<User> GetUsers()
     {
         List<User> userList = new ArrayList<>();
@@ -174,8 +247,6 @@ public class UserPersistence
                 foundUser.userId = Integer.parseInt(rs.getString("UserId"));
                 foundUser.email = rs.getString("UserEmail");
                 foundUser.dateCreated = rs.getString("UserCreateDate");
-                String isAdminst = rs.getString("AdminFlag");
-                foundUser.isAdmin = isAdminst.equals("1");
                 userList.add(foundUser);
             }
         } catch (SQLException e) {
@@ -229,13 +300,32 @@ public class UserPersistence
                 foundUser.userId = Integer.parseInt(rs.getString("UserId"));
                 foundUser.email = rs.getString("UserEmail");
                 foundUser.dateCreated = rs.getString("UserCreateDate");
-                String isAdminst = rs.getString("AdminFlag");
-                foundUser.isAdmin = isAdminst.equals("1");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return foundUser;
+    }
+
+    public static boolean isAdmin(String userName)
+    {
+        boolean isAdmin = false;
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
+
+            if(rs.next())
+            {
+                String isAdminst = rs.getString("AdminFlag");
+                isAdmin = isAdminst.equals("1");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return isAdmin;
     }
 }
