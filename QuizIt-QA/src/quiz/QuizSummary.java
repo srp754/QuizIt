@@ -6,8 +6,7 @@ public class QuizSummary {
 	private int quizId;
 	private String quizName; 
 	private String quizDescription; 
-	private int creatorId; 
-	//TODO: Decide how to represent createDate 
+	private int creatorId;
 	private String createDate;
 	
 	public QuizSummary(String quizName, String quizDescription, int creatorId, String createDate)
@@ -42,8 +41,7 @@ public class QuizSummary {
 	public int getCreatorId() {
 		return creatorId; 
 	}
-	
-	// TODO: Make sure this is how we want to represent date/time of creation
+
 	public String getCreateDate() {
 		return createDate; 
 	}

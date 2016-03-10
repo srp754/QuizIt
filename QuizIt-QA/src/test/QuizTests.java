@@ -172,4 +172,32 @@ public class QuizTests
         assertEquals(expected, actual);
         assertTrue(isCorrectAnswer);
     }
+
+    @org.junit.Test
+    public void Should_Get_Quiz_Summary()
+    {
+        QuizSummary summary = QuizRepository.GetQuizSummary(2);
+
+        assertEquals(summary.getCreatorId(), 4);
+        assertEquals(summary.getQuizName(), "Quiz Two");
+    }
+
+    @org.junit.Test
+    public void Should_Get_Quiz_And_Its_Components_By_Id()
+    {
+        Quiz quiz = QuizRepository.GetQuiz(2);
+
+        String summaryExpected = "Quiz Two";
+        String summaryActual = quiz.summary.getQuizName();
+        assertEquals(summaryExpected, summaryActual);
+
+        int statsExpected = 5;
+        int statsActual = quiz.stats.getUserAttempts();
+        assertEquals(statsExpected, statsActual);
+
+        assertTrue(quiz.questions.size() > 1);
+        String questionExpected = "picture";
+        String questionActual = quiz.questions.get(1).getQuestionType();
+        assertEquals(questionExpected, questionActual);
+    }
 }

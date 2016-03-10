@@ -1,16 +1,23 @@
 package quiz;
 import java.util.*; 
-public class Quiz {
-	
-	// TODO: Might want to track user statistics in the future for the quiz summary page
-	// Example fields for the quiz summary page to store this info in the database. 
-	private int quizId; 
+public class Quiz
+{
+	public int quizId;
+	public QuizSummary summary;
+	public QuizStats stats;
+	public List<Question> questions;
 
-	private List<Question> questions;
-	
-	public Quiz(List<Question> questions, int quizId) {
-		this.questions = questions; 
-		this.quizId = quizId; 
+	public Quiz(int quizId, QuizSummary summary, QuizStats stats, List<Question> questions)
+	{
+		this.quizId = quizId;
+		this.summary = summary;
+		this.stats = stats;
+		this.questions = questions;
+	}
+	public Quiz(List<Question> questions, int quizId)
+	{
+		this.questions = questions;
+		this.quizId = quizId;
 	}
 	
 	// Randomizes the list of questions if the player wants random questions 
@@ -23,12 +30,7 @@ public class Quiz {
 			System.out.println(questions.get(i).toString());
 		}
 	}
-	
-	public List<Question> getQuestions() {
-		return questions; 
-	}
-	
-	public int getId(){
-		return quizId; 
-	}
-}
+
+	public List<Question> getQuestions() {return questions; }
+
+	public int getId(){return quizId;}}

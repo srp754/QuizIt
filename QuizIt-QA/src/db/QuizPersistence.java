@@ -220,6 +220,32 @@ public class QuizPersistence
         return qStats;
     }
 
+    public static QuizSummary GetQuizSummary(int quizId)
+    {
+        QuizSummary qSummary = null;
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "QuizSummary", "QuizId", "" + quizId + "");
+
+            if(rs.next())
+            {
+                String quizName = rs.getString("QuizName");
+                String quizDescription = rs.getString("QuizDescription");
+                int creatorId = Integer.parseInt(rs.getString("CreatorId"));
+                String createDate = rs.getString("CreateDate");
+
+                qSummary = new QuizSummary(quizName, quizDescription, creatorId, createDate, quizId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return qSummary;
+    }
+
     public static List<Activity> GetCreatedQuizzes()
     {
         List<Activity> quizList = new ArrayList<>();
