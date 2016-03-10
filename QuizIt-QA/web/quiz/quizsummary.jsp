@@ -64,8 +64,8 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
-				<li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+				<li><a href="/user/userHomePage.jsp">Home</a></li>
+				<li class="active"><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
 				<li><a href="/user/userFeed.jsp">Feed</a></li>
 				<% if(user.isAdmin()) {
 					out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
