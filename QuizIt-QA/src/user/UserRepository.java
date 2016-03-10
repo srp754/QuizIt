@@ -40,7 +40,7 @@ public class UserRepository implements IUserRepository
         {
             byte[] salt = generateSalt();
             byte[] hashSaltPassword = generateHashValue(hexToString(salt), password);
-            DatabaseTasks.InsertUserDetail(username, email, hexToString(hashSaltPassword), hexToString(salt), isAdmin);
+            db.UserPersistence.InsertUserDetail(username, email, hexToString(hashSaltPassword), hexToString(salt), isAdmin);
             PopulateCurrentUser(username);
             return true;
         }
@@ -49,13 +49,13 @@ public class UserRepository implements IUserRepository
     public void DeleteUser(String userName)
     {
         if(userExists(userName))
-            DatabaseTasks.DeleteUserDetail(userName);
+            db.UserPersistence.DeleteUserDetail(userName);
     }
 
     public void PopulateCurrentUser(String userName)
     {
         if(userExists(userName))
-            _currentUser = DatabaseTasks.GetUser(userName);
+            _currentUser = db.UserPersistence.GetUser(userName);
     }
 
     public void removeCurrentUser() {
@@ -71,7 +71,7 @@ public class UserRepository implements IUserRepository
     {
         if (userExists(username))
         {
-            HashedPassword passwordInfo = DatabaseTasks.GetPasswordInfo(username);
+            HashedPassword passwordInfo = db.UserPersistence.GetPasswordInfo(username);
             String dbPass = passwordInfo.hashedPass;
             String dbSalt = passwordInfo.hashedSalt;
 
@@ -88,7 +88,7 @@ public class UserRepository implements IUserRepository
      * @param userToPromote Username to promote to admin
      */
     public void promoteToAdmin(String userToPromote) {
-        DatabaseTasks.PromoteUserToAdmin(userToPromote);
+        db.UserPersistence.PromoteUserToAdmin(userToPromote);
         //_currentUser.isAdmin = true;
     }
 
@@ -103,13 +103,13 @@ public class UserRepository implements IUserRepository
     public void addFriend(int friendUserId)
     {
         if(!FriendshipExists(friendUserId))
-            DatabaseTasks.InsertUserFriend(_currentUser.userId, friendUserId);
+            db.UserPersistence.InsertUserFriend(_currentUser.userId, friendUserId);
     }
 
     public void removeFriend(int friendUserId)
     {
         if(FriendshipExists(friendUserId))
-            DatabaseTasks.DeleteUserFriendship(_currentUser.userId, friendUserId);
+            db.UserPersistence.DeleteUserFriendship(_currentUser.userId, friendUserId);
     }
 
 
@@ -117,13 +117,13 @@ public class UserRepository implements IUserRepository
     public void addAchievement(String achievementName, String achievementDesc)
     {
         if(!AchievementExists(achievementName))
-            DatabaseTasks.InsertAchievement(getUserId(), achievementName, achievementDesc);
+            db.UserPersistence.InsertAchievement(getUserId(), achievementName, achievementDesc);
     }
 
     public void removeAchievement(String achievementName)
     {
         if(AchievementExists(achievementName))
-            DatabaseTasks.DeleteAchievement(getUserId(), achievementName);
+            db.UserPersistence.DeleteAchievement(getUserId(), achievementName);
     }
 
     public List<String> getAchievements() {
@@ -133,27 +133,27 @@ public class UserRepository implements IUserRepository
 
     public Integer getNumberOfUsers()
     {
-        return DatabaseTasks.GetCountRecordsFromTable("UserDetail");
+        return db.DatabaseTasks.GetCountRecordsFromTable("UserDetail");
     }
 
     public List<User> getAllUsers()
     {
-        return DatabaseTasks.GetUsers();
+        return db.UserPersistence.GetUsers();
     }
 
     public boolean  AchievementExists(String achievementName)
     {
-        return DatabaseTasks.CheckIfRecordExistsWithParametersIntString("UserAchievements", "UserId",  Integer.toString(getUserId()), "AchievementName", achievementName);
+        return db.DatabaseTasks.CheckIfRecordExistsWithParametersIntString("UserAchievements", "UserId",  Integer.toString(getUserId()), "AchievementName", achievementName);
     }
 
     public boolean FriendshipExists(int userId)
     {
-        return DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserFriends", "UserId",  Integer.toString(getUserId()), "FriendId", Integer.toString(userId));
+        return db.DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserFriends", "UserId",  Integer.toString(getUserId()), "FriendId", Integer.toString(userId));
     }
 
     public boolean userExists(String username)
     {
-        return DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);
+        return db.DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);
     }
 
     // Generates the SHA hex hash value using the MessageDigest

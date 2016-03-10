@@ -56,15 +56,11 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/user/userHomePage.jsp">Home</a></li>
-                <li><a href="#">Profile</a></li>
+                <li><a class="btn btn-success" href="/user/userHomePage.jsp" role="button">Home</a></li>
                 <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
                     <button type="submit" class="btn btn-primary">Sign Out</button>
                 </form>
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
         </div>
     </div>
 </nav>
@@ -73,11 +69,11 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="/user/dashboard.jsp">Overview</a></li>
-                <li class="active"><a href="/user/create_announcement.jsp">Create Announcement</a><span class="sr-only">(current)</span></li>
-                <li><a href="/user/remove_user.jsp">Remove User Account</a></li>
+                <li><a href="/admin/dashboard.jspp">Overview</a></li>
+                <li class="active"><a href="/admin/create_announcement.jsp">Create Announcement</a><span class="sr-only">(current)</span></li>
+                <li><a href="/admin/remove_user.jspp">Remove User Account</a></li>
                 <li><a href="remove_quiz.jsp">Remove Quiz</a></li>
-                <li><a href="/user/promote_user.jsp">Promote User</a></li>
+                <li><a href="/admin/promote_user.jspp">Promote User</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

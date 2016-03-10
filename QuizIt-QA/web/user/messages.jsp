@@ -44,6 +44,7 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
+<<<<<<< HEAD
 				<li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
 				<li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
 				<li><a href="#feed">Feed</a></li>
@@ -52,6 +53,16 @@
 				}
 				%>
 				<li><a href="/user/messages.jsp">&#128172;</a></li>
+=======
+				<li><a href="/user/userHomePage.jsp">Home</a></li>
+				<li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+				<li><a href="/user/userFeed.jsp">Feed</a></li>
+				<% if(user.isAdmin()) {
+					out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
+				}
+				%>
+				<li class="active"><a href="/user/messages.jsp">&#128172;</a></li>
+>>>>>>> Ashavsky/master
 			</ul>
 			<form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
 				<button type="submit" class="btn btn-primary">Sign Out</button>
@@ -63,7 +74,8 @@
 			</form>
 		</div><!--/.navbar-collapse -->
 	</div>
-</nav>>
+</nav>
+
 
 <div class="container">
 

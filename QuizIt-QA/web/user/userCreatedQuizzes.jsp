@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<%@ page import="java.util.*,user.*" %>
+<%@ page import="quiz.*, user.*, java.util.*" %>
 <% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -11,16 +12,16 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>User Not Found</title>
+    <title>Your Quizzes</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../css/starter-template.css" rel="stylesheet">
+    <link href="/css/starter-template.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -65,11 +66,11 @@
     </div>
 </nav>
 
-
 <div class="container">
 
     <div class="starter-template">
-        <h1>Sorry, the user <%= request.getParameter("username") %> does not exist.</h1>
+        <h1>Your Quizzes</h1>
+        <h2></h2>
     </div>
 
 </div><!-- /.container -->
@@ -79,9 +80,9 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="../dist/js/bootstrap.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/dist/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
