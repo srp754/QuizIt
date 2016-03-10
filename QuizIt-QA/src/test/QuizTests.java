@@ -51,13 +51,9 @@ public class QuizTests
     public void Should_Add_And_Delete_Quiz_With_Stats()
     {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-<<<<<<< HEAD
+
         int quizId = QuizRepository.AddQuizHeader(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date())));
 
-=======
-        //int quizId = QuizRepository.AddQuiz(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date())));
-        int quizId = QuizRepository.AddQuiz(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date()), 1));
->>>>>>> 27a0534ce3cbae862dd3b90116d0031416af7e73
         boolean doesQuizExist = QuizRepository.QuizExists(quizId);
         assertTrue(doesQuizExist);
         boolean doesQuizStatsExist = QuizRepository.QuizStatsExists(quizId);

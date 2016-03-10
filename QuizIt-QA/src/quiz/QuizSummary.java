@@ -10,7 +10,16 @@ public class QuizSummary {
 	//TODO: Decide how to represent createDate 
 	private String createDate;
 	
-	public QuizSummary(String quizName, String quizDescription, int creatorId, String createDate, int quizId) {
+	public QuizSummary(String quizName, String quizDescription, int creatorId, String createDate)
+	{
+		this.quizName = quizName;
+		this.quizDescription = quizDescription;
+		this.creatorId = creatorId;
+		this.createDate = createDate;
+	}
+
+	public QuizSummary(String quizName, String quizDescription, int creatorId, String createDate, int quizId)
+	{
 		this.quizName = quizName;
 		this.quizDescription = quizDescription;
 		this.creatorId = creatorId;
