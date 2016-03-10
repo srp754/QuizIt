@@ -56,15 +56,17 @@ public class CreateQuizServlet extends HttpServlet {
 		} */
 		
 		if (numQuestions != 0) { // TODO: Implement multiple answer choices, currently only takes in one possible answer for a question
-			for(int i = 1; i < numQuestions; i++) {
+			for(int i = 1; i <= numQuestions; i++) {
 				String questionStr = request.getParameter("question"+i); 
-				String answerStr = request.getParameter("answer"+i);
-				Set<Answer> possibleAnswers = new HashSet<Answer>(); 
+				String answerStr = request.getParameter("answer"+i).toLowerCase();
+				Set<String> answerAlternatives = new HashSet<String>(Arrays.asList(answerStr));
+				List<Answer> possibleAnswers = new ArrayList<Answer>(); 
 				// Placeholder code: currently assumes qresponse, later will need to find out what question type then react accordingly
 				// TODO: Decide how to assign answer id's, for now we'll use "i"
-				QResponseAnswer qra = new QResponseAnswer(answerStr, i); 
+				QResponseAnswer qra = new QResponseAnswer(answerAlternatives, i); 
 				possibleAnswers.add(qra); 
-				QResponse newQuestion = new QResponse(questionStr, possibleAnswers, i); 
+				// TODO add checkbox to toggle ordered option
+				QResponse newQuestion = new QResponse(questionStr, possibleAnswers, 1, false, i); 
 				questionList.add(newQuestion); 
 			}
 		}

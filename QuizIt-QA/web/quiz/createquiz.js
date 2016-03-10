@@ -1,9 +1,9 @@
 var i = 1; // used to track how many extra questions were added 
 
 function increment() {
-	i+=1; // Increments the counter when "add a question" is pressed
 	var numQuestions = document.getElementById("numquestions");
 	numQuestions.value = i; 
+	i+=1; // Increments the counter when "add a question" is pressed
 }
 
 // TODO: Consider validateData method 

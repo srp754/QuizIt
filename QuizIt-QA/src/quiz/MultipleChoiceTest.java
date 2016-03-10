@@ -17,7 +17,7 @@ public class MultipleChoiceTest {
 		answerChoices.add(correctChoice);
 		answerChoices.add(wrongChoice);
 		answerChoices.add(wrongChoice2);
-		MultipleChoice mc1 = new MultipleChoice(question, correctChoice, answerChoices, 0);
+		MultipleChoice mc1 = new MultipleChoice(question, correctChoice, answerChoices, false, 0);
 		assertTrue(mc1.checkAnswer(correctChoice));
 		assertTrue(!mc1.checkAnswer(wrongChoice));
 	}
