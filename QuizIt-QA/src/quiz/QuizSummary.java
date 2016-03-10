@@ -8,17 +8,15 @@ public class QuizSummary {
 	private String quizDescription; 
 	private int creatorId; 
 	//TODO: Decide how to represent createDate 
-	private Date createDate; 
+	private String createDate;
 	
-	public QuizSummary(int quizId, String quizName, String quizDescription, int creatorId) {
-		this.quizId = quizId; 
+	public QuizSummary(String quizName, String quizDescription, int creatorId, String createDate) {
 		this.quizName = quizName; 
 		this.quizDescription = quizDescription; 
 		this.creatorId = creatorId;
-		Date now = new Date(); 
-		this.createDate = now;  
+		this.createDate = createDate;
 	}
-	
+
 	public int getQuizId() {
 		return quizId; 
 	}
@@ -36,7 +34,9 @@ public class QuizSummary {
 	}
 	
 	// TODO: Make sure this is how we want to represent date/time of creation
-	public Date getCreateDate() {
+	public String getCreateDate() {
 		return createDate; 
 	}
+
+	public void setQuizId(int value) {this.quizId = value; }
 }

@@ -2,20 +2,11 @@ package db;
 
 
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.ResultSetMetaData;
 import com.mysql.jdbc.Statement;
-import user.HashedPassword;
-import user.Message;
-import user.MyDBInfo;
-import user.User;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Alex on 3/2/2016.

@@ -4,10 +4,6 @@ import java.util.*;
 
 public class SocialRepository implements ISocialRepository
 {
-	private static Map<Integer, List<Integer>> messages = new HashMap<Integer, List<Integer>>();
-    private static Map<Integer, Set<Integer>> dbFriendRequests = new HashMap<Integer, Set<Integer>>();
-    private static Map<Integer, Set<Integer>> dbMessages = new HashMap<Integer, Set<Integer>>();
-	
 	public static int addMessage(Message msg) //may throw MySqlException that duplicate entry, this is OK - SQL prevent duplicate entries which is good
 	{
 		int newMessageId = db.SocialPersistence.InsertUserMessage(msg);
@@ -92,18 +88,10 @@ public class SocialRepository implements ISocialRepository
 	{
     	return db.DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserSocial us inner join UserFriendRequests uf on us.MessageId = uf.MessageId", "UserId", Integer.toString(recipient), "FriendId", Integer.toString(sender));
     }
-    
+
     public static int addFriendRequest(int sender, int recipient)
 	{
     	Message msg = new Message(1,2,"friend", "text doesn't matter here");
 		return addMessage(msg);
-    }
-    
-    public static void removeFriendRequest(int sender, int recipient)
-	{
-    	if (dbFriendRequests.containsKey(recipient) && 
-    			dbFriendRequests.get(recipient).contains(sender)) {
-    		dbFriendRequests.get(recipient).remove(sender);
-    	}
     }
 }

@@ -1,4 +1,4 @@
-package user;
+package db;
 
 /**
  * Created by Alex on 3/2/2016.

@@ -53,7 +53,6 @@ public class CheckAnswerServlet extends HttpServlet {
 				wantedAttempt = currentAttempt; 
 			}
 		}
-		wantedAttempt.endAttempt();
 		
 		String idStr = request.getParameter("quizid");
 		String parsedId = idStr.replaceAll("\\/", "");

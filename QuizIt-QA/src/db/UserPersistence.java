@@ -1,9 +1,14 @@
 package db;
 
-import com.mysql.fabric.xmlrpc.base.Data;
 import com.mysql.jdbc.Connection;
+<<<<<<< HEAD
 import com.mysql.jdbc.Statement;
 import user.*;
+=======
+import user.Announcement;
+import user.HashedPassword;
+import user.User;
+>>>>>>> Ashavsky/master
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
