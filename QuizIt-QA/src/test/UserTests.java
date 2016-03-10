@@ -75,7 +75,7 @@ public class UserTests
 
         userRepository.PopulateCurrentUser("NotRealUserName");
         isUserAdmin = userRepository.isAdmin();
-        assertFalse( isUserAdmin);
+        assertFalse(isUserAdmin);
     }
 
     @org.junit.Test
