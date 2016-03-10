@@ -45,14 +45,14 @@ public class MessageServlet extends HttpServlet {
 			int userId = userRepository.usernameToId(username);
 			if (type.equals("friend")) {
 				content = userRepository.getUsername() + " would like to be friends.";
-				Messaging.addFriendRequest(userRepository.getUserId(), userId);
+				SocialRepository.addFriendRequest(userRepository.getUserId(), userId);
 			} else if (type.equals("challenge")) {
 				content = userRepository.getUsername() + " has challenged you to take a quiz!</p>" +
 								"<p><a href=\"quiz/quiz.jsp?id=\">" + content + "</a></p>" +
 								"<p>Their high score: " + userRepository.getQuizHighScore(content); 
 			}
 			Message msg = new Message(userRepository.getUserId(), userId, type, content);
-			Messaging.addMessage(msg);
+			SocialRepository.addMessage(msg);
 			request.setAttribute("status", "Sent!");
 		} else {
 			request.setAttribute("status", "That user does not exist.");

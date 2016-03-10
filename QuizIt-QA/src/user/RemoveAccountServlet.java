@@ -23,7 +23,7 @@ public class RemoveAccountServlet extends HttpServlet {
         String username = request.getParameter("inputUserName");
 
         if(userRepo.userExists(username)) {
-            DatabaseTasks.DeleteUserDetail(username);
+            db.UserPersistence.DeleteUserDetail(username);
             out.print(username + " successfully removed");
         }
         else {

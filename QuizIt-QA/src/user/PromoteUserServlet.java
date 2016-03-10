@@ -21,7 +21,7 @@ public class PromoteUserServlet extends HttpServlet {
         String username = request.getParameter("inputUserName");
 
         if(userRepo.userExists(username)) {
-            if(!DatabaseTasks.GetUser(username).isAdmin) {
+            if(!db.UserPersistence.GetUser(username).isAdmin) {
                 userRepo.promoteToAdmin(username);
                 out.print(username + " successfully promoted to administrator");
             }
