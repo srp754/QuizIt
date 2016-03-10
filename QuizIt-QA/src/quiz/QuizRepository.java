@@ -11,11 +11,16 @@ import java.util.List;
  */
 public class QuizRepository
 {
-    public static int AddQuiz(QuizSummary qz) //this is not complete, needs to add more places + take in quiz
+    public static int AddQuizHeader(QuizSummary qz) //this is not complete, needs to add more places + take in quiz
     {
         int quizId = AddQuizSummary(qz);
         AddQuizStats(quizId);
         return quizId;
+    }
+
+    public static void AddQuizContent(Quiz qz)
+    {
+
     }
 
     public static int AddQuizSummary(QuizSummary qz)
@@ -47,28 +52,32 @@ public class QuizRepository
 
     public static boolean QuizExists(int quizId)
     {
-        return  DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizSummary", "QuizId", Integer.toString(quizId));
+        return DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizSummary", "QuizId", Integer.toString(quizId));
     }
-
 
     public static boolean AttemptExists(int attemptId)
     {
-        return  DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizHistory", "AttemptId", Integer.toString(attemptId));
+        return DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizHistory", "AttemptId", Integer.toString(attemptId));
     }
 
     public static boolean QuizStatsExists(int quizId)
     {
-        return  DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizStats", "QuizId", Integer.toString(quizId));
-    }
-
-    public static void AddScore(int attemptId)
-    {
-
+        return DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizStats", "QuizId", Integer.toString(quizId));
     }
 
     public static void UpdateQuizStats(QuizAttempt attempt)
     {
+        QuizPersistence.UpdateQuizStats(attempt);
+    }
 
+    public static QuizStats GetQuizStats(int quizId)
+    {
+        QuizStats qStats = null;
+
+        if(QuizExists(quizId))
+            qStats = db.QuizPersistence.GetQuizStats(quizId);
+
+        return qStats;
     }
 
     public static Quiz GetQuiz(int quizId)

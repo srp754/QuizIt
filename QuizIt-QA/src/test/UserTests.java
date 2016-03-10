@@ -66,15 +66,15 @@ public class UserTests
         boolean isUserAdmin;
 
         userRepository.PopulateCurrentUser("Connie");
-        isUserAdmin = userRepository.isAdmin();
+        isUserAdmin = userRepository.isAdmin("Connie");
         assertTrue(isUserAdmin);
 
         userRepository.PopulateCurrentUser("Scott");
-        isUserAdmin = userRepository.isAdmin();
-        assertFalse(isUserAdmin);
+        isUserAdmin = userRepository.isAdmin("Scott");
+        assertTrue(isUserAdmin);
 
         userRepository.PopulateCurrentUser("NotRealUserName");
-        isUserAdmin = userRepository.isAdmin();
+        isUserAdmin = userRepository.isAdmin("NotRealUserName");
         assertFalse(isUserAdmin);
     }
 
@@ -143,6 +143,13 @@ public class UserTests
         userRepository.removeAchievement("QuizTaker");
         doesAchievementExist = userRepository.AchievementExists("QuizTaker");
         assertFalse(doesAchievementExist);
+
+        /*userRepository.PopulateCurrentUser("admin");
+        userRepository.addAchievement("Amateur Author", "User created their first quiz");
+        userRepository.addAchievement("Prolific Author", "User created 5 quizzes");
+        userRepository.addAchievement("Prodigious Author", "User created 10 quizzes");
+        userRepository.addAchievement("Quiz Machine", "User has taken 10 quizzes");*/
+
     }
 
     @org.junit.Test
@@ -173,10 +180,10 @@ public class UserTests
         userRepository.DeleteUser("AdminTestUser");
         userRepository.createNewUser("AdminTestUser", "test@stanford.edu", "password", false);
         userRepository.PopulateCurrentUser("AdminTestUser");
-        assertFalse(userRepository.isAdmin());
+        assertFalse(userRepository.isAdmin("AdminTestUser"));
 
         userRepository.promoteToAdmin("AdminTestUser");
-        assertTrue(userRepository.isAdmin());
+        assertTrue(userRepository.isAdmin("AdminTestUser"));
         userRepository.DeleteUser("AdminTestUser");
     }
 }
