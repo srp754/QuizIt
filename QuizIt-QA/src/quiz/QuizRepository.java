@@ -3,6 +3,7 @@ package quiz;
 import db.DatabaseTasks;
 import db.QuizPersistence;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class QuizRepository
         QuizPersistence.InsertQuestions(questions);
     }
 
+    public static void AddAnswers(List<Answer> answers)
+    {
+        QuizPersistence.InsertAnswers(answers);
+    }
+
     public static int AddQuizSummary(QuizSummary qz)
     {
         return QuizPersistence.InsertQuizSummary(qz);
@@ -50,9 +56,14 @@ public class QuizRepository
         QuizPersistence.DeleteQuizStats(quizId);
     }
 
-    public static void RemoveQUestions(int quizId)
+    public static void RemoveQuestions(int quizId)
     {
         QuizPersistence.DeleteQuestions(quizId);
+    }
+
+    public static void RemoveAnswers(int questionId)
+    {
+        QuizPersistence.DeleteAnswers(questionId);
     }
 
     public static void RemoveAttempt(int attemptId)
@@ -61,6 +72,11 @@ public class QuizRepository
     }
 
     public static boolean QuizExists(int quizId)
+    {
+        return DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizSummary", "QuizId", Integer.toString(quizId));
+    }
+
+    public static boolean QuestionsExist(int quizId)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizSummary", "QuizId", Integer.toString(quizId));
     }
@@ -90,33 +106,26 @@ public class QuizRepository
         return qStats;
     }
 
-    public static Quiz GetQuiz(int quizId)
-    {
-        return null;
-    }
-
-    public static List<Quiz> GetQuizzes(int userId)
-    {
-        return null;
-    }
-
-    public static Question GetQuestion(int questionId)
+    public static Quiz GetQuiz(int userId)
     {
         return null;
     }
 
     public static List<Question> GetQuestions(int quizId)
     {
-        return null;
-    }
-
-    public static Answer GetAnswer(int answerId)
-    {
-        return null;
+        List<Question> questions = db.QuizPersistence.GetQuestions(quizId);
+        return questions;
     }
 
     public static List<Answer> GetAnswers(int questionId)
     {
+        List<Answer> answers = db.QuizPersistence.GetAnswers(questionId);
+        return answers;
+    }
+
+    public static List<Answer> GetAllAnswersForQuiz(int quizId)
+    {
+//        List<Answer> answers = db.QuizPersistence.GetAllAnswersForQuiz(quizId);
         return null;
     }
 }
