@@ -45,7 +45,6 @@ public class MessageServlet extends HttpServlet {
 			int userId = userRepository.usernameToId(username);
 			if (type.equals("friend")) {
 				content = userRepository.getUsername() + " would like to be friends.";
-				SocialRepository.addFriendRequest(userRepository.getUserId(), userId);
 			} else if (type.equals("challenge")) {
 				content = userRepository.getUsername() + " has challenged you to take a quiz!</p>" +
 								"<p><a href=\"quiz/quiz.jsp?id=\">" + content + "</a></p>" +
