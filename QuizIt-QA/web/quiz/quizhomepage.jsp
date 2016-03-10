@@ -45,19 +45,11 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-<<<<<<< HEAD
-                <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
-                <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
-                <li><a href="#feed">Feed</a></li>
-                <% if(user.isAdmin()) {
-                    out.println("<li><a href='/user/dashboard.jsp'>Admin</a></li>");
-=======
                 <li><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
                 <li class="active"><a href="/user/userFeed.jsp">Feed</a></li>
                 <% if(user.isAdmin()) {
                     out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
->>>>>>> Ashavsky/master
                 }
                 %>
                 <li><a href="/user/messages.jsp">&#128172;</a></li>
@@ -74,30 +66,22 @@
     </div>
 </nav>
 
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
-    <div class="container">
-        <h1>Take a Quiz</h1>
-    </div>
-</div>
+<div class="container">
 
-<div class=""container-fluid>
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-11">
-            <h1 class="page-header">Select a Quiz</h1>
-            <div class="list-group">
-            <%
-                List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
-                for (QuizSummary currentSummary: quizSummaries) {
-            %>
-            <div class="row">
-            <a href="quizsummary.jsp?id=<%=currentSummary.getQuizId() %>" class='list-group-item col-md-3'><%out.println(currentSummary.getQuizName());%></a></div>
-            <%
-                }
-            %>
-            </div>
-        </div>
+    <div class="starter-template">
+        <h1>Welcome to QuizIt!</h1>
+        <h2>Select a Quiz</h2>
+        <%
+            List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
+            int counter = 0;
+            for (QuizSummary currentSummary: quizSummaries) {
+        %>
+        <li><a href="quizsummary.jsp?id=<%=counter %>"><%out.println(currentSummary.getQuizName());%></a></li>
+        <%
+                counter++;
+            }
+        %>
+        <h2><a href="createquiz.jsp"> Create your own quiz!</a></h2>
     </div>
 
 </div><!-- /.container -->

@@ -9,12 +9,22 @@ public class QuizSummary {
 	private int creatorId; 
 	//TODO: Decide how to represent createDate 
 	private String createDate;
-	
+
+	/*
 	public QuizSummary(String quizName, String quizDescription, int creatorId, String createDate) {
 		this.quizName = quizName; 
 		this.quizDescription = quizDescription; 
 		this.creatorId = creatorId;
 		this.createDate = createDate;
+	}
+	*/
+	//Temporary solution
+	public QuizSummary(String quizName, String quizDescription, int creatorId, String createDate, int quizId) {
+		this.quizName = quizName;
+		this.quizDescription = quizDescription;
+		this.creatorId = creatorId;
+		this.createDate = createDate;
+		this.quizId = quizId;
 	}
 
 	public int getQuizId() {

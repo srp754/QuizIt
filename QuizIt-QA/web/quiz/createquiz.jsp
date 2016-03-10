@@ -9,28 +9,18 @@
 </head>
 <body>
 <h1>Create Quiz</h1>
-<%
-String noQuestions = request.getParameter("noquestions");
-if(noQuestions!= null) {
-%>
-</p><%out.println(noQuestions); %> </p>
-<%
-}
-%>
-<form id="questionform" action="CreateQuizServlet" method="post">
-<input type="hidden" name="numquestions" id="numquestions" value="0">
-Quiz Name: <input type="text" name="quizname"> <br>
-Quiz Description: <input type="text" name="quizdescription"> <br> 
-Question Type: 
-<select id="questiontype">
+
+<form id="questionform" action="../CreateQuestionServlet" method="post">
+	<input type="hidden" name="questionnumber" value="0" />
+Select Question Type:
+<select id="questiontype" name="questiontype">
 	<option value="qresponse" selected="selected">Question-Response</option>
 	<option value="fillblank">Fill in the Blank</option>
 	<option value="multiplechoice">Multiple Choice</option>
+	<option value="pictureresponse">Picture-Response</option>
 </select>
-<button type="button" onclick="javascript: addQuestion()" onsubmit="return false">Add A Question</button>
-<span id = "dynamic"></span>
-<br> 
-<input type="submit" value="Continue">
+<br>
+	<input type="submit" name="add" value="Add Question">
 </form>
 </body>
 </html>

@@ -20,7 +20,8 @@ public class QuizTests
     public void Should_Add_And_Delete_Quiz() //Just QuizSummary to start
     {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        int quizId = QuizRepository.AddQuizSummary(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date())));
+       // int quizId = QuizRepository.AddQuizSummary(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date())));
+        int quizId = QuizRepository.AddQuizSummary(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date()), 1));
 
         boolean doesQuizExist = QuizRepository.QuizExists(quizId);
         assertTrue(doesQuizExist);
@@ -48,8 +49,8 @@ public class QuizTests
     public void Should_Add_And_Delete_Quiz_With_Stats()
     {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        int quizId = QuizRepository.AddQuiz(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date())));
-
+        //int quizId = QuizRepository.AddQuiz(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date())));
+        int quizId = QuizRepository.AddQuiz(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date()), 1));
         boolean doesQuizExist = QuizRepository.QuizExists(quizId);
         assertTrue(doesQuizExist);
         boolean doesQuizStatsExist = QuizRepository.QuizStatsExists(quizId);

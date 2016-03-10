@@ -1,6 +1,7 @@
 <%@ page import="quiz.*, user.*, java.util.*" %>
 <% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <%
+	String startTime =  String.valueOf(System.currentTimeMillis());
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);
 	List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
@@ -10,15 +11,12 @@
 			wantedSummary = currSummary;
 		}
 	}
-	List<QuizAttemptHistory> quizAttemptHistoryTable = (List<QuizAttemptHistory>) getServletContext().getAttribute("quizattempts");
+	List<QuizAttempt> quizAttemptHistoryTable = (List<QuizAttempt>) getServletContext().getAttribute("quizattempts");
 	int totalAttempts = quizAttemptHistoryTable.size(); 
 	int userId = user.getUserId(); 
 	List<Quiz> quizList = (List<Quiz>) getServletContext().getAttribute("quizlist");
 	Quiz quiz = quizList.get(quizId);
 	List<Question> quizQuestions = quiz.getQuestions();
-	QuizAttemptHistory currentAttempt = new QuizAttemptHistory(totalAttempts+1, quizId, userId, quizQuestions.size());
-	currentAttempt.startAttempt();
-	quizAttemptHistoryTable.add(currentAttempt);
 %>
 <!DOCTYPE html>
 
@@ -95,7 +93,9 @@
 				out.println(wantedSummary.getQuizName());
 			%>
 		</h1>
+
 		<form action="../CheckAnswerServlet" method="post">
+			<input type="hidden" name="starttime" value="<%=startTime%>" />
 			<input type="hidden" name="quizid"
 				   value=<%=wantedSummary.getQuizId()%> />
 			<input type="hidden" name="attemptid" value=<%=totalAttempts+1 %>/>
@@ -123,7 +123,9 @@
 			<%
 			} else if (questionType.equals("multiplechoice")) {
 				MultipleChoice mcq = (MultipleChoice) currQuestion;
+				out.println(currQuestion.toString());
 				List<Answer> answerChoices = mcq.getAnswerChoices();
+
 				for (Answer currAnswer : answerChoices) {
 			%>
 			<br> <input type="radio" name="<%=currQuestion.getId()%>"
@@ -138,7 +140,17 @@
 
 			<%
 			} else if (questionType.equals("pictureresponse")) {
+				PictureResponse currPictureResponse = (PictureResponse) currQuestion;
+				String imageURL = currPictureResponse.getImageURL();
+				String questionStr = currPictureResponse.toString();
 			%>
+
+			<img src="<%=imageURL%>" />
+			<br>
+			<%out.println(currPictureResponse.toString());%>
+			<br>
+			<input type="text" name="<%=currPictureResponse.getId() %>">
+			<br>
 			<%
 				}
 			%>
