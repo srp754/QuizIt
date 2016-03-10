@@ -46,9 +46,9 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
             <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
-            <li><a href="#feed">Feed</a></li>
+            <li><a href="/user/userFeed.jsp">Feed</a></li>
             <% if(user.isAdmin()) {
-              out.println("<li><a href='/user/dashboard.jsp'>Admin</a></li>");
+              out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
             }
             %>
             <li><a href="/user/messages.jsp">&#128172;</a></li>
@@ -56,7 +56,7 @@
           <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
             <button type="submit" class="btn btn-primary">Sign Out</button>
           </form>
-          <form class="navbar-form navbar-right" action="../UserSearchServlet" method="post">
+          <form class="navbar-form navbar-right" action="/UserSearchServlet" method="post">
             <div class="form-group">
               <input type="text" placeholder="&#128269;" class="form-control" name="username">
             </div>
@@ -80,29 +80,39 @@
         <div class="col-md-4">
           <h2>Announcements</h2>
           <ul class="list-group">
-            <%
-              List<Announcement> announcementList = DatabaseTasks.GetAnnouncments();
-              for(Announcement a : announcementList) {
-                out.println("<li class='list-group-item'>" + a.date + ": " + a.text + "</li>");
-              }
-            %>
+            <%--<%--%>
+              <%--List<Announcement> announcementList = DatabaseTasks.GetAnnouncments();--%>
+              <%--for(Announcement a : announcementList) {--%>
+                <%--out.println("<li class='list-group-item'>" + a.date + ": " + a.text + "</li>");--%>
+              <%--}--%>
+            <%--%>--%>
           </ul>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <p><a class="btn btn-default" href="announcements.jsp" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
           <h2>Quiz History</h2>
           <p>See the latest quizzes you took. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <p><a class="btn btn-default" href="userQuizHistory.jsp" role="button">View details &raquo;</a></p>
        </div>
         <div class="col-md-4">
           <h2>Popular Quizzes</h2>
           <p>Try your luck with the latest and greatest.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <p><a class="btn btn-default" href="popularQuizzes.jsp" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
           <h2>Achievements</h2>
           <p>See your Hall of Fame.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <p><a class="btn btn-default" href="userAchievements.jsp" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Created Quizzes</h2>
+          <p>Check out your quizzes.</p>
+          <p><a class="btn btn-default" href="userCreatedQuizzes.jsp" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Friend Activity</h2>
+          <p>See what your friends' have been up to.</p>
+          <p><a class="btn btn-default" href="userFeed.jsp" role="button">View details &raquo;</a></p>
         </div>
       </div>
 
