@@ -1,25 +1,26 @@
 package quiz;
 import java.util.*; 
 
-public class QResponse implements Question {
+public class QResponse extends Question {
 	/*
 	 * This is a standard text question with an appropriate text response. For
 	 * example: Who was President during the Bay of Pigs fiasco?
 	 */
 
-	private String question;
-	//private Answer answer;
-	private int questionId; 
-	private Set<Answer> possibleAnswers; 
-	private String questionType; 
+	private int questionId;
+	private int answersNeeded;
+	private boolean ordered;
+	private List<Answer> possibleAnswers;
 	
-	public QResponse(String question, Set<Answer> possibleAnswers, int questionId) {
-		this.questionType = "qresponse";
-		this.question = question;
+	public QResponse(String question, List<Answer> possibleAnswers, int answersNeeded, boolean ordered, int questionId) {
+		super(1, "qresponse", question);
 		this.questionId = questionId; 
+		this.answersNeeded = answersNeeded;
+		this.ordered = ordered;
 		this.possibleAnswers = possibleAnswers; 
 	}
 	
+	// TODO: probably remove this
 	// Current implementation: accepts any capitalization i.e. washington or Washington
 	public boolean checkAnswer(Answer userResponse) {
 		String lowercaseResponse = userResponse.toString().toLowerCase();
@@ -31,11 +32,16 @@ public class QResponse implements Question {
 		return false; 
 	}
 	
-	// Checks answer given answer string as a parameter 
+	// Checks answer given answer string as a parameter
+
 	public boolean checkAnswer(String userResponse) {
 		String lowercaseResponse = userResponse.toLowerCase();
+		if (ordered) {
+			// TODO
+		}
+		// TODO decide whether to use Answer or QResponseAnswer
 		for(Answer currAnswer: possibleAnswers) {
-			if(currAnswer.toString().toLowerCase().equals(lowercaseResponse)) {
+			if(((QResponseAnswer) currAnswer).matches(lowercaseResponse)) {
 				return true; 
 			}
 		}
@@ -43,7 +49,7 @@ public class QResponse implements Question {
 	}
 	
 	public String toString() {
-		return question; 
+		return super.getQuestionText();
 	}
 	
 	public int getId() {
@@ -51,7 +57,7 @@ public class QResponse implements Question {
 	}
 	
 	public String getQuestionType() {
-		return questionType; 
+		return super.getQuestionType();
 	}
 	
 }
