@@ -20,16 +20,8 @@ public class UserRepository implements IUserRepository
     private List<String> dbAchievements = new ArrayList<String>(); // REMOVE when DB exists
     private Map<String, List<String>> dbQuizzesCreated = new HashMap<String, List<String>>(); // REMOVE when DB exists
 
-    // Constructor
-    public UserRepository() {
-    }
+    public UserRepository() {}
 
-    /**
-     * Creates a new user account and stores it in the database
-     * @param username New username to create
-     * @param password New password to create
-     * @return true if successful, false if not
-     */
     public boolean createNewUser(String username, String email, String password, Boolean isAdmin)
     {
         if(userExists(username))

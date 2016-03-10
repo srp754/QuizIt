@@ -1,11 +1,8 @@
 package db;
 
-import com.mysql.fabric.xmlrpc.base.Data;
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 import user.Announcement;
 import user.HashedPassword;
-import user.MyDBInfo;
 import user.User;
 
 import java.sql.DriverManager;

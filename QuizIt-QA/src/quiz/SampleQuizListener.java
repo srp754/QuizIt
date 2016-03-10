@@ -3,7 +3,8 @@ package quiz;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.util.*; 
+import java.text.SimpleDateFormat;
+import java.util.*;
 /**
  * Application Lifecycle Listener implementation class SampleQuizListener
  *
@@ -59,7 +60,8 @@ public class SampleQuizListener implements ServletContextListener {
     	quizStatsTable.add(quiz1Stats);
     	String quiz1Name = "Math Quiz";
     	String quiz1Description = "An assortment of math quesitons.";
-    	QuizSummary quiz1Summary = new QuizSummary(0, quiz1Name, quiz1Description, 1);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		QuizSummary quiz1Summary = new QuizSummary(quiz1Name, quiz1Description, 1,formatter.format(new Date()) );
     	quizSummaryTable.add(quiz1Summary);
     	
     	List<Question> questions2 = new ArrayList<Question>(); 
@@ -75,7 +77,7 @@ public class SampleQuizListener implements ServletContextListener {
 		quizStatsTable.add(quiz2Stats);
 		String quiz2Name = "Biology Quiz"; 
 		String quiz2Description = "This quiz tests your knowledge about all things biology";
-		QuizSummary quiz2Summary = new QuizSummary(1, quiz2Name, quiz2Description, 2);
+		QuizSummary quiz2Summary = new QuizSummary(quiz2Name, quiz2Description, 2,formatter.format(new Date()) );
 		quizSummaryTable.add(quiz2Summary);
 		
 		List<Question> multipleChoiceQuestions = new ArrayList<Question>(); 
@@ -95,7 +97,7 @@ public class SampleQuizListener implements ServletContextListener {
 		quizStatsTable.add(quiz3Stats);
 		String quiz3Name = "Random Facts";
 		String quiz3Description = "The theme of this quiz is random trivia!";
-		QuizSummary quiz3Summary = new QuizSummary(2, quiz3Name, quiz3Description, 1);
+		QuizSummary quiz3Summary = new QuizSummary(quiz3Name, quiz3Description, 1,formatter.format(new Date()) );
 		quizSummaryTable.add(quiz3Summary);
 		
 		List<Question> complexQuestions = new ArrayList<Question>();
@@ -123,7 +125,7 @@ public class SampleQuizListener implements ServletContextListener {
 		quizStatsTable.add(complexQuizStats);
 		String complexQuizName = "Complex Quiz";
 		String complexQuizDescription = "A quiz with different question types!";
-		QuizSummary complexQuizSummary = new QuizSummary(3, complexQuizName, complexQuizDescription, 1);
+		QuizSummary complexQuizSummary = new QuizSummary(complexQuizName, complexQuizDescription, 1,formatter.format(new Date()) );
 		quizSummaryTable.add(complexQuizSummary);
 		
     	arg0.getServletContext().setAttribute("quizlist", quizList);

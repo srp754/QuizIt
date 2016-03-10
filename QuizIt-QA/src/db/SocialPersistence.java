@@ -3,7 +3,6 @@ package db;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import user.Message;
-import user.MyDBInfo;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;

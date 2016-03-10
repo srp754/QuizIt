@@ -8,7 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*; 
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Servlet implementation class CreateQuizServlet
@@ -76,7 +77,8 @@ public class CreateQuizServlet extends HttpServlet {
 		String quizName = request.getParameter("quizname"); 
 		String quizDescription = request.getParameter("quizdescription"); 
 		List<QuizSummary> quizSummaryTable = (ArrayList<QuizSummary>) getServletContext().getAttribute("quizsummary");
-		QuizSummary newQuizSummary = new QuizSummary(placeholderQuizId, quizName, quizDescription, placeholderCreatorId); 
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		QuizSummary newQuizSummary = new QuizSummary(quizName, quizDescription, placeholderCreatorId,formatter.format(new Date()) );
 		quizSummaryTable.add(newQuizSummary);
 		
 		//Now we hand the Quiz Statistics details 
