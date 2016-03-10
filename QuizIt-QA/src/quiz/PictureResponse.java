@@ -37,11 +37,13 @@ public class PictureResponse implements Question{
 		}
 		return false; 
 	}
-	
+
 	public String toString() {
-		return imageURL; 
+		return question;
 	}
-	
+
+	public String getImageURL() { return imageURL; }
+
 	public int getId() {
 		return questionId; 
 	}

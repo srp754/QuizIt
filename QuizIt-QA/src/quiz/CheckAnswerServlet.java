@@ -1,5 +1,5 @@
 package quiz;
-
+import user.*;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -8,6 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -41,23 +43,18 @@ public class CheckAnswerServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// Handles scoring for text/string based answers
-		// Iterate through the list of questions to return a score
+		HttpSession session = request.getSession();
+		IUserRepository user = (UserRepository) session.getAttribute("user");
+		int userId = user.getUserId();
 		String attemptIdStr = request.getParameter("attemptid"); 
 		String parsedAttemptId = attemptIdStr.replaceAll("\\/", "");
-		int attemptId = Integer.parseInt(parsedAttemptId);
+		int attemptId = Integer.parseInt(parsedAttemptId); // TODO: This has to be updated to reflect database code
 		List<QuizAttempt> quizAttemptHistoryTable = (ArrayList<QuizAttempt>) getServletContext().getAttribute("quizattempts");
-		QuizAttempt wantedAttempt = null;
-		for(QuizAttempt currentAttempt : quizAttemptHistoryTable) {
-			if(currentAttempt.getAttemptId() == attemptId) {
-				wantedAttempt = currentAttempt; 
-			}
-		}
 		
 		String idStr = request.getParameter("quizid");
 		String parsedId = idStr.replaceAll("\\/", "");
 		int quizid = Integer.parseInt(parsedId);
-		
+
 		List<QuizStats> quizStatsTable = (ArrayList<QuizStats>) getServletContext().getAttribute("quizstats");
 		QuizStats wantedStats = null; 
 		for(QuizStats currStats: quizStatsTable) {
@@ -66,7 +63,7 @@ public class CheckAnswerServlet extends HttpServlet {
 			}
 		}
 		wantedStats.incrementQuizAttempts();
-		//wantedStats.incrementUserAttempts(); IMPLEMENT WHEN USER GETS INTEGRATED 
+		//wantedStats.incrementUserAttempts(); IMPLEMENT WHEN USER GETS INTEGRATED
 		
 		List<Quiz> quizList = (ArrayList<Quiz>) getServletContext().getAttribute("quizlist");
 		Quiz quiz = quizList.get(quizid);
@@ -81,7 +78,18 @@ public class CheckAnswerServlet extends HttpServlet {
 			}
 
 		}
-		wantedAttempt.setAttemptScore(totalCorrect);
+
+		// Create new quiz attempt
+		String startTimeStr = request.getParameter("starttime");
+		String endTimeStr = request.getParameter("endtime");
+		long startTime = Long.parseLong(startTimeStr);
+		long endTime = System.currentTimeMillis();
+		long elapsedTime = endTime-startTime;
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		String dateCreated = formatter.format(new Date());
+		QuizAttempt newAttempt = new QuizAttempt(quizid, userId, totalCorrect, numPossible, elapsedTime, dateCreated);
+
+
 		wantedStats.addSumActualScores(totalCorrect);
 		wantedStats.addSumPossibleScores(numPossible);
 		request.setAttribute("possible", numPossible);
