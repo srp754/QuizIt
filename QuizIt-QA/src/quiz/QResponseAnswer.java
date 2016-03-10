@@ -1,5 +1,7 @@
 package quiz;
 
+import java.util.*;
+
 public class QResponseAnswer implements Answer{
 	// The answer for this question type is a String 
 	
@@ -13,18 +15,12 @@ public class QResponseAnswer implements Answer{
 		this.available = true;
 	}
 	
-	// TODO: can probably remove this
 	public String toString() {
 		return String.join(" OR ", answerAlts); 
 	}
-	
-	public boolean isAvailable() {
-		return available;
-	}
 
-	// TODO: move to Answer.java?
 	public boolean matches(String ans) {
-		if (answerAlts.contains(ans)) {
+		if (available && answerAlts.contains(ans)) {
 			available = false;
 			return true;
 		}

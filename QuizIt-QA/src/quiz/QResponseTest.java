@@ -28,7 +28,7 @@ public class QResponseTest {
 		QResponseAnswer qra2 = new QResponseAnswer(new HashSet<String>(Arrays.asList("WASHINGTON")), 1);
 		possibleAnswers.add(qra1);
 		possibleAnswers.add(qra2);
-		QResponseAnswer qra5 = new QResponseAnswer("George", 4); // Don't accept this one 
+		QResponseAnswer qra5 = new QResponseAnswer(new HashSet<String>(Arrays.asList("George")), 4); // Don't accept this one 
 		QResponse qr1 = new QResponse(q1, possibleAnswers, 1, false, 0);
 		assertTrue(qr1.checkAnswer("GW"));
 		assertTrue(!qr1.checkAnswer("George Washington")); 

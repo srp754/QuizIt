@@ -42,8 +42,9 @@ public class QResponse implements Question {
 		if (ordered) {
 			// TODO
 		}
+		// TODO decide whether to use Answer or QResponseAnswer
 		for(Answer currAnswer: possibleAnswers) {
-			if(currAnswer.isAvailable() && currAnswer.matches(lowercaseResponse)) {
+			if(((QResponseAnswer) currAnswer).matches(lowercaseResponse)) {
 				return true; 
 			}
 		}

@@ -35,7 +35,7 @@ public class MultipleChoice implements Question{
 	
 	//Temporary implementation
 	public boolean checkAnswer(String userResponse) {
-		return correctAnswers.contains(urStr);
+		return correctAnswers.contains(userResponse);
 	}
 	
 	//Override of toString
