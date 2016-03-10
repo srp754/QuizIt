@@ -2,16 +2,17 @@ package quiz;
 
 import java.util.*;
 
-public class QResponseAnswer implements Answer{
+public class QResponseAnswer extends Answer
+{
 	// The answer for this question type is a String 
 	
-	private Set<String> answerAlts; 
-	private int answerId; 
+	private Set<String> answerAlts;
 	private boolean available;
 	
-	public QResponseAnswer(Set<String> answerAlternatives, int answerId) {
-		this.answerAlts = answerAlternatives; 
-		this.answerId = answerId; 
+	public QResponseAnswer(Set<String> answerAlternatives, int answerId)
+	{
+		super(answerId, 1, "pictureresponse", "answerplaceholder", false);
+		this.answerAlts = answerAlternatives;
 		this.available = true;
 	}
 	
@@ -28,6 +29,6 @@ public class QResponseAnswer implements Answer{
 	}
 
 	public int getId() {
-		return answerId; 
+		return super.getAnswerId();
 	}
 }

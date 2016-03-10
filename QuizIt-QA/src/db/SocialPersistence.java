@@ -106,7 +106,7 @@ public class SocialPersistence
             {
                 String query = String.format("Select us.MessageId, UserId, FriendId, MessageType, MessageDate, MessageText as Content " +
                         "from UserSocial us inner join UserNotes un on us.MessageId = un.MessageId " +
-                        "where UserId = 1;", userId);
+                        "where UserId = %1$s;", userId);
                 rs = stmt.executeQuery(query);
                 while(rs.next())
                 {
