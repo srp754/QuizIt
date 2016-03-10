@@ -46,32 +46,32 @@ public class CheckAnswerServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		IUserRepository user = (UserRepository) session.getAttribute("user");
 		int userId = user.getUserId();
-		String attemptIdStr = request.getParameter("attemptid"); 
+		String attemptIdStr = request.getParameter("attemptid");
 		String parsedAttemptId = attemptIdStr.replaceAll("\\/", "");
 		int attemptId = Integer.parseInt(parsedAttemptId); // TODO: This has to be updated to reflect database code
 		List<QuizAttempt> quizAttemptHistoryTable = (ArrayList<QuizAttempt>) getServletContext().getAttribute("quizattempts");
-		
+
 		String idStr = request.getParameter("quizid");
 		String parsedId = idStr.replaceAll("\\/", "");
 		int quizid = Integer.parseInt(parsedId);
 
 		List<QuizStats> quizStatsTable = (ArrayList<QuizStats>) getServletContext().getAttribute("quizstats");
-		QuizStats wantedStats = null; 
+		QuizStats wantedStats = null;
 		for(QuizStats currStats: quizStatsTable) {
 			if(currStats.getQuizId() == quizid) {
-				wantedStats = currStats; 
+				wantedStats = currStats;
 			}
 		}
 		wantedStats.incrementQuizAttempts();
 		//wantedStats.incrementUserAttempts(); IMPLEMENT WHEN USER GETS INTEGRATED
-		
+
 		List<Quiz> quizList = (ArrayList<Quiz>) getServletContext().getAttribute("quizlist");
 		Quiz quiz = quizList.get(quizid);
 		List<Question> questions = quiz.getQuestions();
 		int numPossible = questions.size();
 		int totalCorrect = 0;
 		for (Question currQuestion : questions) {
-			String currId = Integer.toString(currQuestion.getId());
+			String currId = Integer.toString(currQuestion.getQuestionId());
 			String currAnswer = request.getParameter(currId);
 			if (currAnswer != null && currQuestion.checkAnswer(currAnswer)) {
 				totalCorrect++;

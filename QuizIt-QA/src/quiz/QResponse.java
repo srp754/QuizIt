@@ -1,23 +1,19 @@
 package quiz;
 import java.util.*; 
 
-public class QResponse implements Question {
+public class QResponse extends Question {
 	/*
 	 * This is a standard text question with an appropriate text response. For
 	 * example: Who was President during the Bay of Pigs fiasco?
 	 */
 
-	private String question;
-	//private Answer answer;
-	private int questionId; 
+	private int questionId;
 	private int answersNeeded;
 	private boolean ordered;
-	private List<Answer> possibleAnswers; 
-	private String questionType; 
+	private List<Answer> possibleAnswers;
 	
 	public QResponse(String question, List<Answer> possibleAnswers, int answersNeeded, boolean ordered, int questionId) {
-		this.questionType = "qresponse";
-		this.question = question;
+		super(1, "qresponse", question);
 		this.questionId = questionId; 
 		this.answersNeeded = answersNeeded;
 		this.ordered = ordered;
@@ -36,7 +32,8 @@ public class QResponse implements Question {
 		return false; 
 	}
 	
-	// Checks answer given answer string as a parameter 
+	// Checks answer given answer string as a parameter
+
 	public boolean checkAnswer(String userResponse) {
 		String lowercaseResponse = userResponse.toLowerCase();
 		if (ordered) {
@@ -52,7 +49,7 @@ public class QResponse implements Question {
 	}
 	
 	public String toString() {
-		return question; 
+		return super.getQuestionText();
 	}
 	
 	public int getId() {
@@ -60,7 +57,7 @@ public class QResponse implements Question {
 	}
 	
 	public String getQuestionType() {
-		return questionType; 
+		return super.getQuestionType();
 	}
 	
 }

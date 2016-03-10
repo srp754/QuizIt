@@ -19,4 +19,9 @@ public class Question
 	public String getQuestionType() {return questionType;}
 	public String getQuestionText() {return questionText;}
 	public void setQuestionId(int id) {questionId = id;}
+
+	public boolean checkAnswer(String currAnswer)
+	{
+		return false;
+	}
 }
