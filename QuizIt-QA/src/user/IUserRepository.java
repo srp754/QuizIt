@@ -20,7 +20,7 @@ public interface IUserRepository
     public int usernameToId(String username); //temporary method
     public String idToUsername(int userId); //temporary method
     boolean isCorrectLogin(String username, String password); //XX
-    boolean isAdmin(); //XX
+    boolean isAdmin(String username); //XX
     void addFriend(int friendUserId); //XX
     void removeFriend(int friendUserId); //XX
     public void addAchievement(String achievementName, String achievementDesc); //XX

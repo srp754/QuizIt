@@ -1,5 +1,7 @@
 package user;
 
+import db.UserPersistence;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +23,7 @@ public class PromoteUserServlet extends HttpServlet {
         String username = request.getParameter("inputUserName");
 
         if(userRepo.userExists(username)) {
-            if(!db.UserPersistence.GetUser(username).isAdmin) {
+            if(!userRepo.isAdmin(UserPersistence.GetUser(username).userName)) {
                 userRepo.promoteToAdmin(username);
                 out.print(username + " successfully promoted to administrator");
             }

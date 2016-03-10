@@ -72,6 +72,7 @@ public class DatabaseTasks
 
         try
         {
+            Class.forName("com.mysql.jdbc.Driver");
             Connection con = (Connection) DriverManager.getConnection
                     ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
 
@@ -81,6 +82,8 @@ public class DatabaseTasks
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
