@@ -70,7 +70,9 @@
       <div class="container">
         <h1>Welcome back, <%= user.getUsername() %>!</h1>
         <p>Check out what's new.</p>
-        <p><a class="btn btn-primary btn-lg" href="/quiz/quizhomepage.jsp" role="button">Take a Quiz &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" href="/quiz/quizhomepage.jsp" role="button">Take a Quiz &raquo;</a>
+          <a class="btn btn-primary btn-lg" href="/quiz/createquiz.jsp" role="button">Create a Quiz &raquo;</a>
+        </p>
       </div>
     </div>
 
@@ -82,12 +84,12 @@
           <ul class="list-group">
             <%
               List<Announcement> announcementList = DatabaseTasks.GetAnnouncments();
-              for(Announcement a : announcementList) {
-                out.println("<li class='list-group-item'>" + a.date + ": " + a.text + "</li>");
+
+              for(int i=announcementList.size()-1; i >= 0; i--) {
+                out.println("<li class='list-group-item'>" + announcementList.get(i).date + ": " + announcementList.get(i).text + "</li>");
               }
             %>
           </ul>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
           <h2>Quiz History</h2>

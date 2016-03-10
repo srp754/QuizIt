@@ -1,5 +1,5 @@
 <%@ page import="quiz.*, user.*, java.util.*" %>
-<% IUserRepository userRepository = (UserRepository) session.getAttribute("user"); %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <%
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);
@@ -12,7 +12,7 @@
 	}
 	List<QuizAttemptHistory> quizAttemptHistoryTable = (List<QuizAttemptHistory>) getServletContext().getAttribute("quizattempts");
 	int totalAttempts = quizAttemptHistoryTable.size(); 
-	int userId = userRepository.getUserId(); 
+	int userId = user.getUserId(); 
 	List<Quiz> quizList = (List<Quiz>) getServletContext().getAttribute("quizlist");
 	Quiz quiz = quizList.get(quizId);
 	List<Question> quizQuestions = quiz.getQuestions();

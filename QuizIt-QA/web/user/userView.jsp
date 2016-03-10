@@ -48,19 +48,19 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="user/userHomePage">Home</a></li>
-                <li><a href="quiz/quizhomepage.jsp">Quiz</a></li>
+                <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
+                <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
                 <li><a href="#feed">Feed</a></li>
                 <% if(user.isAdmin()) {
                     out.println("<li><a href='user/dashboard.html'>Admin</a></li>");
                 }
                 %>
-                <li><a href="user/messages.jsp">&#128172;</a></li>
+                <li><a href="/user/messages.jsp">&#128172;</a></li>
             </ul>
-            <form class="navbar-form navbar-right" action="../SignOutServlet" method="post">
+            <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
                 <button type="submit" class="btn btn-primary">Sign Out</button>
             </form>
-            <form class="navbar-form navbar-right" action="../UserSearchServlet" method="post">
+            <form class="navbar-form navbar-right" action="/UserSearchServlet" method="post">
                 <div class="form-group">
                     <input type="text" placeholder="&#128269;" class="form-control" name="username">
                 </div>
@@ -84,7 +84,7 @@
         <%
         } else {
         %>
-        <form action="../MessageServlet" method="post">
+        <form action="/MessageServlet" method="post">
             <input name="username" type="hidden" value="<%= username %>"/>
             <input name="messagetype" type="hidden" value="friend"/>
             <input name="content" type="hidden" value=""/>

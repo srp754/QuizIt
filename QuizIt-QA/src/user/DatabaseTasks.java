@@ -8,6 +8,8 @@ import com.mysql.jdbc.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -251,6 +253,37 @@ public class DatabaseTasks
             sb.append("'" + msg.getContent() + "',");
             sb.append("'" + "Need to get info from quiz here" + "',");
             sb.append(-1 + ");");
+
+            stmt.executeUpdate(sb.toString());
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void InsertAnnouncement(String text)
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+            Statement stmt = (Statement) con.createStatement();
+            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            stmt.executeQuery("SET @@auto_increment_increment=1; ");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO Announcements VALUES(");
+            sb.append("'" + text + "',");
+            sb.append("'" + formatter.format(new Date()) + "');");
 
             stmt.executeUpdate(sb.toString());
             con.close();
@@ -677,6 +710,39 @@ public class DatabaseTasks
         }
 
         return foundMessage;
+    }
+
+    public static List<Announcement> GetAnnouncments()
+    {
+        List<Announcement> announcementList = new ArrayList<>();
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = GetResultSet(con, "*", "Announcements");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            //DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG);
+
+            while(rs.next())
+            {
+                Date date = null;
+                try {
+                    date = formatter.parse(rs.getString("AnnouncementCreateDate"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String text = rs.getString("AnnouncementText");
+                Announcement a = new Announcement(text, formatter.format(date));
+                announcementList.add(a);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return announcementList;
     }
 
     public static boolean CheckIfRecordExistsWithParameterString(String tableName, String parameterName, String parameterValue)

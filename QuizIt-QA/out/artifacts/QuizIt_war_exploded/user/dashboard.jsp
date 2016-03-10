@@ -51,7 +51,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="#">Profile</a></li>
-                <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
+                <form class="navbar-form" action="/SignOutServlet" method="post">
                     <button type="submit" class="btn btn-primary">Sign Out</button>
                 </form>
             </ul>
@@ -100,6 +100,7 @@
                         out.println("<tr><td>Number of admin users" + "</td><td>" + numAdmin + "</td>");
                         out.println("<tr><td>Number of total users" + "</td><td>" + numUsers + "</td>");
 
+                        out.println("<tr><td>Number of created quizzes" + "</td><td>TODO</td>");
                     %>
                     </tbody>
                 </table>
