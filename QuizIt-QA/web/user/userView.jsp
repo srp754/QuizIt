@@ -1,7 +1,7 @@
 <%@ page import="user.*" %>
 <!DOCTYPE html>
 
-<% IUserRepository user = (IUserRepository) session.getAttribute("user");
+<% IUserRepository user = (UserRepository) session.getAttribute("user");
     String username = request.getParameter("username");
     int userId = user.usernameToId(username);
 %>

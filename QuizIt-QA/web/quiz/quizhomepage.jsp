@@ -1,5 +1,5 @@
 <%@ page import="quiz.*, user.*, java.util.*" %>
-<% IUserRepository user = (IUserRepository) session.getAttribute("user"); %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -74,12 +74,12 @@
         <%
             List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
             for (QuizSummary currentSummary: quizSummaries) {
-
         %>
         <li><a href="quizsummary.jsp?id=<%=currentSummary.getQuizId() %>"><%out.println(currentSummary.getQuizName());%></a></li>
         <%
             }
         %>
+        <h2><a href="createquiz.jsp"> Create your own quiz!</a></h2>
     </div>
 
 </div><!-- /.container -->

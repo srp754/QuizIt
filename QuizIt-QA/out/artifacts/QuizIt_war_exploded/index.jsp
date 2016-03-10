@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <%@ page import="java.util.*,user.*" %>
-<% IUserRepository user = (IUserRepository) session.getAttribute("user"); %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -51,13 +51,13 @@
             <a class="navbar-brand" href="#">QuizIt</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <form class="navbar-form navbar-right" action="../LoginServlet" method="post">
-                <span style="color:#ff4341;"><%= session.getAttribute("loginError") %></span>
+            <form class="navbar-form navbar-right" onsubmit="event.preventDefault(); loginUser()">
+                <span style="color:#ff4341;" id="loginError"></span>
                 <div class="form-group">
-                    <input type="text" placeholder="Username" class="form-control" name="userName">
+                    <input type="text" placeholder="Email" class="form-control" id="userName">
                 </div>
                 <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control" name="password">
+                    <input type="password" placeholder="Password" class="form-control" id="password">
                 </div>
                 <button type="submit" class="btn btn-success">Sign in</button>
             </form>
@@ -91,6 +91,29 @@
 <script src="../../dist/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script type="text/javascript">
+    function loginUser() {
+        var username = document.getElementById("userName").value;
+        var password= document.getElementById("password").value;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                if (xhttp.responseText.indexOf("Invalid") == 0) {
+                    document.getElementById("loginError").innerHTML = xhttp.responseText;
+                    document.getElementById("userName").value = "";
+                    document.getElementById("password").value = "";
+                }
+                else {
+                    location.href = "/user/userHomePage.jsp";
+                }
+            }
+        };
+        xhttp.open("POST", "/LoginServlet", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        xhttp.send("userName=" + username + "&password=" + password);
+    }
+</script>
 </body>
 </html>
 

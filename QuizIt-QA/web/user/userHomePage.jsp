@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <%@ page import="java.util.*,user.*" %>
-<% IUserRepository user = (IUserRepository) session.getAttribute("user"); %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -44,16 +44,16 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="user/userHomePage">Home</a></li>
-            <li><a href="quiz/quizhomepage.jsp">Quiz</a></li>
+            <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
+            <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
             <li><a href="#feed">Feed</a></li>
             <% if(user.isAdmin()) {
-              out.println("<li><a href='user/dashboard.html'>Admin</a></li>");
+              out.println("<li><a href='/user/dashboard.jsp'>Admin</a></li>");
             }
             %>
-            <li><a href="user/messages.jsp">&#128172;</a></li>
+            <li><a href="/user/messages.jsp">&#128172;</a></li>
           </ul>
-          <form class="navbar-form navbar-right" action="../SignOutServlet" method="post">
+          <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
             <button type="submit" class="btn btn-primary">Sign Out</button>
           </form>
           <form class="navbar-form navbar-right" action="../UserSearchServlet" method="post">
@@ -70,7 +70,7 @@
       <div class="container">
         <h1>Welcome back, <%= user.getUsername() %>!</h1>
         <p>Check out what's new.</p>
-        <p><a class="btn btn-primary btn-lg" href="quiz/quizhomepage.jsp" role="button">Take a Quiz &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" href="/quiz/quizhomepage.jsp" role="button">Take a Quiz &raquo;</a></p>
       </div>
     </div>
 
@@ -79,7 +79,14 @@
       <div class="row">
         <div class="col-md-4">
           <h2>Announcements</h2>
-          <p> Announcements here </p>
+          <ul class="list-group">
+            <%
+              List<Announcement> announcementList = DatabaseTasks.GetAnnouncments();
+              for(Announcement a : announcementList) {
+                out.println("<li class='list-group-item'>" + a.date + ": " + a.text + "</li>");
+              }
+            %>
+          </ul>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">

@@ -42,7 +42,7 @@ public class FriendServlet extends HttpServlet {
 		if (action.equals("Accept")) {
 			userRepository.addFriend(userId);
 		}
-		Messaging.removeFriendRequest(userRepository.getUserId(), userId);
+		SocialRepository.removeFriendRequest(userRepository.getUserId(), userId);
 	}
 
 }

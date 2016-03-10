@@ -40,7 +40,7 @@ public class UserRepository implements IUserRepository
         {
             byte[] salt = generateSalt();
             byte[] hashSaltPassword = generateHashValue(hexToString(salt), password);
-            DatabaseTasks.InsertUserDetail(username, email, hexToString(hashSaltPassword), hexToString(salt), isAdmin);
+            db.UserPersistence.InsertUserDetail(username, email, hexToString(hashSaltPassword), hexToString(salt), isAdmin);
             PopulateCurrentUser(username);
             return true;
         }
@@ -49,13 +49,13 @@ public class UserRepository implements IUserRepository
     public void DeleteUser(String userName)
     {
         if(userExists(userName))
-            DatabaseTasks.DeleteUserDetail(userName);
+            db.UserPersistence.DeleteUserDetail(userName);
     }
 
     public void PopulateCurrentUser(String userName)
     {
         if(userExists(userName))
-            _currentUser = DatabaseTasks.GetUser(userName);
+            _currentUser = db.UserPersistence.GetUser(userName);
     }
 
     public void removeCurrentUser() {
@@ -71,7 +71,7 @@ public class UserRepository implements IUserRepository
     {
         if (userExists(username))
         {
-            HashedPassword passwordInfo = DatabaseTasks.GetPasswordInfo(username);
+            HashedPassword passwordInfo = db.UserPersistence.GetPasswordInfo(username);
             String dbPass = passwordInfo.hashedPass;
             String dbSalt = passwordInfo.hashedSalt;
 
@@ -88,8 +88,8 @@ public class UserRepository implements IUserRepository
      * @param userToPromote Username to promote to admin
      */
     public void promoteToAdmin(String userToPromote) {
-        DatabaseTasks.PromoteUserToAdmin(userToPromote);
-        _currentUser.isAdmin = true;
+        db.UserPersistence.PromoteUserToAdmin(userToPromote);
+        //_currentUser.isAdmin = true;
     }
 
     public boolean isAdmin()
@@ -103,101 +103,27 @@ public class UserRepository implements IUserRepository
     public void addFriend(int friendUserId)
     {
         if(!FriendshipExists(friendUserId))
-            DatabaseTasks.InsertUserFriend(_currentUser.userId, friendUserId);
+            db.UserPersistence.InsertUserFriend(_currentUser.userId, friendUserId);
     }
 
     public void removeFriend(int friendUserId)
     {
         if(FriendshipExists(friendUserId))
-            DatabaseTasks.DeleteUserFriendship(_currentUser.userId, friendUserId);
+            db.UserPersistence.DeleteUserFriendship(_currentUser.userId, friendUserId);
     }
 
-    /**
-     * Adds a user's quiz ID and score to the database
-     * @param quizId
-     * @param grade
-     */
-    public void addQuizScore(String quizId, Double grade) {
-        //TODO add to DB when it's ready
-        dbQuizHistory.put(quizId, grade);
-    }
 
-    /**
-     * Removes a particular quiz history from a user
-     * @param username
-     * @param quizId
-     */
-    public void removeQuiz(String username, String quizId) {
-        //TODO replace with DB when ready
-        dbQuizHistory.remove(quizId);
-    }
-
-    /**
-     * Returns the user's score for a particular quiz
-     * @param quizId
-     * @return
-     */
-    public Double getQuizScore(String quizId) {
-        //TODO get from DB when it's ready
-        return dbQuizHistory.get(quizId);
-    }
-    
-    public Double getQuizHighScore(String quizId) {
-    	//TODO get from DB when it's ready
-    	return 100.0;
-    }
-
-    /**
-     * Returns the number of quizzes a user has taken
-     * @return number of quizzes taken
-     */
-    public Integer getNumberOfQuizzesTaken() {
-        //TODO replace with DB when it's ready
-        return dbQuizHistory.size();
-    }
-
-    public Integer getNumberOfQuizzesCreated() {
-        //TODO replace with DB when it's ready
-        if(dbQuizzesCreated.get(_currentUser.userName) == null) {
-            return 0;
-        }
-        else
-        {
-            return dbQuizzesCreated.get(_currentUser.userName).size();
-        }
-    }
-
-    /**
-     * Returns the 5 most recently created quizzes for the user or empty list if user has not
-     * created a quiz.
-     * @return
-     */
-    public List<String> getRecentlyCreatedQuizzes() {
-        //TODO pull from DB when it's ready
-        int numQuizzesCreated = getNumberOfQuizzesCreated();
-
-        if (numQuizzesCreated== 0) {
-            return new ArrayList<String>();
-        }
-        else {
-            List<String> quizList = new ArrayList<String>();
-            for (int i = numQuizzesCreated-1; i >= Math.max(numQuizzesCreated - MAX_RECENT_CREATED_QUIZZES, 0); i--) {
-                quizList.add(dbQuizzesCreated.get(_currentUser.userName).get(i));
-            }
-            return quizList;
-        }
-    }
 
     public void addAchievement(String achievementName, String achievementDesc)
     {
         if(!AchievementExists(achievementName))
-            DatabaseTasks.InsertAchievement(getUserId(), achievementName, achievementDesc);
+            db.UserPersistence.InsertAchievement(getUserId(), achievementName, achievementDesc);
     }
 
     public void removeAchievement(String achievementName)
     {
         if(AchievementExists(achievementName))
-            DatabaseTasks.DeleteAchievement(getUserId(), achievementName);
+            db.UserPersistence.DeleteAchievement(getUserId(), achievementName);
     }
 
     public List<String> getAchievements() {
@@ -207,27 +133,27 @@ public class UserRepository implements IUserRepository
 
     public Integer getNumberOfUsers()
     {
-        return DatabaseTasks.GetCountRecordsFromTable("UserDetail");
+        return db.DatabaseTasks.GetCountRecordsFromTable("UserDetail");
     }
 
     public List<User> getAllUsers()
     {
-        return DatabaseTasks.GetUsers();
+        return db.UserPersistence.GetUsers();
     }
 
     public boolean  AchievementExists(String achievementName)
     {
-        return DatabaseTasks.CheckIfRecordExistsWithParametersIntString("UserAchievements", "UserId",  Integer.toString(getUserId()), "AchievementName", achievementName);
+        return db.DatabaseTasks.CheckIfRecordExistsWithParametersIntString("UserAchievements", "UserId",  Integer.toString(getUserId()), "AchievementName", achievementName);
     }
 
     public boolean FriendshipExists(int userId)
     {
-        return DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserFriends", "UserId",  Integer.toString(getUserId()), "FriendId", Integer.toString(userId));
+        return db.DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserFriends", "UserId",  Integer.toString(getUserId()), "FriendId", Integer.toString(userId));
     }
 
     public boolean userExists(String username)
     {
-        return DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);
+        return db.DatabaseTasks.CheckIfRecordExistsWithParameterString("UserDetail", "UserName", username);
     }
 
     // Generates the SHA hex hash value using the MessageDigest
@@ -270,4 +196,82 @@ public class UserRepository implements IUserRepository
         return buff.toString();
     }
 
+
+    //*********************** PROBABLY WILL BE DELETED, QUIZ METHODS ***************************
+
+    /**
+     * Adds a user's quiz ID and score to the database
+     * @param quizId
+     * @param grade
+     */
+    public void addQuizScore(String quizId, Double grade) {
+        //TODO add to DB when it's ready
+        dbQuizHistory.put(quizId, grade);
+    }
+
+    /**
+     * Removes a particular quiz history from a user
+     * @param username
+     * @param quizId
+     */
+    public void removeQuiz(String username, String quizId) {
+        //TODO replace with DB when ready
+        dbQuizHistory.remove(quizId);
+    }
+
+    /**
+     * Returns the user's score for a particular quiz
+     * @param quizId
+     * @return
+     */
+    public Double getQuizScore(String quizId) {
+        //TODO get from DB when it's ready
+        return dbQuizHistory.get(quizId);
+    }
+
+    public Double getQuizHighScore(String quizId) {
+        //TODO get from DB when it's ready
+        return 100.0;
+    }
+
+    /**
+     * Returns the number of quizzes a user has taken
+     * @return number of quizzes taken
+     */
+    public Integer getNumberOfQuizzesTaken() {
+        //TODO replace with DB when it's ready
+        return dbQuizHistory.size();
+    }
+
+    public Integer getNumberOfQuizzesCreated() {
+        //TODO replace with DB when it's ready
+        if(dbQuizzesCreated.get(_currentUser.userName) == null) {
+            return 0;
+        }
+        else
+        {
+            return dbQuizzesCreated.get(_currentUser.userName).size();
+        }
+    }
+
+    /**
+     * Returns the 5 most recently created quizzes for the user or empty list if user has not
+     * created a quiz.
+     * @return
+     */
+    public List<String> getRecentlyCreatedQuizzes() {
+        //TODO pull from DB when it's ready
+        int numQuizzesCreated = getNumberOfQuizzesCreated();
+
+        if (numQuizzesCreated== 0) {
+            return new ArrayList<String>();
+        }
+        else {
+            List<String> quizList = new ArrayList<String>();
+            for (int i = numQuizzesCreated-1; i >= Math.max(numQuizzesCreated - MAX_RECENT_CREATED_QUIZZES, 0); i--) {
+                quizList.add(dbQuizzesCreated.get(_currentUser.userName).get(i));
+            }
+            return quizList;
+        }
+    }
 }

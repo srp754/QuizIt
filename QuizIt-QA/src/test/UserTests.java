@@ -1,16 +1,19 @@
-package user;
+package test;
 
-import org.junit.Test;
+import user.IUserRepository;
+import user.User;
+import user.UserRepository;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Created by scottparsons on 2/25/16.
+ * Created by Alex on 3/9/2016.
  */
-public class UserTest
+public class UserTests
 {
     @org.junit.Test
     public void Should_Get_Count_Of_Users() throws SQLException
@@ -177,3 +180,4 @@ public class UserTest
         userRepository.DeleteUser("AdminTestUser");
     }
 }
+
