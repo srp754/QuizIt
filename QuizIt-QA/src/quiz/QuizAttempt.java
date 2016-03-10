@@ -2,7 +2,8 @@ package quiz;
 
 import java.util.Date;
 
-public class QuizAttemptHistory {
+public class QuizAttempt
+{
 	private int attemptId; 
 	private int quizId; 
 	private int userId; 
@@ -11,7 +12,7 @@ public class QuizAttemptHistory {
 	private long elapsedTime; // Time between start quiz and submit quiz
 	private long attemptTime; 
 	
-	public QuizAttemptHistory(int attemptId, int quizId, int userId, int attemptPossible) {
+	public QuizAttempt(int attemptId, int quizId, int userId, int attemptPossible) {
 		this.attemptId = attemptId;
 		this.quizId = quizId; 
 		this.userId = userId; 
