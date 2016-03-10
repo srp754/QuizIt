@@ -1,6 +1,7 @@
 package db;
 
 import com.mysql.jdbc.Connection;
+import quiz.Question;
 import user.Activity;
 import db.MyDBInfo;
 import quiz.QuizAttempt;
@@ -23,77 +24,6 @@ import java.util.Date;
  */
 public class QuizPersistence
 {
-
-    public static List<Activity> GetCreatedQuizzes()
-    {
-        List<Activity> quizList = new ArrayList<>();
-
-        try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserActivity");
-
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-            while(rs.next())
-            {
-                if(rs.getString("ActivityType").equals("QuizCreated")) {
-                    Date date = null;
-                    try {
-                        date = formatter.parse(rs.getString("ActivityDate"));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    String type = rs.getString("ActivityType");
-                    Activity activity = new Activity(type, formatter.format(date));
-                    quizList.add(activity);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return quizList;
-    }
-
-    public static List<Activity> GetTakenQuizzes()
-    {
-        List<Activity> quizList = new ArrayList<>();
-
-        try
-        {
-            Connection con = (Connection) DriverManager.getConnection
-                    ("jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME, MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserActivity");
-
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-            while (rs.next())
-            {
-                if (rs.getString("ActivityType").equals("QuizTaken"))
-                {
-                    Date date = null;
-                    try
-                    {
-                        date = formatter.parse(rs.getString("ActivityDate"));
-                    } catch (ParseException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    String type = rs.getString("ActivityType");
-                    Activity activity = new Activity(type, formatter.format(date));
-                    quizList.add(activity);
-                }
-            }
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
-        return quizList;
-    }
     public static int InsertQuizSummary(QuizSummary qz)
     {
         int quizId = 0;
@@ -126,6 +56,24 @@ public class QuizPersistence
         }
 
         return quizId;
+    }
+
+    public static void InsertQuestions(List<Question> questions)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO QuizSummary VALUES");
+
+        for(Question question : questions)
+        {
+            sb.append("(");
+            sb.append("null,");
+            sb.append(question.getQuizId() + ",");
+            sb.append("'" + question.getQuestionType() + "',");
+            sb.append("'" + question.getQuestionText() + "',");
+            sb.append(");");
+        }
+        sb.append(");");
+        DatabaseTasks.ExecuteUpdate(sb.toString());
     }
 
     public static int InsertAttempt(QuizAttempt attempt)
@@ -202,6 +150,12 @@ public class QuizPersistence
         DatabaseTasks.ExecuteUpdate(query);
     }
 
+    public static void DeleteQuestions(int quizId)
+    {
+        String query = String.format("Delete from QuizQuestions WHERE QuizId = %1$s;", quizId);
+        DatabaseTasks.ExecuteUpdate(query);
+    }
+
     public static void DeleteAttempt(int quizId)
     {
         String query = String.format("Delete from QuizHistory WHERE AttemptId = %1$s;", quizId);
@@ -238,5 +192,76 @@ public class QuizPersistence
         }
 
         return qStats;
+    }
+
+    public static List<Activity> GetCreatedQuizzes()
+    {
+        List<Activity> quizList = new ArrayList<>();
+
+        try {
+            Connection con = (Connection) DriverManager.getConnection
+                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserActivity");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            while(rs.next())
+            {
+                if(rs.getString("ActivityType").equals("QuizCreated")) {
+                    Date date = null;
+                    try {
+                        date = formatter.parse(rs.getString("ActivityDate"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String type = rs.getString("ActivityType");
+                    Activity activity = new Activity(type, formatter.format(date));
+                    quizList.add(activity);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return quizList;
+    }
+
+    public static List<Activity> GetTakenQuizzes()
+    {
+        List<Activity> quizList = new ArrayList<>();
+
+        try
+        {
+            Connection con = (Connection) DriverManager.getConnection
+                    ("jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME, MyDBInfo.MYSQL_PASSWORD);
+
+            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserActivity");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            while (rs.next())
+            {
+                if (rs.getString("ActivityType").equals("QuizTaken"))
+                {
+                    Date date = null;
+                    try
+                    {
+                        date = formatter.parse(rs.getString("ActivityDate"));
+                    } catch (ParseException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    String type = rs.getString("ActivityType");
+                    Activity activity = new Activity(type, formatter.format(date));
+                    quizList.add(activity);
+                }
+            }
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return quizList;
     }
 }

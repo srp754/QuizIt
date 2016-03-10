@@ -1,9 +1,6 @@
 package test;
 
-import quiz.QuizAttempt;
-import quiz.QuizRepository;
-import quiz.QuizStats;
-import quiz.QuizSummary;
+import quiz.*;
 import user.SocialRepository;
 
 import java.text.SimpleDateFormat;
@@ -111,5 +108,11 @@ public class QuizTests
         QuizRepository.RemoveQuiz(quizId);
         QuizRepository.RemoveAttempt(attemptId);
         QuizRepository.RemoveAttempt(attemptId2);
+    }
+
+    @org.junit.Test
+    public void Should_Add_And_Remove_Questions()
+    {
+
     }
 }

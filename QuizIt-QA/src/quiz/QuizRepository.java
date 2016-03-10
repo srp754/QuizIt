@@ -23,6 +23,11 @@ public class QuizRepository
 
     }
 
+    public static void AddQuestions(List<Question> questions)
+    {
+        QuizPersistence.InsertQuestions(questions);
+    }
+
     public static int AddQuizSummary(QuizSummary qz)
     {
         return QuizPersistence.InsertQuizSummary(qz);
@@ -43,6 +48,11 @@ public class QuizRepository
     {
         QuizPersistence.DeleteQuiz(quizId);
         QuizPersistence.DeleteQuizStats(quizId);
+    }
+
+    public static void RemoveQUestions(int quizId)
+    {
+        QuizPersistence.DeleteQuestions(quizId);
     }
 
     public static void RemoveAttempt(int attemptId)
