@@ -278,7 +278,7 @@ public class QuizPersistence
         try {
             ResultSet rs = DatabaseTasks.GetResultSet("*", "UserActivity");
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
             while(rs.next())
             {
@@ -291,7 +291,8 @@ public class QuizPersistence
                     }
                     String type = rs.getString("ActivityType");
                     int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
-                    Activity activity = new Activity(type, formatter.format(date), linkId);
+                    int userId = Integer.parseInt(rs.getString("UserId"));
+                    Activity activity = new Activity(userId, type, formatter.format(date), linkId);
                     quizList.add(activity);
                 }
             }
@@ -310,7 +311,7 @@ public class QuizPersistence
         {
             ResultSet rs = DatabaseTasks.GetResultSet("*", "UserActivity");
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
             while (rs.next())
             {
@@ -326,7 +327,8 @@ public class QuizPersistence
                     }
                     String type = rs.getString("ActivityType");
                     int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
-                    Activity activity = new Activity(type, formatter.format(date), linkId);
+                    int userId = Integer.parseInt(rs.getString("UserId"));
+                    Activity activity = new Activity(userId, type, formatter.format(date), linkId);
                     quizList.add(activity);
                 }
             }
