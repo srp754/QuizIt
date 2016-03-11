@@ -138,6 +138,13 @@ public class QuizRepository
         return answers;
     }
 
+    public static boolean CheckAnswer(int questionId, String answerText)
+    {
+        String dbAnswerText = db.QuizPersistence.GetAnswer(questionId);
+        boolean isAnswerCorrect = answerText.equals(dbAnswerText);
+        return isAnswerCorrect;
+    }
+
     public static List<Answer> GetAllAnswersForQuiz(int quizId) //Note sure this is needed, only if DB perf still bad
     {
 //        List<Answer> answers = db.QuizPersistence.GetAllAnswersForQuiz(quizId);
@@ -146,7 +153,7 @@ public class QuizRepository
 
     public static List<QuizSummary> GetAllQuizSummaries()
     {
-        //may need this for quiz summary page?
-        return null;
+        List<QuizSummary> summaries = QuizPersistence.GetQuizSummaries();
+        return summaries;
     }
 }

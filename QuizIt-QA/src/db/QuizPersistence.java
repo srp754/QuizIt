@@ -230,6 +230,30 @@ public class QuizPersistence
         return qSummary;
     }
 
+    public static List<QuizSummary> GetQuizSummaries()
+    {
+        List<QuizSummary> summaries = new ArrayList<>();
+
+        try {
+            ResultSet rs = DatabaseTasks.GetResultSet("*", "QuizSummary");
+
+            while(rs.next())
+            {
+                int quizId = Integer.parseInt(rs.getString("QuizId"));
+                String quizName = rs.getString("QuizName");
+                String quizDescription = rs.getString("QuizDescription");
+                int creatorId = Integer.parseInt(rs.getString("CreatorId"));
+                String createDate = rs.getString("CreateDate");
+
+                summaries.add(new QuizSummary(quizName, quizDescription, creatorId, createDate, quizId));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return summaries;
+    }
+
     public static int GetNumberOfCreatedQuizzes() {
         int count = 0;
 
@@ -383,5 +407,28 @@ public class QuizPersistence
         }
 
         return foundAnswers;
+    }
+
+    public static String GetAnswer(int questionId)
+    {
+        String correctAnswer = "Answer Not Found";
+
+        ResultSet rs;
+        try
+        {
+            Statement stmt = db.DBConnection.getStatement();
+
+            String query = String.format("Select * from QuizAnswers where QuestionId = %1$s and AnswerCorrectFlag = true;", questionId);
+            rs = stmt.executeQuery(query);
+            if(rs.next())
+                correctAnswer = rs.getString("AnswerText");
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return correctAnswer;
     }
 }
