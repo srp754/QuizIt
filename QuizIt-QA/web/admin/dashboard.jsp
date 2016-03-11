@@ -96,7 +96,8 @@
                         out.println("<tr><td>Number of admin users" + "</td><td>" + numAdmin + "</td>");
                         out.println("<tr><td>Number of total users" + "</td><td>" + numUsers + "</td>");
 
-                        out.println("<tr><td>Number of created quizzes" + "</td><td>TODO</td>");
+                        int numCreated = db.QuizPersistence.GetNumberOfCreatedQuizzes();
+                        out.println("<tr><td>Number of created quizzes" + "</td><td>" + numCreated + "</td>");
                     %>
                     </tbody>
                 </table>

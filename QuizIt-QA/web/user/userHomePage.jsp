@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@ page import="java.util.*,user.*,db.*" %>
+<%@ page import="java.util.*,user.*,db.*,quiz.*" %>
 <% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <html lang="en">
 <head>
@@ -93,32 +93,17 @@
         <div class="col-md-4">
             <h2>Quiz History</h2>
             <%
-                List<Activity> activityList = db.QuizPersistence.GetCreatedQuizzes();
+                List<Activity> activityList = db.UserPersistence.GetActivities(user.getUserId());
                 if(activityList.size() > 0) {
-                    out.println("<ul class='list-group'>");
-
-                    for(int i=activityList.size()-1; i >= 0; i--) {
-                        if(activityList.get(i).type.equals("QuizCreated") || activityList.get(i).type.equals("QuizTaken") ) {
-                            out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                    "TODO" + "'>" + activityList.get(i).date + ": " + activityList.get(i).type + "</li>");
-                        }
-                    }
-                    out.println("</ul>");
-                }
-            %>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>Popular Quizzes</h2>
-            <%
-                List<Activity> quizList = db.QuizPersistence.GetTakenQuizzes();
-                if(quizList.size() > 0) {
                     out.println("<ul class='list-group'>");
 
                     int count = 0;
                     for(int i=activityList.size()-1; i >= 0; i--) {
-                        out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                "TODO" + "'>" + quizList.get(i).date + ": " + quizList.get(i).type + "</li>");
+                        if(activityList.get(i).type.equals("QuizCreated") || activityList.get(i).type.equals("QuizTaken") ) {
+                            QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
+                            out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
+                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": " + activityList.get(i).type + "</li>");
+                        }
 
                         if(count >= 5) {
                             break;
@@ -127,7 +112,26 @@
                     out.println("</ul>");
                 }
             %>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Popular Quizzes</h2>
+            <%
+                List<Activity> quizList = db.QuizPersistence.GetTakenQuizzesActivity();
+                if(quizList.size() > 0) {
+                    out.println("<ul class='list-group'>");
+
+                    int count = 0;
+                    for(int i=quizList.size()-1; i >= 0; i--) {
+                        QuizSummary qs = db.QuizPersistence.GetQuizSummary(quizList.get(i).linkId);
+                        out.println("<li class='list-group-item'>" + quizList.get(i).date + ": " + qs.getQuizDescription() + "</li>");
+
+                        if(count >= 5) {
+                            break;
+                        }
+                    }
+                    out.println("</ul>");
+                }
+            %>
         </div>
 
 
@@ -136,14 +140,15 @@
         <div class="col-md-4">
             <h2>Recently Created Quizzes</h2>
             <%
-                quizList = db.QuizPersistence.GetCreatedQuizzes();
+                quizList = db.QuizPersistence.GetCreatedQuizzesActivity();
                 if(quizList.size() > 0) {
                     out.println("<ul class='list-group'>");
 
                     int count = 0;
-                    for(int i=activityList.size()-1; i >= 0; i--) {
+                    for(int i=quizList.size()-1; i >= 0; i--) {
+                        QuizSummary qs = db.QuizPersistence.GetQuizSummary(quizList.get(i).linkId);
                         out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                "TODO" + "'>" + quizList.get(i).date + ": " + quizList.get(i).type + "</li>");
+                                qs.getQuizDescription() + "'>" + quizList.get(i).date + ": " + quizList.get(i).type + "</li>");
 
                         if(count >= 5) {
                             break;
@@ -152,7 +157,6 @@
                     out.println("</ul>");
                 }
             %>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>Achievements</h2>
@@ -165,7 +169,6 @@
                     }
                 %>
             </ul>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
 
         <div class="col-md-4">
@@ -180,7 +183,6 @@
                 out.println("<li class='list-group-item'>Challenges: " + challenge.size() + "</li>");
             %>
             </ul>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
 
     </div>
@@ -188,7 +190,6 @@
         <div class="col-md-4">
             <h2>Friend's Activities</h2>
 
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
     </div>
 

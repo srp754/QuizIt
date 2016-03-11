@@ -15,12 +15,12 @@ public class UserRepository implements IUserRepository
     private final static int MAX_RECENT_CREATED_QUIZZES = 5;
     private User _currentUser = null;
 
-    private Map<String, Boolean> dbUsersAdmin = new HashMap<String, Boolean>(); // REMOVE when DB exists
     private Map<String, Double> dbQuizHistory = new HashMap<String, Double>(); // REMOVE when DB exists
     private List<String> dbAchievements = new ArrayList<String>(); // REMOVE when DB exists
     private Map<String, List<String>> dbQuizzesCreated = new HashMap<String, List<String>>(); // REMOVE when DB exists
 
-    public UserRepository() {}
+    public UserRepository() {
+    }
 
     public boolean createNewUser(String username, String email, String password, Boolean isAdmin)
     {
@@ -87,6 +87,10 @@ public class UserRepository implements IUserRepository
     public boolean isAdmin(String username)
     {
         return db.UserPersistence.isAdmin(username);
+    }
+
+    public boolean isAdmin() {
+        return db.UserPersistence.isAdmin(_currentUser.userName);
     }
 
     public void addFriend(int friendUserId)

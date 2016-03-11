@@ -35,15 +35,10 @@ public class QuizPersistence
             sb.append("'" + formatter.format(new Date()) + "');");
             DatabaseTasks.ExecuteUpdate(sb.toString());
 
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
             String query = String.format("Select * from QuizSummary WHERE %1$s = %2$s order by QuizId desc LIMIT 1;", "CreatorId", qz.getCreatorId());
-            ResultSet rs = DatabaseTasks.GetResultSet(con, query);
+            ResultSet rs = DatabaseTasks.GetResultSet(query);
             rs.next(); // exactly one result so allowed
             quizId = rs.getInt(1);
-
-            con.close();
         }
         catch (SQLException e)
         {
@@ -114,15 +109,10 @@ public class QuizPersistence
             sb.append("'" + formatter.format(new Date()) + "');");
             DatabaseTasks.ExecuteUpdate(sb.toString());
 
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
             String query = String.format("Select * from QuizHistory WHERE %1$s = %2$s order by AttemptId desc LIMIT 1;", "UserId", attempt.getUserId());
-            ResultSet rs = DatabaseTasks.GetResultSet(con, query);
+            ResultSet rs = DatabaseTasks.GetResultSet(query);
             rs.next(); // exactly one result so allowed
             attemptId = rs.getInt(1);
-
-            con.close();
         }
         catch (SQLException e)
         {
@@ -199,10 +189,7 @@ public class QuizPersistence
         QuizStats qStats = null;
 
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "QuizStats", "QuizId", "" + quizId + "");
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("QuizStats", "QuizId", "" + quizId + "");
 
             if(rs.next())
             {
@@ -225,10 +212,7 @@ public class QuizPersistence
         QuizSummary qSummary = null;
 
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "QuizSummary", "QuizId", "" + quizId + "");
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("QuizSummary", "QuizId", "" + quizId + "");
 
             if(rs.next())
             {
@@ -246,15 +230,29 @@ public class QuizPersistence
         return qSummary;
     }
 
-    public static List<Activity> GetCreatedQuizzes()
+    public static int GetNumberOfCreatedQuizzes() {
+        int count = 0;
+
+        try {
+            ResultSet rs = DatabaseTasks.GetResultSet("*", "QuizSummary");
+
+            while(rs.next()) {
+                count++;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
+    public static List<Activity> GetCreatedQuizzesActivity()
     {
         List<Activity> quizList = new ArrayList<>();
 
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserActivity");
+            ResultSet rs = DatabaseTasks.GetResultSet("*", "UserActivity");
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -268,7 +266,8 @@ public class QuizPersistence
                         e.printStackTrace();
                     }
                     String type = rs.getString("ActivityType");
-                    Activity activity = new Activity(type, formatter.format(date));
+                    int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
+                    Activity activity = new Activity(type, formatter.format(date), linkId);
                     quizList.add(activity);
                 }
             }
@@ -279,16 +278,13 @@ public class QuizPersistence
         return quizList;
     }
 
-    public static List<Activity> GetTakenQuizzes()
+    public static List<Activity> GetTakenQuizzesActivity()
     {
         List<Activity> quizList = new ArrayList<>();
 
         try
         {
-            Connection con = (Connection) DriverManager.getConnection
-                    ("jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME, MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserActivity");
+            ResultSet rs = DatabaseTasks.GetResultSet("*", "UserActivity");
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -305,7 +301,8 @@ public class QuizPersistence
                         e.printStackTrace();
                     }
                     String type = rs.getString("ActivityType");
-                    Activity activity = new Activity(type, formatter.format(date));
+                    int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
+                    Activity activity = new Activity(type, formatter.format(date), linkId);
                     quizList.add(activity);
                 }
             }
@@ -330,11 +327,7 @@ public class QuizPersistence
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-            Statement stmt = (Statement) con.createStatement();
-            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            Statement stmt = db.DBConnection.getStatement();
 
             String query = String.format("Select * from QuizQuestions where QuizId = %1$s;", quizId);
             rs = stmt.executeQuery(query);
@@ -346,12 +339,9 @@ public class QuizPersistence
                 questionText =  rs.getString("QuestionText");
                 foundQuestions.add(new Question(questionId, quizzId, questionType, questionText));
             }
-            con.close();
+
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }
@@ -372,11 +362,7 @@ public class QuizPersistence
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-            Statement stmt = (Statement) con.createStatement();
-            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            Statement stmt = db.DBConnection.getStatement();
 
             String query = String.format("Select * from QuizAnswers where QuestionId = %1$s;", questionId);
             rs = stmt.executeQuery(query);
@@ -389,12 +375,9 @@ public class QuizPersistence
                 answerCorrectFlag = answerCorrectFlagValue.equals("1");
                 foundAnswers.add(new Answer(answerId,questionId,answerType,answerText,answerCorrectFlag));
             }
-            con.close();
+
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }

@@ -1,6 +1,8 @@
 package db;
 
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -10,6 +12,7 @@ import java.sql.SQLException;
 public class DBConnection {
     private static DBConnection _dbConnectionSingleton = null;
     private static Connection _conn = null;
+    private static Statement _stmt = null;
     private boolean _flag = true;
 
     /**
@@ -35,6 +38,8 @@ public class DBConnection {
             try {
                 _conn = (Connection) DriverManager.getConnection
                         ("jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME, MyDBInfo.MYSQL_PASSWORD);
+                _stmt = (Statement) _conn.createStatement();
+                _stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
             } catch (SQLException e) {
                 _flag = false;
             }
@@ -54,6 +59,10 @@ public class DBConnection {
 
     public static Connection getConnection() {
         return getInstance()._conn;
+    }
+
+    public static Statement getStatement() {
+        return getInstance()._stmt;
     }
 
     public static void closeConnection() {

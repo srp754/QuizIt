@@ -141,10 +141,7 @@ public class UserPersistence
         List<Announcement> announcementList = new ArrayList<>();
 
         try {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "Announcements");
+            ResultSet rs = DatabaseTasks.GetResultSet("*", "Announcements");
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -172,9 +169,7 @@ public class UserPersistence
         List<Achievement> achievementsList = new ArrayList<>();
 
         try {
-            Connection con = db.DBConnection.getConnection();
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserAchievements", "UserId", "'" + userId + "'");
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserAchievements", "UserId", "'" + userId + "'");
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -203,9 +198,7 @@ public class UserPersistence
         List<Activity> activityList = new ArrayList<>();
 
         try {
-            Connection con = db.DBConnection.getConnection();
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserActivity", "UserId", "'" + userId + "'");
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserActivity", "UserId", "'" + userId + "'");
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -218,7 +211,8 @@ public class UserPersistence
                     e.printStackTrace();
                 }
                 String type = rs.getString("ActivityType");
-                Activity activity = new Activity(type, formatter.format(date));
+                int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
+                Activity activity = new Activity(type, formatter.format(date), linkId);
                 activityList.add(activity);
             }
         } catch (SQLException e) {
@@ -233,8 +227,7 @@ public class UserPersistence
         List<User> userList = new ArrayList<>();
 
         try {
-            Connection con = db.DBConnection.getConnection();
-            ResultSet rs = DatabaseTasks.GetResultSet(con, "*", "UserDetail");
+            ResultSet rs = DatabaseTasks.GetResultSet("*", "UserDetail");
 
             while(rs.next())
             {
@@ -257,9 +250,7 @@ public class UserPersistence
     {
         HashedPassword foundUser = null;
         try {
-            Connection con = db.DBConnection.getConnection();
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserDetail", "UserName", "'" + userName + "'");
 
             if(rs.next())
             {
@@ -280,9 +271,7 @@ public class UserPersistence
         User foundUser = null;
 
         try {
-            Connection con = db.DBConnection.getConnection();
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserDetail", "UserName", "'" + userName + "'");
 
             if(rs.next())
             {
@@ -299,13 +288,42 @@ public class UserPersistence
         return foundUser;
     }
 
+    public static List<Activity> GetAchievementActivity(int userId)
+    {
+        List<Activity> achList = new ArrayList<>();
+
+        try {
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserActivity", "UserId", "'" + userId + "'");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            while(rs.next())
+            {
+                if(rs.getString("ActivityType").equals("Achievement")) {
+                    Date date = null;
+                    try {
+                        date = formatter.parse(rs.getString("ActivityDate"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String type = rs.getString("ActivityType");
+                    int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
+                    Activity activity = new Activity(type, formatter.format(date), linkId);
+                    achList.add(activity);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return achList;
+    }
+
     public static boolean isAdmin(String userName)
     {
         boolean isAdmin = false;
         try {
-            Connection con = db.DBConnection.getConnection();
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserDetail", "UserName", "'" + userName + "'");
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserDetail", "UserName", "'" + userName + "'");
 
             if(rs.next())
             {
