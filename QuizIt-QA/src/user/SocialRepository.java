@@ -89,9 +89,4 @@ public class SocialRepository implements ISocialRepository
     	return db.DatabaseTasks.CheckIfRecordExistsWithParametersIntInt("UserSocial us inner join UserFriendRequests uf on us.MessageId = uf.MessageId", "UserId", Integer.toString(recipient), "FriendId", Integer.toString(sender));
     }
 
-    public static int addFriendRequest(int sender, int recipient)
-	{
-    	Message msg = new Message(1,2,"friend", "text doesn't matter here");
-		return addMessage(msg);
-    }
 }

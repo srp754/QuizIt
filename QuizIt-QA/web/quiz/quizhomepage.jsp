@@ -48,7 +48,7 @@
                 <li><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
                 <li class="active"><a href="/user/userFeed.jsp">Feed</a></li>
-                <% if(user.isAdmin()) {
+                <% if(user.isAdmin(user.getUsername())) {
                     out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
                 %>
@@ -72,13 +72,12 @@
         <h1>Welcome to QuizIt!</h1>
         <h2>Select a Quiz</h2>
         <%
-            List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
-            int counter = 0;
+            List<QuizSummary> quizSummaries = QuizRepository.GetAllQuizSummaries();
             for (QuizSummary currentSummary: quizSummaries) {
+                int quizid = currentSummary.getQuizId();
         %>
-        <li><a href="quizsummary.jsp?id=<%=counter %>"><%out.println(currentSummary.getQuizName());%></a></li>
+        <li><a href="/quiz/quizsummary.jsp?id=<%=quizid %>"><%out.println(currentSummary.getQuizName());%></a></li>
         <%
-                counter++;
             }
         %>
         <h2><a href="createquiz.jsp"> Create your own quiz!</a></h2>

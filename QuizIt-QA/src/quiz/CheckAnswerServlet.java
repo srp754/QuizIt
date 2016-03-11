@@ -46,34 +46,21 @@ public class CheckAnswerServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		IUserRepository user = (UserRepository) session.getAttribute("user");
 		int userId = user.getUserId();
-		String attemptIdStr = request.getParameter("attemptid");
-		String parsedAttemptId = attemptIdStr.replaceAll("\\/", "");
-		int attemptId = Integer.parseInt(parsedAttemptId); // TODO: This has to be updated to reflect database code
-		List<QuizAttempt> quizAttemptHistoryTable = (ArrayList<QuizAttempt>) getServletContext().getAttribute("quizattempts");
 
 		String idStr = request.getParameter("quizid");
 		String parsedId = idStr.replaceAll("\\/", "");
 		int quizid = Integer.parseInt(parsedId);
 
-		List<QuizStats> quizStatsTable = (ArrayList<QuizStats>) getServletContext().getAttribute("quizstats");
-		QuizStats wantedStats = null;
-		for(QuizStats currStats: quizStatsTable) {
-			if(currStats.getQuizId() == quizid) {
-				wantedStats = currStats;
-			}
-		}
-		wantedStats.incrementQuizAttempts();
-		//wantedStats.incrementUserAttempts(); IMPLEMENT WHEN USER GETS INTEGRATED
-
-		List<Quiz> quizList = (ArrayList<Quiz>) getServletContext().getAttribute("quizlist");
-		Quiz quiz = quizList.get(quizid);
-		List<Question> questions = quiz.getQuestions();
+		Quiz quiz = QuizRepository.GetQuiz(quizid);
+		List<Question> questions = QuizRepository.GetQuestions(quizid);
 		int numPossible = questions.size();
 		int totalCorrect = 0;
+		// Grading Logic needs to be rewritten
 		for (Question currQuestion : questions) {
 			String currId = Integer.toString(currQuestion.getQuestionId());
 			String currAnswer = request.getParameter(currId);
-			if (currAnswer != null && currQuestion.checkAnswer(currAnswer)) {
+			System.out.println("currAnswer: "+currAnswer);
+			if (currAnswer != null && QuizRepository.CheckAnswer(currQuestion.getQuestionId(), currAnswer)) {
 				totalCorrect++;
 			}
 
@@ -88,11 +75,13 @@ public class CheckAnswerServlet extends HttpServlet {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 		String dateCreated = formatter.format(new Date());
 		QuizAttempt newAttempt = new QuizAttempt(quizid, userId, totalCorrect, numPossible, elapsedTime, dateCreated);
-
-
-		wantedStats.addSumActualScores(totalCorrect);
-		wantedStats.addSumPossibleScores(numPossible);
-		request.setAttribute("possible", numPossible);
+		// Save it to the datebase
+		QuizRepository.AddAttempt(newAttempt);
+		// Update the QuizStats accordingly
+		QuizRepository.UpdateQuizStats(newAttempt);
+		String timeTaken =  ( new SimpleDateFormat("mm:ss:SSS")).format(new Date(elapsedTime)).toString();
+		request.setAttribute("timeelapsed", timeTaken) ;
+		request.setAttribute ("possible", numPossible);
 		request.setAttribute("correct", totalCorrect);
 		RequestDispatcher rd = request.getRequestDispatcher("quiz/quizresults.jsp");
 		rd.forward(request, response);

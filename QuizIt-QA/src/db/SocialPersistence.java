@@ -51,7 +51,7 @@ public class SocialPersistence
         StringBuilder sb = new StringBuilder();
         sb.append("INSERT INTO UserFriendRequests VALUES(");
         sb.append(msg.getMessageId()+ ",");
-        sb.append("'" + "Sent" + "',");
+        sb.append("'" + msg.getContent() + "',");
         sb.append("false" + ");");
 
         DatabaseTasks.ExecuteUpdate(sb.toString());

@@ -3,6 +3,8 @@
 <%
     int totalCorrect = (int) request.getAttribute("correct");
     int numPossible = (int) request.getAttribute("possible");
+    String timeElapsed = (String) request.getAttribute("timeelapsed");
+
 %>
 <!DOCTYPE html>
 
@@ -52,7 +54,7 @@
                 <li><a href="/user/userHomePage.jsp">Home</a></li>
                 <li class="active"><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
                 <li><a href="/user/userFeed.jsp">Feed</a></li>
-                <% if(user.isAdmin()) {
+                <% if(user.isAdmin(user.getUsername())) {
                     out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
                 %>
@@ -76,6 +78,7 @@
     <div class="starter-template">
         <h1>Quiz Results</h1>
         <p> You got <%out.println(totalCorrect); %> correct out of <%out.println(numPossible); %> </p>
+        <p> Time taken: <%out.println(timeElapsed);%></p>
         <a href="quiz/quizhomepage.jsp">Return to homepage</a>
     </div>
 

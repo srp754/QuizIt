@@ -3,20 +3,11 @@
 <%
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);
-	List<QuizSummary> quizSummaries = (ArrayList<QuizSummary>) getServletContext().getAttribute("quizsummary");
-	QuizSummary wantedSummary = null;
-	for(QuizSummary currSummary: quizSummaries) {
-		if(currSummary.getQuizId() == quizId) {
-			wantedSummary = currSummary;
-		}
-	}
-	List<QuizStats> quizStatsTable =  (ArrayList<QuizStats>) getServletContext().getAttribute("quizstats");
-
-	QuizStats wantedStats = null;
-	for(QuizStats currStats: quizStatsTable) {
-		if(currStats.getQuizId() == quizId) {
-			wantedStats = currStats;
-		}
+	QuizSummary wantedSummary = QuizRepository.GetQuizSummary(quizId);
+	int totalAttempts = 0;
+	QuizStats wantedStats = QuizRepository.GetQuizStats(quizId);
+	if(wantedStats != null) {
+		totalAttempts = wantedStats.getQuizAttempts();
 	}
 %>
 <!DOCTYPE html>
@@ -67,7 +58,7 @@
 				<li><a href="/user/userHomePage.jsp">Home</a></li>
 				<li class="active"><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
 				<li><a href="/user/userFeed.jsp">Feed</a></li>
-				<% if(user.isAdmin()) {
+				<% if(user.isAdmin(user.getUsername())) {
 					out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
 				}
 				%>
@@ -89,7 +80,7 @@
 	<div class="container">
 		<h1><%out.println(wantedSummary.getQuizName()); %></h1>
 		<h2>Creator: <%out.println(wantedSummary.getCreatorId()); %></h2>
-		<h2>Total Attempts: <%out.println(wantedStats.getQuizAttempts()); %></h2>
+		<h2>Total Attempts: <%out.println(totalAttempts); %></h2>
 		<p><%out.println(wantedSummary.getQuizDescription()); %></p>
 		<p><a class="btn btn-primary btn-lg" href="takequiz.jsp?id=<%=wantedSummary.getQuizId() %>" role="button">Take Quiz</a>
 			<p <%
