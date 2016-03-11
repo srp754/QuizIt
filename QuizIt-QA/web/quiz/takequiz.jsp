@@ -4,18 +4,9 @@
 	String startTime =  String.valueOf(System.currentTimeMillis());
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);
-	List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
-	QuizSummary wantedSummary = null;
-	for (QuizSummary currSummary : quizSummaries) {
-		if (currSummary.getQuizId() == quizId) {
-			wantedSummary = currSummary;
-		}
-	}
-	List<QuizAttempt> quizAttemptHistoryTable = (List<QuizAttempt>) getServletContext().getAttribute("quizattempts");
-	int totalAttempts = quizAttemptHistoryTable.size(); 
-	int userId = user.getUserId(); 
-	List<Quiz> quizList = (List<Quiz>) getServletContext().getAttribute("quizlist");
-	Quiz quiz = quizList.get(quizId);
+	QuizSummary wantedSummary = QuizRepository.GetQuizSummary(quizId);
+	int userId = user.getUserId();
+	Quiz quiz = QuizRepository.GetQuiz(quizId);
 	List<Question> quizQuestions = quiz.getQuestions();
 %>
 <!DOCTYPE html>
@@ -66,7 +57,7 @@
 				<li><a href="/user/userHomePage.jsp">Home</a></li>
 				<li class="active"><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
 				<li><a href="/user/userFeed.jsp">Feed</a></li>
-				<% if(user.isAdmin()) {
+				<% if(user.isAdmin(user.getUsername())) {
 					out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
 				}
 				%>
@@ -98,7 +89,6 @@
 			<input type="hidden" name="starttime" value="<%=startTime%>" />
 			<input type="hidden" name="quizid"
 				   value=<%=wantedSummary.getQuizId()%> />
-			<input type="hidden" name="attemptid" value=<%=totalAttempts+1 %>/>
 			<%
 				for (Question currQuestion : quizQuestions) {
 					String questionType = currQuestion.getQuestionType();
@@ -108,7 +98,7 @@
 			<%
 				out.println(currQuestion.toString());
 			%>
-			<br> <input type="text" name="<%=currQuestion.getId()%>">
+			<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
 			<br>
 			<%
 			} else if (questionType.equals("fillblank")) {
@@ -118,7 +108,7 @@
 			<%
 				out.println(parsedQ);
 			%>
-			<br> <input type="text" name="<%=currQuestion.getId()%>">
+			<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
 			<br>
 			<%
 			} else if (questionType.equals("multiplechoice")) {
@@ -128,8 +118,8 @@
 
 				for (Answer currAnswer : answerChoices) {
 			%>
-			<br> <input type="radio" name="<%=currQuestion.getId()%>"
-						id="<%=currAnswer.getId()%>" value="<%=currAnswer.toString()%>">
+			<br> <input type="radio" name="<%=currQuestion.getQuestionId()%>"
+						id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.toString()%>">
 			<%
 				out.println(currAnswer.toString());
 			%>
