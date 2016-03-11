@@ -15,7 +15,7 @@ public class QResponseAnswer extends Answer
 		this.answerAlts = answerAlternatives;
 		this.available = true;
 	}
-	
+
 	public String toString() {
 		return String.join(" OR ", answerAlts); 
 	}
