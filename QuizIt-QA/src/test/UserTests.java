@@ -1,5 +1,8 @@
 package test;
 
+import db.DBConnection;
+import org.junit.After;
+import org.junit.AfterClass;
 import user.IUserRepository;
 import user.User;
 import user.UserRepository;
@@ -185,6 +188,11 @@ public class UserTests
         userRepository.promoteToAdmin("AdminTestUser");
         assertTrue(userRepository.isAdmin("AdminTestUser"));
         userRepository.DeleteUser("AdminTestUser");
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        DBConnection.closeConnection();
     }
 }
 
