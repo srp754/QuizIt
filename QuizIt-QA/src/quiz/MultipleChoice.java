@@ -18,12 +18,7 @@ public class MultipleChoice extends Question
 		this.questionId = questionId; 
 		this.multi = multi;
 	}
-	
-	//TODO probably remove this
-	public Set<Answer> getAnswers() {
-		return correctAnswers; 
-	}
-	
+
 	// TODO probably remove this
 	public boolean checkAnswer(Answer userResponse) {
 		// Check if userResponse is in choices  

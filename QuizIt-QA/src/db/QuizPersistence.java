@@ -48,6 +48,34 @@ public class QuizPersistence
         return quizId;
     }
 
+    public static int InsertQuestion(Question question)
+    {
+        int questionId = 0;
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO QuizQuestions VALUES ");
+
+            sb.append(" (null,");
+            sb.append(question.getQuizId() + ",");
+            sb.append("'" + question.getQuestionType() + "',");
+            sb.append("'" + question.getQuestionText() + "');");
+            DatabaseTasks.ExecuteUpdate(sb.toString());
+
+            String query = String.format("Select * from QuizQuestions WHERE %1$s = %2$s order by QuestionId desc LIMIT 1;", "QuizId", question.getQuizId());
+            ResultSet rs = DatabaseTasks.GetResultSet(query);
+            rs.next(); // exactly one result so allowed
+            questionId = rs.getInt(1);
+        }
+
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return questionId;
+    }
+
     public static void InsertQuestions(List<Question> questions)
     {
         StringBuilder sb = new StringBuilder();
