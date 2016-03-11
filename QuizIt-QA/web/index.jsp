@@ -54,7 +54,7 @@
             <form class="navbar-form navbar-right" onsubmit="event.preventDefault(); loginUser()">
                 <span style="color:#ff4341;" id="loginError"></span>
                 <div class="form-group">
-                    <input type="text" placeholder="Email" class="form-control" id="userName">
+                    <input type="text" placeholder="Username" class="form-control" id="userName">
                 </div>
                 <div class="form-group">
                     <input type="password" placeholder="Password" class="form-control" id="password">

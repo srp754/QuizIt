@@ -71,7 +71,7 @@
             <ul class="nav nav-sidebar">
                 <li><a href="/admin/dashboard.jsp">Overview</a></li>
                 <li><a href="/admin/create_announcement.jsp">Create Announcement</a></li>
-                <li><a href="/admin/remove_user.jspp">Remove User Account</a></li>
+                <li><a href="/admin/remove_user.jsp">Remove User Account</a></li>
                 <li><a href="remove_quiz.jsp">Remove Quiz</a></li>
                 <li class="active"><a href="/admin/promote_user.jsp">Promote User</a><span class="sr-only">(current)</span></li>
             </ul>
