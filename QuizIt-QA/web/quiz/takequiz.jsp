@@ -159,7 +159,7 @@
 							<br />
 							<input type="text" name="<%=currQuestion.getQuestionId() %>">
 							<br />
-						<%
+						<
 					}
 				}
 			%>
