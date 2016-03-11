@@ -206,6 +206,23 @@ public class QuizPersistence
 
         return qStats;
     }
+    
+    public static double getQuizHighScore(String username, int quizId) {
+        double score = 0.0;
+
+        try {
+            ResultSet rs = DatabaseTasks.GetResultSet(
+            		String.format("SELECT MAX(SumActualScore) AS score FROM QuizStats WHERE QuizId = %1$s;", quizId));
+
+            if(rs.next()) {
+                score = rs.getDouble("score");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return score;    	
+    }
 
     public static QuizSummary GetQuizSummary(int quizId)
     {
