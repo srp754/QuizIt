@@ -49,7 +49,7 @@ public class MessageServlet extends HttpServlet {
 				content = userRepository.getUsername() + " would like to be friends.";
 			} else if (type.equals("challenge")) {
 				content = userRepository.getUsername() + " has challenged you to take a quiz!</p>" +
-								"<p><a href=\"quiz/quiz.jsp?id=\">" + content + "</a></p>" +
+								"<p><a href=\"/quiz/quizsummary.jsp?id=" + content + "\">Take the quiz</a></p>" +
 								"<p>Their high score: " + userRepository.getQuizHighScore(Integer.parseInt(content)); 
 			}
 			Message msg = new Message(userId, userRepository.getUserId(), type, content);
@@ -63,7 +63,7 @@ public class MessageServlet extends HttpServlet {
 		if (type.equals("friend")) {
 			dispatch = request.getRequestDispatcher("user/userView.jsp");
 		} else if (type.equals("challenge")) {
-			dispatch = request.getRequestDispatcher("user/quiz.jsp");
+			dispatch = request.getRequestDispatcher("quiz/quizsummary.jsp?id=" + request.getParameter("content"));
 		} else {
 			dispatch = request.getRequestDispatcher("user/messages.jsp");
 		}
