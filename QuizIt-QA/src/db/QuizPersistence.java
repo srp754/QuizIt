@@ -234,6 +234,23 @@ public class QuizPersistence
 
         return qStats;
     }
+    
+    public static double getQuizHighScore(String username, int quizId) {
+        double score = 0.0;
+
+        try {
+            ResultSet rs = DatabaseTasks.GetResultSet(
+            		String.format("SELECT MAX(SumActualScore) AS score FROM QuizStats WHERE QuizId = %1$s;", quizId));
+
+            if(rs.next()) {
+                score = rs.getDouble("score");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return score;    	
+    }
 
     public static QuizSummary GetQuizSummary(int quizId)
     {
@@ -306,7 +323,7 @@ public class QuizPersistence
         try {
             ResultSet rs = DatabaseTasks.GetResultSet("*", "UserActivity");
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
             while(rs.next())
             {
@@ -319,7 +336,8 @@ public class QuizPersistence
                     }
                     String type = rs.getString("ActivityType");
                     int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
-                    Activity activity = new Activity(type, formatter.format(date), linkId);
+                    int userId = Integer.parseInt(rs.getString("UserId"));
+                    Activity activity = new Activity(userId, type, formatter.format(date), linkId);
                     quizList.add(activity);
                 }
             }
@@ -338,7 +356,7 @@ public class QuizPersistence
         {
             ResultSet rs = DatabaseTasks.GetResultSet("*", "UserActivity");
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
             while (rs.next())
             {
@@ -354,7 +372,8 @@ public class QuizPersistence
                     }
                     String type = rs.getString("ActivityType");
                     int linkId = Integer.parseInt(rs.getString("ActivityLinkId"));
-                    Activity activity = new Activity(type, formatter.format(date), linkId);
+                    int userId = Integer.parseInt(rs.getString("UserId"));
+                    Activity activity = new Activity(userId, type, formatter.format(date), linkId);
                     quizList.add(activity);
                 }
             }

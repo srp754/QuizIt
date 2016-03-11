@@ -104,7 +104,7 @@
                             out.println("<td>" + u.userName + "</td>");
                             out.println("<td>" + u.email + "</td>");
                             out.println("<td>" + u.dateCreated + "</td>");
-                            if(u.isAdmin) {
+                            if(user.isAdmin(u.userName)) {
                                 out.println("<td>Admin</td>");
                             }
                             else {

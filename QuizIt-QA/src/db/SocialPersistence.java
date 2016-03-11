@@ -2,11 +2,13 @@ package db;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
+import user.Activity;
 import user.Message;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -263,5 +265,26 @@ public class SocialPersistence
         }
 
         return foundMessage;
+    }
+
+    public static List<Integer> GetFriendsIds(int userId)
+    {
+        List<Integer> friendIds = new ArrayList<Integer>();
+
+        try {
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserFriends", "UserId", "'" + userId + "'");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            while(rs.next())
+            {
+                int Id = Integer.parseInt(rs.getString("FriendId"));
+                friendIds.add(Id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return friendIds;
     }
 }
