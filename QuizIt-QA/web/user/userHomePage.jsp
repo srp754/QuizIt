@@ -231,17 +231,17 @@
                             if(activityList.get(i).type.equals("QuizCreated")) {
                                 QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
-                                    + "'>" + db.UserPersistence.idToUsername(id) + "created quiz \"" + qs.getQuizName() + "\"</li>");
+                                    + "'>" + db.UserPersistence.idToUsername(id) + " created quiz \"" + qs.getQuizName() + "\"</li>");
                             }
                             else if(activityList.get(i).type.equals("QuizTaken")) {
                                 QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
-                                        + "'>" + db.UserPersistence.idToUsername(id) + "took quiz \"" + qs.getQuizName() + "\"</li>");
+                                        + "'>" + db.UserPersistence.idToUsername(id) + " took quiz \"" + qs.getQuizName() + "\"</li>");
                             }
                             else if(activityList.get(i).type.equals("Achievement")) {
                                 Achievement a = db.UserPersistence.GetAchievement(activityList.get(i).linkId);
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + a.description
-                                        + "'>" + db.UserPersistence.idToUsername(id) + "earned achievement \"" + a.name + "\"</li>");
+                                        + "'>" + db.UserPersistence.idToUsername(id) + " earned achievement \"" + a.name + "\"</li>");
                             }
                             count++;
                         }
