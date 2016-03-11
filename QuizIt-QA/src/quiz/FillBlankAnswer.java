@@ -1,21 +1,17 @@
 package quiz;
 
-public class FillBlankAnswer implements Answer{
-	// The answer for this question type is a String 
-	
-	private String answerStr; 
-	private int answerId; 
-	
-	public FillBlankAnswer(String answerStr, int answerId) {
-		this.answerStr = answerStr; 
-		this.answerId = answerId; 
+public class FillBlankAnswer extends Answer
+{
+	public FillBlankAnswer(String answerStr, int answerId)
+	{
+		super(answerId, 1, "fillblank", answerStr, false);
 	}
 	
 	public String toString() {
-		return answerStr; 
+		return super.getAnswerText();
 	}
 	
 	public int getId() {
-		return answerId; 
+		return super.getAnswerId();
 	}
 }

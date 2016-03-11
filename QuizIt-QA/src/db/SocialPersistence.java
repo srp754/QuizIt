@@ -31,15 +31,12 @@ public class SocialPersistence
             sb.append("'" + formatter.format(new Date()) + "');");
             DatabaseTasks.ExecuteUpdate(sb.toString());
 
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
             String query = String.format("Select * from UserSocial WHERE %1$s = %2$s order by MessageId desc LIMIT 1;", "UserId", msg.getRecipient());
-            ResultSet rs = DatabaseTasks.GetResultSet(con, query);
+            ResultSet rs = DatabaseTasks.GetResultSet(query);
             rs.next(); // exactly one result so allowed
             msgId = rs.getInt(1);
 
-            con.close();
+
         }
         catch (SQLException e)
         {
@@ -96,17 +93,13 @@ public class SocialPersistence
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-            Statement stmt = (Statement) con.createStatement();
-            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            Statement stmt = db.DBConnection.getStatement();
 
             if(messageType.equals("note"))
             {
                 String query = String.format("Select us.MessageId, UserId, FriendId, MessageType, MessageDate, MessageText as Content " +
                         "from UserSocial us inner join UserNotes un on us.MessageId = un.MessageId " +
-                        "where UserId = 1;", userId);
+                        "where UserId = %1$s;", userId);
                 rs = stmt.executeQuery(query);
                 while(rs.next())
                 {
@@ -200,12 +193,9 @@ public class SocialPersistence
                 }
             }
 
-            con.close();
+
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }
@@ -227,11 +217,7 @@ public class SocialPersistence
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = DatabaseTasks.GetResultSetWithParameter(con, "UserSocial", "MessageId", Integer.toString(messageId));
+            ResultSet rs = DatabaseTasks.GetResultSetWithParameter("UserSocial", "MessageId", Integer.toString(messageId));
 
             if(rs.next())
             {
@@ -243,7 +229,7 @@ public class SocialPersistence
 
             if(messageType.equals("note"))
             {
-                rs = DatabaseTasks.GetResultSetWithParameter(con, "UserNotes", "MessageId", Integer.toString(messageId));
+                rs = DatabaseTasks.GetResultSetWithParameter("UserNotes", "MessageId", Integer.toString(messageId));
                 if(rs.next())
                 {
                     content = rs.getString("MessageText");
@@ -252,7 +238,7 @@ public class SocialPersistence
             }
             else if(messageType.equals("friend"))
             {
-                rs =  DatabaseTasks.GetResultSetWithParameter(con, "UserFriendRequests", "MessageId", Integer.toString(messageId));
+                rs =  DatabaseTasks.GetResultSetWithParameter("UserFriendRequests", "MessageId", Integer.toString(messageId));
                 if(rs.next())
                 {
                     content = rs.getString("RequestStatus");
@@ -262,7 +248,7 @@ public class SocialPersistence
             }
             else
             {
-                rs = DatabaseTasks.GetResultSetWithParameter(con, "UserChallenges", "MessageId", Integer.toString(messageId));
+                rs = DatabaseTasks.GetResultSetWithParameter("UserChallenges", "MessageId", Integer.toString(messageId));
                 if(rs.next())
                 {
                     content = rs.getString("ChallengerNote");
@@ -270,13 +256,8 @@ public class SocialPersistence
                     foundMessage = new Message(messageId, userId, friendId, messageType, content, messageDate, quizChallengeScore, quizChallengeId);
                 }
             }
-
-            con.close();
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }

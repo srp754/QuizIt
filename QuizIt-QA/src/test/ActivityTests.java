@@ -31,11 +31,11 @@ public class ActivityTests
         userRepository.DeleteUser("ActivityUser");
 
         userRepository.PopulateCurrentUser("admin");
-        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizTaken",0);
-        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizTaken",0);
-        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizCreated",0);
-        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizCreated",0);
-        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizTaken",0);
+        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizTaken",2);
+        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizTaken",3);
+        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizCreated",4);
+        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizCreated",5);
+        db.UserPersistence.InsertUserActivity(userRepository.getUserId(), "QuizTaken",6);
     }
 
 }

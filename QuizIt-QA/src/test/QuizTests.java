@@ -4,7 +4,9 @@ import quiz.*;
 import user.SocialRepository;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -16,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class QuizTests
 {
     @org.junit.Test
-    public void Should_Add_And_Delete_Quiz() //Just QuizSummary to start
+    public void Should_Add_And_Delete_Quiz()
     {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
        // int quizId = QuizRepository.AddQuizSummary(new QuizSummary("TestQuiz", "Test Quiz For Alex", 1, formatter.format(new Date())));
@@ -111,8 +113,91 @@ public class QuizTests
     }
 
     @org.junit.Test
-    public void Should_Add_And_Remove_Questions()
+    public void Should_Add_And_Remove_Questions() //won't add blank questions in future, just for tests
     {
+        List<Question> qList = new ArrayList<>();
+        qList.add(new Question(3, "qresponse", "sample question 1"));
+        qList.add(new Question(3, "qresponse", "sample question 2"));
+        qList.add(new Question(3, "qresponse", "sample question 3"));
 
+        QuizRepository.AddQuestions(qList);
+
+        List<Question> questionsDB =  QuizRepository.GetQuestions(3);
+        assertTrue(questionsDB.size() > 2);
+
+        QuizRepository.RemoveQuestions(3);
+    }
+
+    @org.junit.Test
+    public void Should_Get_Details_About_Questions()
+    {
+        List<Question> questionsDB =  QuizRepository.GetQuestions(1);
+
+        String actual = questionsDB.get(0).getQuestionType();
+        String expected = "multchoice";
+
+        String actual2 = questionsDB.get(1).getQuestionText();
+        String expected2 = "Sample Question 2 for Quiz 1";
+
+        assertEquals(expected, actual);
+        assertEquals(expected2, actual2);
+    }
+
+    @org.junit.Test
+    public void Should_Add_And_Remove_Answers() //won't add blank questions in future, just for tests
+    {
+        List<Answer> aList = new ArrayList<>();
+        aList.add(new Answer(5, "multi", "sample answer 1", false));
+        aList.add(new Answer(5, "multi", "sample answer 2", true));
+        aList.add(new Answer(5, "multi", "sample answer 3", false));
+
+        QuizRepository.AddAnswers(aList);
+
+        List<Answer> answerDb =  QuizRepository.GetAnswers(5);
+        assertTrue(answerDb.size() > 2);
+
+        QuizRepository.RemoveAnswers(5);
+    }
+
+    @org.junit.Test
+    public void Should_Get_Details_About_Answers()
+    {
+        List<Answer> answersDB =  QuizRepository.GetAnswers(2);
+
+        String actual = answersDB.get(1).getAnswerType();
+        String expected = "picture";
+
+        boolean isCorrectAnswer = answersDB.get(0).getAnswerCorrectFlag();
+
+        assertEquals(expected, actual);
+        assertTrue(isCorrectAnswer);
+    }
+
+    @org.junit.Test
+    public void Should_Get_Quiz_Summary()
+    {
+        QuizSummary summary = QuizRepository.GetQuizSummary(2);
+
+        assertEquals(summary.getCreatorId(), 4);
+        assertEquals(summary.getQuizName(), "Quiz Two");
+    }
+
+    @org.junit.Test
+    public void Should_Get_Quiz_And_Its_Components_By_Id()
+    {
+        Quiz quiz = QuizRepository.GetQuiz(2);
+
+        String summaryExpected = "Quiz Two";
+        String summaryActual = quiz.summary.getQuizName();
+        assertEquals(summaryExpected, summaryActual);
+
+        int statsExpected = 5;
+        int statsActual = quiz.stats.getUserAttempts();
+        assertEquals(statsExpected, statsActual);
+
+        assertTrue(quiz.questions.size() > 1);
+        String questionExpected = "picture";
+        String questionActual = quiz.questions.get(1).getQuestionType();
+        assertEquals(questionExpected, questionActual);
     }
 }

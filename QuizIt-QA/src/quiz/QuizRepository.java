@@ -3,6 +3,7 @@ package quiz;
 import db.DatabaseTasks;
 import db.QuizPersistence;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,15 @@ import java.util.List;
  */
 public class QuizRepository
 {
+    public static Quiz GetQuiz(int quizId)
+    {
+        QuizSummary summary = GetQuizSummary(quizId);
+        QuizStats stats = GetQuizStats(quizId);
+        List<Question> questions = GetQuestions(quizId);
+
+        return new Quiz(quizId, summary, stats, questions);
+    }
+
     public static int AddQuizHeader(QuizSummary qz) //this is not complete, needs to add more places + take in quiz
     {
         int quizId = AddQuizSummary(qz);
@@ -18,14 +28,20 @@ public class QuizRepository
         return quizId;
     }
 
-    public static void AddQuizContent(Quiz qz)
+    public static void AddQuizContent(List<Question> questions, List<Answer> answers)
     {
-
+        AddQuestions(questions);
+        AddAnswers(answers);
     }
 
     public static void AddQuestions(List<Question> questions)
     {
         QuizPersistence.InsertQuestions(questions);
+    }
+
+    public static void AddAnswers(List<Answer> answers)
+    {
+        QuizPersistence.InsertAnswers(answers);
     }
 
     public static int AddQuizSummary(QuizSummary qz)
@@ -50,9 +66,14 @@ public class QuizRepository
         QuizPersistence.DeleteQuizStats(quizId);
     }
 
-    public static void RemoveQUestions(int quizId)
+    public static void RemoveQuestions(int quizId)
     {
         QuizPersistence.DeleteQuestions(quizId);
+    }
+
+    public static void RemoveAnswers(int questionId)
+    {
+        QuizPersistence.DeleteAnswers(questionId);
     }
 
     public static void RemoveAttempt(int attemptId)
@@ -61,6 +82,11 @@ public class QuizRepository
     }
 
     public static boolean QuizExists(int quizId)
+    {
+        return DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizSummary", "QuizId", Integer.toString(quizId));
+    }
+
+    public static boolean QuestionsExist(int quizId)
     {
         return DatabaseTasks.CheckIfRecordExistsWithParameterInt("QuizSummary", "QuizId", Integer.toString(quizId));
     }
@@ -90,33 +116,37 @@ public class QuizRepository
         return qStats;
     }
 
-    public static Quiz GetQuiz(int quizId)
+    public static QuizSummary GetQuizSummary(int quizId)
     {
-        return null;
-    }
+        QuizSummary qSummary = null;
 
-    public static List<Quiz> GetQuizzes(int userId)
-    {
-        return null;
-    }
+        if(QuizExists(quizId))
+            qSummary = db.QuizPersistence.GetQuizSummary(quizId);
 
-    public static Question GetQuestion(int questionId)
-    {
-        return null;
+        return qSummary;
     }
 
     public static List<Question> GetQuestions(int quizId)
     {
-        return null;
-    }
-
-    public static Answer GetAnswer(int answerId)
-    {
-        return null;
+        List<Question> questions = db.QuizPersistence.GetQuestions(quizId);
+        return questions;
     }
 
     public static List<Answer> GetAnswers(int questionId)
     {
+        List<Answer> answers = db.QuizPersistence.GetAnswers(questionId);
+        return answers;
+    }
+
+    public static List<Answer> GetAllAnswersForQuiz(int quizId) //Note sure this is needed, only if DB perf still bad
+    {
+//        List<Answer> answers = db.QuizPersistence.GetAllAnswersForQuiz(quizId);
+        return null;
+    }
+
+    public static List<QuizSummary> GetAllQuizSummaries()
+    {
+        //may need this for quiz summary page?
         return null;
     }
 }

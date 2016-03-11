@@ -1,7 +1,6 @@
 package db;
 
 
-import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import quiz.QuizAttempt;
 
@@ -18,22 +17,12 @@ public class DatabaseTasks
     {
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-            Statement stmt = (Statement) con.createStatement();
-            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            Statement stmt = db.DBConnection.getStatement();
             stmt.executeQuery("SET @@auto_increment_increment=1; ");
 
             stmt.executeUpdate(sql);
-            con.close();
         }
-
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }
@@ -73,18 +62,12 @@ public class DatabaseTasks
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = GetResultSet(con, query);
+            ResultSet rs = GetResultSet(query);
             doesRecordExist = rs.next(); //if row exists, record is found, can return true
-            con.close();
+            
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -97,13 +80,10 @@ public class DatabaseTasks
 
         try
         {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = GetResultSet(con, query);
+            ResultSet rs = GetResultSet(query);
             rs.next();
             doesRecordExist = rs.next(); //if 2nd row exists, can return true
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -119,14 +99,11 @@ public class DatabaseTasks
 
         try
         {
-            Connection con = (Connection) DriverManager.getConnection
-                    ( "jdbc:mysql://" + MyDBInfo.MYSQL_DATABASE_SERVER, MyDBInfo.MYSQL_USERNAME ,MyDBInfo.MYSQL_PASSWORD);
-
-            ResultSet rs = GetResultSet(con, "Count(*)", tableName);
+            ResultSet rs = GetResultSet("Count(*)", tableName);
 
             rs.next(); // exactly one result so allowed
             count = rs.getInt(1);
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -136,38 +113,32 @@ public class DatabaseTasks
         return count;
     }
 
-    public static ResultSet GetResultSetWithParameter(Connection con,String tableName, String parameterName, String parameterValue)
+    public static ResultSet GetResultSetWithParameter(String tableName, String parameterName, String parameterValue)
     {
         String query = String.format("Select * from %1$s WHERE %2$s = %3$s;", tableName, parameterName, parameterValue);
-        ResultSet rs = GetResultSet(con, query);
+        ResultSet rs = GetResultSet(query);
         return rs;
     }
 
-    public static ResultSet GetResultSet(Connection con,String selectionType, String tableName)
+    public static ResultSet GetResultSet(String selectionType, String tableName)
     {
         ResultSet rs = null;
         String query = String.format("Select " + selectionType + " from %1$s;", tableName);
-        rs = GetResultSet(con, query);
+        rs = GetResultSet(query);
         return rs;
     }
 
-    public static ResultSet GetResultSet(Connection con, String query)
+    public static ResultSet GetResultSet(String query)
     {
         ResultSet rs = null;
 
         try
         {
-            Class.forName("com.mysql.jdbc.Driver");
-            Statement stmt = (Statement) con.createStatement();
-            stmt.executeQuery("USE " +  MyDBInfo.MYSQL_DATABASE_NAME);
+            Statement stmt = db.DBConnection.getStatement();
 
             rs = stmt.executeQuery(query);
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }

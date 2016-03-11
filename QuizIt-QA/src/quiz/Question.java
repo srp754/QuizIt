@@ -13,6 +13,12 @@ public class Question
 		this.questionType = questionType;
 		this.questionText = questionText;
 	}
+	public Question(int questionId,int quizzId, String questionType, String questionText)
+	{
+		this.quizzId = quizzId;
+		this.questionType = questionType;
+		this.questionText = questionText;
+	}
 
 	public int getQuestionId() {return questionId;}
 	public int getQuizId() {return quizzId;}
