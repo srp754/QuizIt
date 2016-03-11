@@ -35,7 +35,9 @@ public class SocialTests
     @org.junit.Test
     public void Should_Add_And_Delete_A_Friend_Request()
     {
-        int messageId = SocialRepository.addFriendRequest(3,4);
+    	// haven't tested, might fail
+        int messageId = SocialRepository.addMessage(
+        		new Message(3,4, "friend", "4 sent a friend request to 3"));
 
         boolean doesMessageExist = SocialRepository.MessageExists(messageId);
         assertTrue(doesMessageExist);
