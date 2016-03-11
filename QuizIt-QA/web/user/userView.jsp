@@ -79,7 +79,8 @@
         %>
         <p>You are Friends</p>
         <%
-        } else if (SocialRepository.requestExists(user.getUserId(), userId)) {
+        } else if (SocialRepository.requestExists(user.getUserId(), userId) ||
+        		SocialRepository.requestExists(userId, user.getUserId())) {
         %>
         <p>Friend request pending.</p>
         <%

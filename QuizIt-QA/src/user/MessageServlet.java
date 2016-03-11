@@ -40,7 +40,9 @@ public class MessageServlet extends HttpServlet {
 		IUserRepository userRepository = (UserRepository) request.getSession().getAttribute("user");
 		String username = request.getParameter("username");
 		String type = request.getParameter("messagetype");
-		if (userRepository.userExists(username)) {
+		if (username.equals(userRepository.getUsername())) {
+			request.setAttribute("status", "Sorry, you can't send a " + type + " to yourself!");
+		} else if (userRepository.userExists(username)) {
 			String content = request.getParameter("content");
 			int userId = userRepository.usernameToId(username);
 			if (type.equals("friend")) {
@@ -50,7 +52,7 @@ public class MessageServlet extends HttpServlet {
 								"<p><a href=\"quiz/quiz.jsp?id=\">" + content + "</a></p>" +
 								"<p>Their high score: " + userRepository.getQuizHighScore(content); 
 			}
-			Message msg = new Message(userRepository.getUserId(), userId, type, content);
+			Message msg = new Message(userId, userRepository.getUserId(), type, content);
 			SocialRepository.addMessage(msg);
 			request.setAttribute("status", "Sent!");
 		} else {

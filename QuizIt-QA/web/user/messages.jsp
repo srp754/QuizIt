@@ -70,48 +70,61 @@
 
 	<div class="starter-template">
 		<h1>Messages</h1>
-		<%
-			List<Message> friendReqs = SocialRepository.getFriendRequests(user.getUserId());
-			List<Message> messages = SocialRepository.getMessages(user.getUserId());
-			for (Message req : friendReqs) {
-		%>
-		<p><%= req.getContent() %></p>
-		<form action="/FriendServlet" method="post">
-			<input name="userId" type="hidden" value="<%= req.getSender() %>"/>
-			<input name="id" type="hidden" value="<%= req.getMessageId() %>"/>
-			<p><input name="action" type="submit" value="Accept" />
-				<input name="action" type="submit" value="Deny" /></p>
-		</form>
-		<%
-			}
-
-			for (Message msg : messages) {
-				if (msg.getSender() == user.getUserId()) {
-		%>
-		<p><b>To: <%= user.idToUsername(msg.getRecipient()) %></b></p>
-		<%
-		} else {
-		%>
-		<p><b>From: <%= user.idToUsername(msg.getSender()) %></b></p>
-		<%--<p><a href="message.jsp?id=">id</a></p>--%>
-		<%
-			}
-		%>
-		<p><%= msg.getContent() %></p>
-		<%
-			}
-		%>
-		<form action="/MessageServlet" method="post">
-			<p>To: <input name="username" type="text"/>
-					<% if (request.getAttribute("status") != null) { %>
-			<p><%= (String) request.getAttribute("status") %></p>
-			<%
-				}
-			%>
-			<input name="messagetype" type="hidden" value="note"/>
-			<p><textarea name="content" rows="5" cols="20"></textarea>
-			<p><input type="submit" value="Send Message"/></p>
-		</form>
+		<div class="row">
+			<div class="col-md-4">
+				<h2>Friend Requests</h2>
+				<%
+					List<Message> friendReqs = SocialRepository.getFriendRequests(user.getUserId());
+					for (Message req : friendReqs) {
+				%>
+				<p><%= req.getContent() %></p>
+				<form action="/FriendServlet" method="post">
+					<input name="userId" type="hidden" value="<%= req.getSender() %>"/>
+					<input name="messageId" type="hidden" value="<%= req.getMessageId()  %>"/>
+					<p><input name="action" type="submit" value="Accept" />
+						<input name="action" type="submit" value="Deny" /></p>
+				</form>
+				<% } %>
+			</div>
+			<div class="col-md-4">
+				<h2>Inbox</h2>
+				<%
+					List<Message> messages = SocialRepository.getChallenges(user.getUserId());
+					messages.addAll(SocialRepository.getNotes(user.getUserId()));
+					for (Message msg : messages) {
+						if (msg.getSender() == user.getUserId()) {
+				%>
+				<p><b>To: <%= user.idToUsername(msg.getRecipient()) %></b></p>
+				<%
+				} else {
+				%>
+				<p><b>From: <%= user.idToUsername(msg.getSender()) %></b></p>
+				<%--<p><a href="message.jsp?id=">id</a></p>--%>
+				<%
+					}
+				%>
+				<p><%= msg.getContent() %></p>
+				<%
+					}
+				%>
+			</div>
+			<div class="col-md-4">
+				<h2>Send a Message</h2>
+				<form class="form-horizontal" action="/MessageServlet" method="post">
+					<div class="form-group">
+						<input name="username" id="username" type="text" class="form-control" placeholder="Send to...">
+								<% if (request.getAttribute("status") != null) { %>
+						<p><%= (String) request.getAttribute("status") %></p>
+						<%
+							}
+						%>
+						<input name="messagetype" type="hidden" value="note"/>
+						<p><textarea class="form-control" name="content" rows="5" cols="20" placeholder="Write a note here"></textarea>
+						<p><button type="submit" class="btn btn-success">Send</button></p>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 
 </div><!-- /.container -->

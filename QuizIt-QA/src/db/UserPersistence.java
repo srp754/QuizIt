@@ -287,6 +287,38 @@ public class UserPersistence
 
         return foundUser;
     }
+    
+    public static int usernameToId(String userName) {
+    	int id = -1;
+    	
+    	try {
+	    	ResultSet rs = DatabaseTasks.GetResultSet(
+	    			String.format("SELECT UserId FROM UserDetail WHERE UserName = '%1$s';", userName));
+	    	if (rs.next()) {
+	    		id = rs.getInt("UserId");
+	    	}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return id;
+    }
+    
+    public static String idToUsername(int userId) {
+    	String username = "";
+    	
+    	try {
+	    	ResultSet rs = DatabaseTasks.GetResultSet(
+	    			String.format("SELECT UserName FROM UserDetail WHERE UserId = %1$s;", userId));
+	    	if (rs.next()) {
+	    		username = rs.getString("UserName");
+	    	}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return username;
+    }
 
     public static List<Activity> GetAchievementActivity(int userId)
     {

@@ -56,8 +56,14 @@ public class UserRepository implements IUserRepository
 
     public String getUsername() { return _currentUser.userName; }
     public int getUserId() { return _currentUser.userId; }
-    public int usernameToId(String username) { return username.hashCode(); }
-    public String idToUsername(int userId) { return String.valueOf(userId); }
+    
+    public int usernameToId(String username) { 
+    	return db.UserPersistence.usernameToId(username); 
+    }
+    
+    public String idToUsername(int userId) { 
+    	return db.UserPersistence.idToUsername(userId); 
+    }
 
     public boolean isCorrectLogin(String username, String password)
     {

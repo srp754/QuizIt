@@ -1,8 +1,8 @@
 package user;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,6 +44,8 @@ public class FriendServlet extends HttpServlet {
 			userRepository.addFriend(userId);
 		}
 		SocialRepository.removeMessage(messageId);
+		RequestDispatcher dispatch = request.getRequestDispatcher("user/messages.jsp");
+		dispatch.forward(request, response);
 	}
 
 }
