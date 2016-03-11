@@ -200,4 +200,23 @@ public class QuizTests
         String questionActual = quiz.questions.get(1).getQuestionType();
         assertEquals(questionExpected, questionActual);
     }
+
+    @org.junit.Test
+    public void Should_Get_Quiz_Summaries()
+    {
+        List<QuizSummary> summaries = QuizRepository.GetAllQuizSummaries();
+        assertTrue(summaries.size() > 3);
+    }
+
+    @org.junit.Test
+    public void Should_Check_If_Correct_Answer()
+    {
+        String expectedAnswer = "Sample Answer 3 for Question 2";
+        boolean isAnswerCorrect = QuizRepository.CheckAnswer(2, expectedAnswer);
+        assertTrue(isAnswerCorrect);
+
+        String expectedAnswer2 = "Sample Answer 6 for Question 4";
+        boolean isAnswerCorrect2 = QuizRepository.CheckAnswer(4, expectedAnswer2);
+        assertTrue(isAnswerCorrect2);
+    }
 }

@@ -102,8 +102,8 @@ public class UserPersistence
 
     public static void PromoteUserToAdmin(String userName)
     {
-            String query = String.format("UPDATE UserDetail SET AdminFlag='1' WHERE UserName = %1$s;", "'" + userName + "'");
-            DatabaseTasks.ExecuteUpdate(query);
+        String query = String.format("UPDATE UserDetail SET AdminFlag='1' WHERE UserName = %1$s;", "'" + userName + "'");
+        DatabaseTasks.ExecuteUpdate(query);
     }
 
     public static void DeleteAchievement(int userId, String achievementName)

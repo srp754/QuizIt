@@ -122,9 +122,8 @@ public class DatabaseTasks
 
     public static ResultSet GetResultSet(String selectionType, String tableName)
     {
-        ResultSet rs = null;
         String query = String.format("Select " + selectionType + " from %1$s;", tableName);
-        rs = GetResultSet(query);
+        ResultSet rs = GetResultSet(query);
         return rs;
     }
 
@@ -145,6 +144,4 @@ public class DatabaseTasks
 
         return rs;
     }
-
-
 }
