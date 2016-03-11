@@ -50,7 +50,7 @@ public class MessageServlet extends HttpServlet {
 			} else if (type.equals("challenge")) {
 				content = userRepository.getUsername() + " has challenged you to take a quiz!</p>" +
 								"<p><a href=\"quiz/quiz.jsp?id=\">" + content + "</a></p>" +
-								"<p>Their high score: " + userRepository.getQuizHighScore(content); 
+								"<p>Their high score: " + userRepository.getQuizHighScore(Integer.parseInt(content)); 
 			}
 			Message msg = new Message(userId, userRepository.getUserId(), type, content);
 			SocialRepository.addMessage(msg);

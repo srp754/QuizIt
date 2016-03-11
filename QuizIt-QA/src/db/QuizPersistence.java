@@ -48,6 +48,34 @@ public class QuizPersistence
         return quizId;
     }
 
+    public static int InsertQuestion(Question question)
+    {
+        int questionId = 0;
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO QuizQuestions VALUES ");
+
+            sb.append(" (null,");
+            sb.append(question.getQuizId() + ",");
+            sb.append("'" + question.getQuestionType() + "',");
+            sb.append("'" + question.getQuestionText() + "');");
+            DatabaseTasks.ExecuteUpdate(sb.toString());
+
+            String query = String.format("Select * from QuizQuestions WHERE %1$s = %2$s order by QuestionId desc LIMIT 1;", "QuizId", question.getQuizId());
+            ResultSet rs = DatabaseTasks.GetResultSet(query);
+            rs.next(); // exactly one result so allowed
+            questionId = rs.getInt(1);
+        }
+
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return questionId;
+    }
+
     public static void InsertQuestions(List<Question> questions)
     {
         StringBuilder sb = new StringBuilder();
@@ -205,6 +233,23 @@ public class QuizPersistence
         }
 
         return qStats;
+    }
+    
+    public static double getQuizHighScore(String username, int quizId) {
+        double score = 0.0;
+
+        try {
+            ResultSet rs = DatabaseTasks.GetResultSet(
+            		String.format("SELECT MAX(SumActualScore) AS score FROM QuizStats WHERE QuizId = %1$s;", quizId));
+
+            if(rs.next()) {
+                score = rs.getDouble("score");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return score;    	
     }
 
     public static QuizSummary GetQuizSummary(int quizId)

@@ -29,7 +29,7 @@ public class Answer
 	public String getAnswerType() {return answerType;}
 	public String getAnswerText() {return answerText;}
 	public boolean getAnswerCorrectFlag() {return isAnswerCorrect;}
-	public void setAnswerId(int id) {answerId = id;}
-
+	public void setAnswerId(int id) {this.answerId = id;}
+	public void setQuestionId(int id) {this.questionId = id;}
 
 }

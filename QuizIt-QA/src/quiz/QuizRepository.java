@@ -28,10 +28,21 @@ public class QuizRepository
         return quizId;
     }
 
-    public static void AddQuizContent(List<Question> questions, List<Answer> answers)
+    public static void AddQuizContent(List<Question> questions, int quizId)
     {
-        AddQuestions(questions);
-        AddAnswers(answers);
+        for(Question question : questions)
+        {
+            question.setQuizId(quizId);
+            int questionId = AddQuestion(question);
+            for(Answer answer : question.getAnswers())
+                answer.setQuestionId(questionId);
+            AddAnswers(question.getAnswers());
+        }
+    }
+
+    public static int AddQuestion(Question question)
+    {
+        return QuizPersistence.InsertQuestion(question);
     }
 
     public static void AddQuestions(List<Question> questions)

@@ -40,12 +40,12 @@ public class CreateQuestionServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		String questionType = request.getParameter("questiontype");
-		 System.out.println("Question type: "+questionType);
+		System.out.println("Question type: "+questionType);
 		String lastQuestionType = request.getParameter("lastquestiontype");
-		 System.out.println("Last question type: "+lastQuestionType);
+		System.out.println("Last question type: "+lastQuestionType);
 		if (lastQuestionType != null) { // Process the fields
 		    System.out.println("Adding question");
 			List<Question> createQuizQuestions = (ArrayList<Question>) getServletContext().getAttribute("createquestions");
