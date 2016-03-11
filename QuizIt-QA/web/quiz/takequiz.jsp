@@ -92,60 +92,68 @@
 			<%
 				for (Question currQuestion : quizQuestions) {
 					String questionType = currQuestion.getQuestionType();
-					if (questionType.equals("qresponse")) {
-			%>
-			<br>
-			<%
-				out.println(currQuestion.toString());
-			%>
-			<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
-			<br>
-			<%
-			} else if (questionType.equals("fillblank")) {
-				String unparsedQ = currQuestion.toString();
-				String parsedQ = unparsedQ.replace("|", "_____");
-			%>
-			<%
-				out.println(parsedQ);
-			%>
-			<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
-			<br>
-			<%
-			} else if (questionType.equals("multiplechoice")) {
-				MultipleChoice mcq = (MultipleChoice) currQuestion;
-				out.println(currQuestion.toString());
-				List<Answer> answerChoices = mcq.getAnswerChoices();
+					if (questionType.equals("qresponse"))
+					{
+						%>
+						<br>
+						<%
+							out.println(currQuestion.toString());
+						%>
+						<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
+						<br>
+						<%
+					}
+					else if (questionType.equals("fillblank"))
+					{
+						String unparsedQ = currQuestion.toString();
+						String parsedQ = unparsedQ.replace("|", "_____");
+						%>
+						<%
+							out.println(parsedQ);
+						%>
+						<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
+						<br>
+						<%
+					}
+					else if (questionType.equals("multiplechoice"))
+					{
+						MultipleChoice mcq = (MultipleChoice) currQuestion;
+						out.println(currQuestion.toString());
+						List<Answer> answerChoices = mcq.getAnswerChoices();
 
-				for (Answer currAnswer : answerChoices) {
-			%>
-			<br> <input type="radio" name="<%=currQuestion.getQuestionId()%>"
-						id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.toString()%>">
-			<%
-				out.println(currAnswer.toString());
-			%>
-			<br>
-			<%
-				}
-			%>
+							for (Answer currAnswer : answerChoices)
+							{
+								%>
+								<br> <input type="radio" name="<%=currQuestion.getQuestionId()%>"
+											id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.toString()%>">
+								<%
+									out.println(currAnswer.toString());
+								%>
+								<br>
+								<%
+							}
+						%>
 
-			<%
-			} else if (questionType.equals("pictureresponse")) {
-				PictureResponse currPictureResponse = (PictureResponse) currQuestion;
-				String imageURL = currPictureResponse.getImageURL();
-				String questionStr = currPictureResponse.toString();
-			%>
+						<%
+					}
+					else if (questionType.equals("pictureresponse"))
+					{
+						PictureResponse currPictureResponse = (PictureResponse) currQuestion;
+						String imageURL = currPictureResponse.getImageURL();
+						String questionStr = currPictureResponse.toString();
+						%>
 
-			<img src="<%=imageURL%>" />
-			<br>
-			<%out.println(currPictureResponse.toString());%>
-			<br>
-			<input type="text" name="<%=currPictureResponse.getId() %>">
-			<br>
-			<%
-				}
-			%>
-			<br>
-			<%
+						<img src="<%=imageURL%>" />
+						<br>
+						<%out.println(currPictureResponse.toString());%>
+						<br>
+						<input type="text" name="<%=currPictureResponse.getId() %>">
+						<br>
+						<%
+							}
+						%>
+						<br>
+						<%
 				}
 			%>
 			<button type="submit" class="btn btn-success">Submit</button>
