@@ -48,53 +48,51 @@ public class CreateQuestionServlet extends HttpServlet {
 
 		if (lastQuestionType != null)
 		{
-			if (lastQuestionType.equals("qresponse") || lastQuestionType.equals("qresponse"))
+			if (lastQuestionType.equals("qresponse") || lastQuestionType.equals("fillblank"))
 			{
 				List<String> listAnswerStrings = Answer.answerToList(request.getParameter("answer").toLowerCase());
 				List<Answer> listAnswers = new ArrayList<>();
 
-				String questionStr = request.getParameter("question"); //quizId overwritten later anyway
-				Question question = new Question(0, lastQuestionType, questionStr);
+				String questionStr = request.getParameter("question");
+				Question question = new Question(0, lastQuestionType, questionStr); //quizId overwritten later anyway
 
 				for(String answerText : listAnswerStrings)
 					listAnswers.add(new Answer(0, lastQuestionType, answerText, true)); //questionId overwritten later anyway
 				question.setAnswers(listAnswers);
 				createQuizQuestions.add(question);
 			}
-			else if (lastQuestionType.equals("fillblank"))
-			{
-//                String questionStr = request.getParameter("question");
-//                String answerStr = request.getParameter("answer");
-//                Set<Answer> fbAnswers = new HashSet<Answer>();
-//                FillBlankAnswer fba = new FillBlankAnswer(answerStr, 1);
-//                fbAnswers.add(fba);
-//                FillBlank fb = new FillBlank(questionStr, fbAnswers, 1);
-//                createQuizQuestions.add(fb);
-			}
 			else if(lastQuestionType.equals("multiplechoice"))
 			{
-//			    String questionStr = request.getParameter("question");
-//			    String answerStr = request.getParameter("answer");
-//                List<Answer> choices = new ArrayList<Answer>();
-//                MultipleChoiceAnswer correctChoice = new MultipleChoiceAnswer(answerStr, 0);
-//                Set<Answer> correctAnswers = new HashSet<Answer>(Arrays.asList(correctChoice));
-//                choices.add(correctChoice);
-//                int wrongChoices = 3; // Magic number defined in js file/design (decides how many more choices to include)
-//                for(int i = 0; i < wrongChoices; i++) {
-//                    String wrongStr = request.getParameter("wrong"+i);
-//                    choices.add(new MultipleChoiceAnswer(wrongStr, i+1));
-//                }
-//                MultipleChoice multipleChoiceQ = new MultipleChoice(questionStr, correctAnswers, choices, false, 1);
-//                createQuizQuestions.add(multipleChoiceQ);
+				List<Answer> listAnswers = new ArrayList<>();
+
+			    String questionStr = request.getParameter("question");
+				Question question = new Question(0, lastQuestionType, questionStr);
+
+			    String answerText = request.getParameter("answer").toLowerCase();
+				listAnswers.add(new Answer(0, lastQuestionType, answerText, true));
+
+				int wrongChoices = 3; // Magic number defined in js file/design (decides how many more choices to include)
+				for(int i = 0; i < wrongChoices; i++) {
+					String wrongAnswerText = request.getParameter("wrong"+i);
+					listAnswers.add(new Answer(0, lastQuestionType, wrongAnswerText, false));
+				}
+
+				question.setAnswers(listAnswers);
+				createQuizQuestions.add(question);
 			}
 			else if (lastQuestionType.equals("pictureresponse"))
 			{
-//                String questionStr = request.getParameter("question");
-//                String answerStr = request.getParameter("answer");
-//                String imageURL = request.getParameter("imageurl");
-//                PictureResponseAnswer pictureAnswer = new PictureResponseAnswer(answerStr, 1);
-//                PictureResponse pictureQuestion = new PictureResponse(questionStr, imageURL, pictureAnswer, 1);
-//                createQuizQuestions.add(pictureQuestion);
+				List<String> listAnswerStrings = Answer.answerToList(request.getParameter("answer").toLowerCase());
+				List<Answer> listAnswers = new ArrayList<>();
+
+				String questionStr = request.getParameter("question");
+				String imageURL = request.getParameter("imageurl");
+				Question question = new Question(0, lastQuestionType, questionStr + ";" + imageURL); //quizId overwritten later anyway
+
+				for(String answerText : listAnswerStrings)
+					listAnswers.add(new Answer(0, lastQuestionType, answerText, true)); //questionId overwritten later anyway
+				question.setAnswers(listAnswers);
+				createQuizQuestions.add(question);
 			}
 		}
 
