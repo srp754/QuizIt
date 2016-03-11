@@ -81,7 +81,7 @@
 
             <form onsubmit="event.preventDefault(); promote_user()">
                 <div class="form-group">
-                    <label for="inputUserName">Remove User</label>
+                    <label for="inputUserName">Promote User</label>
                     <input type="name" class="form-control" id="inputUserName" placeholder="Username" name="inputUserName" required>
                     <p id="promoteUserText"></p>
                 </div>
@@ -108,7 +108,7 @@
                             out.println("<td>" + u.userName + "</td>");
                             out.println("<td>" + u.email + "</td>");
                             out.println("<td>" + u.dateCreated + "</td>");
-                            if(u.isAdmin) {
+                            if(user.isAdmin(u.userName)) {
                                 out.println("<td>Admin</td>");
                             }
                             else {

@@ -40,67 +40,64 @@ public class CreateQuestionServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		String questionType = request.getParameter("questiontype");
-		 System.out.println("Question type: "+questionType);
 		String lastQuestionType = request.getParameter("lastquestiontype");
-		 System.out.println("Last question type: "+lastQuestionType);
-		if (lastQuestionType != null) { // Process the fields
-		    System.out.println("Adding question");
-			List<Question> createQuizQuestions = (ArrayList<Question>) getServletContext().getAttribute("createquestions");
-			int placeholderId = createQuizQuestions.size();
-			// Access persistent list of questions that we add to
-			if (lastQuestionType.equals("qresponse")) {
+		List<Question> createQuizQuestions = (ArrayList<Question>) getServletContext().getAttribute("createquestions");
+
+		if (lastQuestionType != null)
+		{
+			if (lastQuestionType.equals("qresponse") || lastQuestionType.equals("fillblank"))
+			{
+				List<String> listAnswerStrings = Answer.answerToList(request.getParameter("answer").toLowerCase());
+				List<Answer> listAnswers = new ArrayList<>();
+
 				String questionStr = request.getParameter("question");
-				String answerStr = request.getParameter("answer").toLowerCase();
-				//System.out.println("Question: "+questionStr);
-				//System.out.println("Answer: "+answerStr);
-				Set<String> answerAlternatives = new HashSet<String>(Arrays.asList(answerStr));
-				List<Answer> possibleAnswers = new ArrayList<Answer>(); 
-				QResponseAnswer qra = new QResponseAnswer(answerAlternatives, placeholderId);
-				possibleAnswers.add(qra);
-				// TODO add checkbox to toggle ordered option
-				QResponse newQuestion = new QResponse(questionStr, possibleAnswers, 1, false, placeholderId);
-				createQuizQuestions.add(newQuestion);
-			} else if (lastQuestionType.equals("fillblank")) {
-                String questionStr = request.getParameter("question");
-                String answerStr = request.getParameter("answer");
-                Set<Answer> fbAnswers = new HashSet<Answer>();
-                FillBlankAnswer fba = new FillBlankAnswer(answerStr, placeholderId);
-                fbAnswers.add(fba);
-                FillBlank fb = new FillBlank(questionStr, fbAnswers, placeholderId);
-                createQuizQuestions.add(fb);
-			} else if (lastQuestionType.equals("multiplechoice")) {
+				Question question = new Question(0, lastQuestionType, questionStr); //quizId overwritten later anyway
+
+				for(String answerText : listAnswerStrings)
+					listAnswers.add(new Answer(0, lastQuestionType, answerText, true)); //questionId overwritten later anyway
+				question.setAnswers(listAnswers);
+				createQuizQuestions.add(question);
+			}
+			else if(lastQuestionType.equals("multiplechoice"))
+			{
+				List<Answer> listAnswers = new ArrayList<>();
+
 			    String questionStr = request.getParameter("question");
-			    String answerStr = request.getParameter("answer");
-                List<Answer> choices = new ArrayList<Answer>();
-                MultipleChoiceAnswer correctChoice = new MultipleChoiceAnswer(answerStr, 0);
-                Set<Answer> correctAnswers = new HashSet<Answer>(Arrays.asList(correctChoice));
-                choices.add(correctChoice);
-                int wrongChoices = 3; // Magic number defined in js file/design (decides how many more choices to include)
-                for(int i = 0; i < wrongChoices; i++) {
-                    String wrongStr = request.getParameter("wrong"+i);
-                    choices.add(new MultipleChoiceAnswer(wrongStr, i+1));
-                }
-                MultipleChoice multipleChoiceQ = new MultipleChoice(questionStr, correctAnswers, choices, false, placeholderId);
-                createQuizQuestions.add(multipleChoiceQ);
-			} else if (lastQuestionType.equals("pictureresponse")) {
-                String questionStr = request.getParameter("question");
-                String answerStr = request.getParameter("answer");
-                String imageURL = request.getParameter("imageurl");
-                PictureResponseAnswer pictureAnswer = new PictureResponseAnswer(answerStr, placeholderId);
-                PictureResponse pictureQuestion = new PictureResponse(questionStr, imageURL, pictureAnswer, placeholderId);
-                createQuizQuestions.add(pictureQuestion);
+				Question question = new Question(0, lastQuestionType, questionStr);
+
+			    String answerText = request.getParameter("answer").toLowerCase();
+				listAnswers.add(new Answer(0, lastQuestionType, answerText, true));
+
+				int wrongChoices = 3; // Magic number defined in js file/design (decides how many more choices to include)
+				for(int i = 0; i < wrongChoices; i++) {
+					String wrongAnswerText = request.getParameter("wrong"+i);
+					listAnswers.add(new Answer(0, lastQuestionType, wrongAnswerText, false));
+				}
+
+				question.setAnswers(listAnswers);
+				createQuizQuestions.add(question);
+			}
+			else if (lastQuestionType.equals("pictureresponse"))
+			{
+				List<String> listAnswerStrings = Answer.answerToList(request.getParameter("answer").toLowerCase());
+				List<Answer> listAnswers = new ArrayList<>();
+
+				String questionStr = request.getParameter("question");
+				String imageURL = request.getParameter("imageurl");
+				Question question = new Question(0, lastQuestionType, questionStr + ";" + imageURL); //quizId overwritten later anyway
+
+				for(String answerText : listAnswerStrings)
+					listAnswers.add(new Answer(0, lastQuestionType, answerText, true)); //questionId overwritten later anyway
+				question.setAnswers(listAnswers);
+				createQuizQuestions.add(question);
 			}
 		}
-		// lastQuestionType = questionType;
-		request.setAttribute("lastquestiontype", questionType);
 
-		String lastQuestionNumber = request.getParameter("questionnumber");
-		String lastqparsed = lastQuestionNumber.replaceAll("\\/", "");
-		int nextQuestionNumber = Integer.parseInt(lastqparsed) + 1;
-		request.setAttribute("questionnumber", nextQuestionNumber);
+		request.setAttribute("lastquestiontype", questionType);
+		request.setAttribute("createquestions", createQuizQuestions);
 
 		String addAnotherQuestion = request.getParameter("add");
 		String completeQuiz = request.getParameter("complete");

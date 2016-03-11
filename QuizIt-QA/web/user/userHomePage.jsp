@@ -84,8 +84,13 @@
             <ul class="list-group">
                 <%
                     List<Announcement> announcementList = db.UserPersistence.GetAnnouncements();
-                    for(int i=announcementList.size()-1; i >= 0; i--) {
-                        out.println("<li class='list-group-item'>" + announcementList.get(i).date + ": " + announcementList.get(i).text + "</li>");
+                    if(announcementList.isEmpty()) {
+                        out.println("<li class='list-group-item'>None</li>");
+                    }
+                    else {
+                        for (int i = announcementList.size() - 1; i >= 0; i--) {
+                            out.println("<li class='list-group-item'>" + announcementList.get(i).date + ": " + announcementList.get(i).text + "</li>");
+                        }
                     }
                 %>
             </ul>
@@ -94,22 +99,31 @@
             <h2>Quiz History</h2>
             <%
                 List<Activity> activityList = db.UserPersistence.GetActivities(user.getUserId());
-                if(activityList.size() > 0) {
+                if(!activityList.isEmpty()) {
                     out.println("<ul class='list-group'>");
 
                     int count = 0;
                     for(int i=activityList.size()-1; i >= 0; i--) {
-                        if(activityList.get(i).type.equals("QuizCreated") || activityList.get(i).type.equals("QuizTaken") ) {
+                        if(activityList.get(i).type.equals("QuizCreated")) {
                             QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                             out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": " + activityList.get(i).type + "</li>");
+                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": Created quiz \"" + qs.getQuizName() + "\"</li>");
+                            count++;
                         }
-
+                        else if(activityList.get(i).type.equals("QuizTaken")) {
+                            QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
+                            out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
+                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": Took quiz \"" + qs.getQuizName() + "\"</li>");
+                            count++;
+                        }
                         if(count >= 5) {
                             break;
                         }
                     }
                     out.println("</ul>");
+                }
+                else {
+                    out.println("<li class='list-group-item'>None</li>");
                 }
             %>
         </div>
@@ -117,19 +131,22 @@
             <h2>Popular Quizzes</h2>
             <%
                 List<Activity> quizList = db.QuizPersistence.GetTakenQuizzesActivity();
-                if(quizList.size() > 0) {
+                if(!quizList.isEmpty()) {
                     out.println("<ul class='list-group'>");
 
                     int count = 0;
                     for(int i=quizList.size()-1; i >= 0; i--) {
                         QuizSummary qs = db.QuizPersistence.GetQuizSummary(quizList.get(i).linkId);
-                        out.println("<li class='list-group-item'>" + quizList.get(i).date + ": " + qs.getQuizDescription() + "</li>");
-
+                        out.println("<li class='list-group-item'>"+ qs.getQuizDescription() + "</li>");
+                        count++;
                         if(count >= 5) {
                             break;
                         }
                     }
                     out.println("</ul>");
+                }
+                else {
+                    out.println("<li class='list-group-item'>None</li>");
                 }
             %>
         </div>
@@ -141,20 +158,23 @@
             <h2>Recently Created Quizzes</h2>
             <%
                 quizList = db.QuizPersistence.GetCreatedQuizzesActivity();
-                if(quizList.size() > 0) {
+                if(!quizList.isEmpty()) {
                     out.println("<ul class='list-group'>");
 
                     int count = 0;
                     for(int i=quizList.size()-1; i >= 0; i--) {
                         QuizSummary qs = db.QuizPersistence.GetQuizSummary(quizList.get(i).linkId);
-                        out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                qs.getQuizDescription() + "'>" + quizList.get(i).date + ": " + quizList.get(i).type + "</li>");
-
+                        out.println("<li class='list-group-item' data-toggle='tooltip' title='Created by " +
+                                db.UserPersistence.idToUsername(qs.getCreatorId()) + "'>" + quizList.get(i).date + ": " + qs.getQuizDescription() + "</li>");
+                        count++;
                         if(count >= 5) {
                             break;
                         }
                     }
                     out.println("</ul>");
+                }
+                else {
+                    out.println("<li class='list-group-item'>None</li>");
                 }
             %>
         </div>
@@ -163,9 +183,19 @@
             <ul class="list-group">
                 <%
                     List<Achievement> achievementsListList = db.UserPersistence.GetAchievements(user.getUserId());
-                    for(int i=achievementsListList.size()-1; i >= 0; i--) {
-                        out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                achievementsListList.get(i).description + "'>" + achievementsListList.get(i).date + ": " + achievementsListList.get(i).name + "</li>");
+                    int count = 0;
+                    if(!achievementsListList.isEmpty()) {
+                        for (int i = achievementsListList.size() - 1; i >= 0; i--) {
+                            out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
+                                    achievementsListList.get(i).description + "'>" + achievementsListList.get(i).date + ": " + achievementsListList.get(i).name + "</li>");
+                            count++;
+                            if(count >= 5) {
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        out.println("<li class='list-group-item'>None</li>");
                     }
                 %>
             </ul>
@@ -189,7 +219,44 @@
     <div class="row">
         <div class="col-md-4">
             <h2>Friend's Activities</h2>
+            <ul class="list-group">
+            <%
+                activityList = db.UserPersistence.GetActivities();
+                if(!activityList.isEmpty()) {
+                    count = 0;
+                    List<Integer> friendIds = db.SocialPersistence.GetFriendsIds(user.getUserId());
+                    for (int i = activityList.size() - 1; i >= 0; i--) {
+                        int id = activityList.get(i).userId;
+                        if(friendIds.contains(id)) {
+                            if(activityList.get(i).type.equals("QuizCreated")) {
+                                QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
+                                out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
+                                    + "'>" + db.UserPersistence.idToUsername(id) + " created quiz \"" + qs.getQuizName() + "\"</li>");
+                            }
+                            else if(activityList.get(i).type.equals("QuizTaken")) {
+                                QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
+                                out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
+                                        + "'>" + db.UserPersistence.idToUsername(id) + " took quiz \"" + qs.getQuizName() + "\"</li>");
+                            }
+                            else if(activityList.get(i).type.equals("Achievement")) {
+                                Achievement a = db.UserPersistence.GetAchievement(activityList.get(i).linkId);
+                                out.println("<li class='list-group-item' data-toggle='tooltip' title='" + a.description
+                                        + "'>" + db.UserPersistence.idToUsername(id) + " earned achievement \"" + a.name + "\"</li>");
+                            }
+                            count++;
+                        }
 
+                        if(count >= 5) {
+                            break;
+                        }
+                    }
+                }
+                else {
+                    out.println("<li class='list-group-item'>None</li>");
+                }
+
+            %>
+            </ul>
         </div>
     </div>
 
