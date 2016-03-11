@@ -35,8 +35,7 @@ function addQResponse() {
 	input.name = "question";
 	question.appendChild(input); 
 	question.appendChild(document.createElement("br"));
-	//question.appendChild(document.createTextNode(i+". Answer Text: "));
-	question.appendChild(document.createTextNode("Answer Text: "));
+	question.appendChild(document.createTextNode("Answer Text (delimit multiple answers with ';'): "));
 	var answerInput = document.createElement("input");
 	answerInput.type = "text";
 	//answerInput.name = "answer" + i;
@@ -58,7 +57,7 @@ function addFillBlank(){
 	input.name = "question";
 	question.appendChild(input);
 	question.appendChild(document.createElement("br"));
-	question.appendChild(document.createTextNode("Answer Text: "));
+	question.appendChild(document.createTextNode("Answer Text (delimit multiple answers with ';'): "));
 	var answerInput = document.createElement("input");
 	answerInput.type = "text";
 	answerInput.name = 'answer';
@@ -109,7 +108,7 @@ function addPictureResponse() {
 	input.name = "question";
 	question.appendChild(input);
 	question.appendChild(document.createElement("br"));
-	question.appendChild(document.createTextNode("Answer Text: "));
+	question.appendChild(document.createTextNode("Answer Text (delimit multiple answers with ;): "));
 	var answerInput = document.createElement("input");
 	answerInput.type = "text";
 	answerInput.name = 'answer';
