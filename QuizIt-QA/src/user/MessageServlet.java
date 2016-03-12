@@ -61,7 +61,7 @@ public class MessageServlet extends HttpServlet {
 		
 		RequestDispatcher dispatch;
 		if (type.equals("friend")) {
-			dispatch = request.getRequestDispatcher("user/userView.jsp");
+			dispatch = request.getRequestDispatcher("user/userProfile.jsp");
 		} else if (type.equals("challenge")) {
 			dispatch = request.getRequestDispatcher("quiz/quizsummary.jsp?id=" + request.getParameter("content"));
 		} else {
