@@ -610,7 +610,7 @@ public class QuizPersistence
         {
             Statement stmt = db.DBConnection.getStatement();
 
-            String query = String.format("Select * from QuizHistory where QuizId = %1$s and QuizHistory.the_date > DATE_SUB(CURDATE(), INTERVAL 1 DAY) Order By AttemptScore Desc;", quizId);
+            String query = String.format("Select * from QuizHistory where QuizId = %1$s and AttemptDate > DATE_SUB(NOW(), INTERVAL 24 HOUR) Order By AttemptScore Desc;", quizId);
             rs = stmt.executeQuery(query);
             while(rs.next())
             {

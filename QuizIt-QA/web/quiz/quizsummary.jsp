@@ -199,7 +199,7 @@
 						String timeUsername = user.idToUsername(currentTimeAttempt.getUserId());
 						int timeScore = currentTimeAttempt.getAttemptScore();
 			%>
-			<li><%out.println(timeUsername+" Score: "+currentTimeAttempt);%></li>
+			<li><%out.println(timeUsername+" Score: "+timeScore);%></li>
 			<%
 					}
 				}
