@@ -46,8 +46,8 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/user/userHomePage.jsp">Home</a></li>
-                <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
-                <li class="active"><a href="/user/userFeed.jsp">Feed</a></li>
+                <li class="active"><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+                <li><a href="/user/userFeed.jsp">Feed</a></li>
                 <% if(user.isAdmin()) {
                     out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
@@ -59,7 +59,7 @@
             </form>
             <form class="navbar-form navbar-right" action="/UserSearchServlet" method="post">
                 <div class="form-group">
-                    <input type="text" placeholder="&#128269;" class="form-control" name="username">
+                    <input type="text" placeholder="&#128269; Search for User" class="form-control" name="username">
                 </div>
             </form>
         </div><!--/.navbar-collapse -->
@@ -67,23 +67,42 @@
 </nav>
 
 <div class="container">
-
     <div class="starter-template">
         <h1>Welcome to QuizIt!</h1>
         <h2>Select a Quiz</h2>
-        <%
-            List<QuizSummary> quizSummaries = QuizRepository.GetAllQuizSummaries();
-            for (QuizSummary currentSummary: quizSummaries) {
-                int quizid = currentSummary.getQuizId();
-        %>
-        <li><a href="/quiz/quizsummary.jsp?id=<%=quizid %>"><%out.println(currentSummary.getQuizName());%></a></li>
-        <%
-            }
-        %>
-        <h2><a href="createquiz.jsp"> Create your own quiz!</a></h2>
+        <a class="btn btn-primary" href="createquiz.jsp" role="button"> Create your own quiz!</a>
+    </div>
+    <div class="col-md-6 col-md-offset-3">
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Quiz</th>
+                <th>Creator</th>
+                <th>Created</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                List<QuizSummary> quizSummaries = QuizRepository.GetAllQuizSummaries();
+                for (QuizSummary currentSummary: quizSummaries) {
+                    int quizid = currentSummary.getQuizId();
+                    out.println("<tr>");
+                    out.println("<td>" + "<a href=\"/quiz/quizsummary.jsp?id=" + quizid + "\">" + currentSummary.getQuizName() + "</a></td>");
+                    out.println("<td>" + currentSummary.getCreatorId() + "</td>");
+                    out.println("<td>" + currentSummary.getCreateDate() + "</td>");
+                    out.print("</td>");
+                }
+            %>
+            </tbody>
+            <%--<li class='list-group-item' data-toggle='tooltip' title=""><a href="/quiz/quizsummary.jsp?id=<%=quizid %>"><%out.println(currentSummary.getQuizName());%></a></li>--%>
+        </table>
     </div>
 
-</div><!-- /.container -->
+
+</div>
+
+<!-- /.container -->
 
 
 <!-- Bootstrap core JavaScript
