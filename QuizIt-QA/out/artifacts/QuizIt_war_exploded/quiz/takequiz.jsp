@@ -1,24 +1,13 @@
 <%@ page import="quiz.*, user.*, java.util.*" %>
 <% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <%
+	String startTime =  String.valueOf(System.currentTimeMillis());
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);
-	List<QuizSummary> quizSummaries = (List<QuizSummary>) getServletContext().getAttribute("quizsummary");
-	QuizSummary wantedSummary = null;
-	for (QuizSummary currSummary : quizSummaries) {
-		if (currSummary.getQuizId() == quizId) {
-			wantedSummary = currSummary;
-		}
-	}
-	List<QuizAttemptHistory> quizAttemptHistoryTable = (List<QuizAttemptHistory>) getServletContext().getAttribute("quizattempts");
-	int totalAttempts = quizAttemptHistoryTable.size(); 
-	int userId = user.getUserId(); 
-	List<Quiz> quizList = (List<Quiz>) getServletContext().getAttribute("quizlist");
-	Quiz quiz = quizList.get(quizId);
+	QuizSummary wantedSummary = QuizRepository.GetQuizSummary(quizId);
+	int userId = user.getUserId();
+	Quiz quiz = QuizRepository.GetQuiz(quizId);
 	List<Question> quizQuestions = quiz.getQuestions();
-	QuizAttemptHistory currentAttempt = new QuizAttemptHistory(totalAttempts+1, quizId, userId, quizQuestions.size());
-	currentAttempt.startAttempt();
-	quizAttemptHistoryTable.add(currentAttempt);
 %>
 <!DOCTYPE html>
 
@@ -65,19 +54,19 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="user/userHomePage">Home</a></li>
-				<li><a href="quiz/quizhomepage.jsp">Quiz</a></li>
-				<li><a href="#feed">Feed</a></li>
+				<li><a href="/user/userHomePage.jsp">Home</a></li>
+				<li class="active"><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+				<li><a href="/user/userFeed.jsp">Feed</a></li>
 				<% if(user.isAdmin()) {
-					out.println("<li><a href='user/dashboard.html'>Admin</a></li>");
+					out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
 				}
 				%>
-				<li><a href="user/messages.jsp">&#128172;</a></li>
+				<li><a href="/user/messages.jsp">&#128172;</a></li>
 			</ul>
-			<form class="navbar-form navbar-right" action="../SignOutServlet" method="post">
+			<form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
 				<button type="submit" class="btn btn-primary">Sign Out</button>
 			</form>
-			<form class="navbar-form navbar-right" action="../UserSearchServlet" method="post">
+			<form class="navbar-form navbar-right" action="/UserSearchServlet" method="post">
 				<div class="form-group">
 					<input type="text" placeholder="&#128269;" class="form-control" name="username">
 				</div>
@@ -85,6 +74,7 @@
 		</div><!--/.navbar-collapse -->
 	</div>
 </nav>
+
 
 <div class="container">
 
@@ -94,57 +84,86 @@
 				out.println(wantedSummary.getQuizName());
 			%>
 		</h1>
+
 		<form action="../CheckAnswerServlet" method="post">
+			<input type="hidden" name="starttime" value="<%=startTime%>" />
 			<input type="hidden" name="quizid"
 				   value=<%=wantedSummary.getQuizId()%> />
-			<input type="hidden" name="attemptid" value=<%=totalAttempts+1 %>/>
 			<%
-				for (Question currQuestion : quizQuestions) {
+				for (int i =0; i < quizQuestions.size(); i++)
+				{
+					Question currQuestion = quizQuestions.get(i);
 					String questionType = currQuestion.getQuestionType();
-					if (questionType.equals("qresponse")) {
-			%>
-			<br>
-			<%
-				out.println(currQuestion.toString());
-			%>
-			<br> <input type="text" name="<%=currQuestion.getId()%>">
-			<br>
-			<%
-			} else if (questionType.equals("fillblank")) {
-				String unparsedQ = currQuestion.toString();
-				String parsedQ = unparsedQ.replace("|", "_____");
-			%>
-			<%
-				out.println(parsedQ);
-			%>
-			<br> <input type="text" name="<%=currQuestion.getId()%>">
-			<br>
-			<%
-			} else if (questionType.equals("multiplechoice")) {
-				MultipleChoice mcq = (MultipleChoice) currQuestion;
-				List<Answer> answerChoices = mcq.getAnswerChoices();
-				for (Answer currAnswer : answerChoices) {
-			%>
-			<br> <input type="radio" name="<%=currQuestion.getId()%>"
-						id="<%=currAnswer.getId()%>" value="<%=currAnswer.toString()%>">
-			<%
-				out.println(currAnswer.toString());
-			%>
-			<br>
-			<%
-				}
-			%>
+					if (questionType.equals("qresponse"))
+					{
+						%>
+						<h4>
+						<%
+							out.println("<b>" + (i+1) + ".</b> " + currQuestion.getQuestionText());
+						%>
+						</h4>
+						<input type="text" name="<%=currQuestion.getQuestionId()%>">
+						<%
+					}
+					else if (questionType.equals("fillblank"))
+					{
+						String unparsedQ = currQuestion.getQuestionText();
+						String parsedQ = unparsedQ.replace("|", "_____");
+						%>
+						<h4>
+							<%
+								out.println("<b>" + (i+1) + ".</b> " + parsedQ);
+							%>
+						</h4>
+						<input type="text" name="<%=currQuestion.getQuestionId()%>">
 
-			<%
-			} else if (questionType.equals("pictureresponse")) {
-			%>
-			<%
+						<%
+					}
+					else if (questionType.equals("multiplechoice"))
+					{
+						%>
+						<h4>
+						<%
+							out.println("<b>" + (i+1) + ".</b> " + currQuestion.getQuestionText());
+						%>
+						</h4>
+						<%
+						List<Answer> answerChoices = QuizRepository.GetAnswers(currQuestion.getQuestionId());
+
+							for (Answer currAnswer : answerChoices)
+							{
+								%>
+								<input type="radio" name="<%=currQuestion.getQuestionId()%>"
+											id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.getAnswerText()%>">
+								<%
+									out.println(currAnswer.getAnswerText());
+								%>
+								<br>
+								<%
+							}
+
+					}
+					else if (questionType.equals("pictureresponse"))
+					{
+						List<String> questionAndUrlList = Answer.answerToList(currQuestion.getQuestionText());
+						String questionText = questionAndUrlList.get(0);
+						String imageURL = questionAndUrlList.get(1);
+						%>
+						<h4>
+							<%
+								out.println("<b>" + (i+1) + ".</b> " + questionText);
+							%>
+						</h4>
+							<img src="<%=imageURL%>" />
+							<br />
+							<br />
+							<input type="text" name="<%=currQuestion.getQuestionId() %>">
+							<br />
+						<%
+					}
 				}
 			%>
-			<br>
-			<%
-				}
-			%>
+			<br />
 			<button type="submit" class="btn btn-success">Submit</button>
 		</form>
 	</div>

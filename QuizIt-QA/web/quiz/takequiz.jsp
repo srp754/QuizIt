@@ -99,7 +99,7 @@
 						%>
 						<h4>
 						<%
-							out.println("<b>" + i + ".</b> " + currQuestion.getQuestionText());
+							out.println("<b>" + (i+1) + ".</b> " + currQuestion.getQuestionText());
 						%>
 						</h4>
 						<input type="text" name="<%=currQuestion.getQuestionId()%>">
@@ -112,7 +112,7 @@
 						%>
 						<h4>
 							<%
-								out.println("<b>" + i + ".</b> " + parsedQ);
+								out.println("<b>" + (i+1) + ".</b> " + parsedQ);
 							%>
 						</h4>
 						<input type="text" name="<%=currQuestion.getQuestionId()%>">
@@ -124,7 +124,7 @@
 						%>
 						<h4>
 						<%
-							out.println("<b>" + i + ".</b> " + currQuestion.getQuestionText());
+							out.println("<b>" + (i+1) + ".</b> " + currQuestion.getQuestionText());
 						%>
 						</h4>
 						<%
@@ -134,7 +134,7 @@
 							{
 								%>
 								<input type="radio" name="<%=currQuestion.getQuestionId()%>"
-											id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.toString()%>">
+											id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.getAnswerText()%>">
 								<%
 									out.println(currAnswer.getAnswerText());
 								%>
@@ -151,7 +151,7 @@
 						%>
 						<h4>
 							<%
-								out.println("<b>" + i + ".</b> " + questionText);
+								out.println("<b>" + (i+1) + ".</b> " + questionText);
 							%>
 						</h4>
 							<img src="<%=imageURL%>" />

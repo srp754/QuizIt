@@ -1,15 +1,12 @@
 package quiz;
 
-public class PictureResponse implements Question{
-	private String question; 
+public class PictureResponse extends Question{
 	private String imageURL; 
 	private Answer answer; 
-	private int questionId; 
-	private String questionType; 
+	private int questionId;
 	
 	public PictureResponse(String question, String imageURL, Answer answer, int questionId) {
-		this.questionType = "pictureresponse";
-		this.question = question; 
+		super(1, "pictureresponse", question);
 		this.imageURL = imageURL; 
 		this.answer = answer; 
 		this.questionId = questionId; 
@@ -37,16 +34,18 @@ public class PictureResponse implements Question{
 		}
 		return false; 
 	}
-	
+
 	public String toString() {
-		return imageURL; 
+		return super.getQuestionText();
 	}
-	
+
+	public String getImageURL() { return imageURL; }
+
 	public int getId() {
 		return questionId; 
 	}
 	
 	public String getQuestionType() {
-		return questionType; 
+		return super.getQuestionType();
 	}
 }

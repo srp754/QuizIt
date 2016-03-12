@@ -1,7 +1,7 @@
 <%@ page import="user.*" %>
 <!DOCTYPE html>
 
-<% IUserRepository user = (IUserRepository) session.getAttribute("user");
+<% IUserRepository user = (UserRepository) session.getAttribute("user");
     String username = request.getParameter("username");
     int userId = user.usernameToId(username);
 %>
@@ -48,19 +48,19 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="user/userHomePage">Home</a></li>
-                <li><a href="quiz/quizhomepage.jsp">Quiz</a></li>
-                <li><a href="#feed">Feed</a></li>
+                <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
+                <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+                <li><a href="/user/userFeed.jsp">Feed</a></li>
                 <% if(user.isAdmin()) {
-                    out.println("<li><a href='user/dashboard.html'>Admin</a></li>");
+                    out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
                 %>
-                <li><a href="user/messages.jsp">&#128172;</a></li>
+                <li><a href="/user/messages.jsp">&#128172;</a></li>
             </ul>
-            <form class="navbar-form navbar-right" action="../SignOutServlet" method="post">
+            <form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
                 <button type="submit" class="btn btn-primary">Sign Out</button>
             </form>
-            <form class="navbar-form navbar-right" action="../UserSearchServlet" method="post">
+            <form class="navbar-form navbar-right" action="/UserSearchServlet" method="post">
                 <div class="form-group">
                     <input type="text" placeholder="&#128269;" class="form-control" name="username">
                 </div>
@@ -68,6 +68,7 @@
         </div><!--/.navbar-collapse -->
     </div>
 </nav>
+
 
 <div class="container">
 
@@ -78,13 +79,14 @@
         %>
         <p>You are Friends</p>
         <%
-        } else if (Messaging.requestExists(user.getUserId(), userId)) {
+        } else if (SocialRepository.requestExists(user.getUserId(), userId) ||
+        		SocialRepository.requestExists(userId, user.getUserId())) {
         %>
         <p>Friend request pending.</p>
         <%
         } else {
         %>
-        <form action="../MessageServlet" method="post">
+        <form action="/MessageServlet" method="post">
             <input name="username" type="hidden" value="<%= username %>"/>
             <input name="messagetype" type="hidden" value="friend"/>
             <input name="content" type="hidden" value=""/>

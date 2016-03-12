@@ -1,18 +1,16 @@
 package quiz;
 import java.util.*; 
-public class FillBlank implements Question{
+public class FillBlank extends Question{
 	/* Pretty much identical to QResponse
 	 * However, the question string will represent the blank as the '|' character
 	 * i.e. "The | is the largest animal ever known to have lived."
 	 */
-	
-	private String question; 
+
 	private Set<Answer> possibleAnswers; 
-	private int questionId; 
-	private String questionType; 
+	private int questionId;
+
 	public FillBlank(String question, Set<Answer> possibleAnswers, int questionId) {
-		this.questionType = "fillblank";
-		this.question = question; 
+		super(1, "fillblank", question);
 		this.possibleAnswers = possibleAnswers;
 		this.questionId = questionId; 
 	}
@@ -40,7 +38,7 @@ public class FillBlank implements Question{
 	}
 	
 	public String toString() {
-		return question; 
+		return super.getQuestionText();
 	}
 	
 	public int getId() {
@@ -48,6 +46,6 @@ public class FillBlank implements Question{
 	}
 	
 	public String getQuestionType() {
-		return questionType; 
+		return super.getQuestionType();
 	}
 }

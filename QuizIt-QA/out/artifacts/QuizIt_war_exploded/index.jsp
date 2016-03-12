@@ -54,7 +54,7 @@
             <form class="navbar-form navbar-right" onsubmit="event.preventDefault(); loginUser()">
                 <span style="color:#ff4341;" id="loginError"></span>
                 <div class="form-group">
-                    <input type="text" placeholder="Email" class="form-control" id="userName">
+                    <input type="text" placeholder="Username" class="form-control" id="userName">
                 </div>
                 <div class="form-group">
                     <input type="password" placeholder="Password" class="form-control" id="password">
@@ -91,6 +91,10 @@
 <script src="/dist/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
 <script type="text/javascript">
     function loginUser() {
         var username = document.getElementById("userName").value;
