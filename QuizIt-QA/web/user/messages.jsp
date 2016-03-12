@@ -92,13 +92,16 @@
 					List<Message> messages = SocialRepository.getChallenges(user.getUserId());
 					messages.addAll(SocialRepository.getNotes(user.getUserId()));
 					for (Message msg : messages) {
+						String username;
 						if (msg.getSender() == user.getUserId()) {
+							username = user.idToUsername(msg.getRecipient());
 				%>
-				<p><b>To: <%= user.idToUsername(msg.getRecipient()) %></b></p>
+				<p><b>To: <a href="/user/userProfile.jsp?username=<%= username %>"><%= username %></a></b></p>
 				<%
 				} else {
+					username = user.idToUsername(msg.getSender());
 				%>
-				<p><b>From: <%= user.idToUsername(msg.getSender()) %></b></p>
+				<p><b>From: <a href="/user/userProfile.jsp?username=<%= username %>"><%= username %></a></b></p>
 				<%--<p><a href="message.jsp?id=">id</a></p>--%>
 				<%
 					}

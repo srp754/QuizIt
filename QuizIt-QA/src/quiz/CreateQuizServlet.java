@@ -54,6 +54,7 @@ public class CreateQuizServlet extends HttpServlet {
 		QuizSummary summary = new QuizSummary(quizName, quizDescription, userId, createDate);
 		int quizId = QuizRepository.AddQuizHeader(summary);
 		QuizRepository.AddQuizContent(createQuizQuestions, quizId);
+		user.addAchievement("Amateur Author", "You've created a quiz!");
 
 		createQuizQuestions = new ArrayList<>(); // Reset the quiz questions
 		getServletContext().setAttribute("createquestions", createQuizQuestions);

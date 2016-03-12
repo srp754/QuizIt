@@ -45,10 +45,11 @@ public class MessageServlet extends HttpServlet {
 		} else if (userRepository.userExists(username)) {
 			String content = request.getParameter("content");
 			int userId = userRepository.usernameToId(username);
+			String userLink = "<a href=\"/user/userProfile.jsp?username=" + userRepository.getUsername() + "\">" + userRepository.getUsername() + "</a>";
 			if (type.equals("friend")) {
-				content = userRepository.getUsername() + " would like to be friends.";
+				content =  userLink + " would like to be friends.";
 			} else if (type.equals("challenge")) {
-				content = userRepository.getUsername() + " has challenged you to take a quiz!</p>" +
+				content = userLink + " has challenged you to take a quiz!</p>" +
 								"<p><a href=\"/quiz/quizsummary.jsp?id=" + content + "\">Take the quiz</a></p>" +
 								"<p>Their high score: " + userRepository.getQuizHighScore(Integer.parseInt(content)); 
 			}
