@@ -235,22 +235,22 @@
                             if(activityList.get(i).type.equals("QuizCreated")) {
                                 QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                                 System.out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
-                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId='" + username + "'>"
+                                        + "'>" + "<a href='/user/userProfile.jsp?username='" + username + "'>"
                                         + username + "</a> created quiz \"" + qs.getQuizName() + "\"</li>");
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
-                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId=" + username + "'>"
+                                        + "'>" + "<a href='/user/userProfile.jsp?username=" + username + "'>"
                                         + username + "</a> created quiz \"" + qs.getQuizName() + "\"</li>");
                             }
                             else if(activityList.get(i).type.equals("QuizTaken")) {
                                 QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
-                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId=" + username + "'>"
+                                        + "'>" + "<a href='/user/userProfile.jsp?username=" + username + "'>"
                                         + username + "</a> took quiz \"" + qs.getQuizName() + "\"</li>");
                             }
                             else if(activityList.get(i).type.equals("Achievement")) {
                                 Achievement a = db.UserPersistence.GetAchievement(activityList.get(i).linkId);
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + a.description
-                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId=" + username + "'>"
+                                        + "'>" + "<a href='/user/userProfile.jsp?username=" + username + "'>"
                                         + id + "</a> earned achievement \"" + a.name + "\"</li>");
                             }
                             anyItems = true;

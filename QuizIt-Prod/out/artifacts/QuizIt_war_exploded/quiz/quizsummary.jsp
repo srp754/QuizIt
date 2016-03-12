@@ -102,8 +102,7 @@
 				if (wantedSummary.getCreatorId() != user.getUserId())
 					out.print(" hidden ");
 			%>
-			 ><a class="btn btn-success btn-lg" href="#" role="button">Edit Quiz</a></p>
-		</p>
+			 >
 
 	</div>
 </div>

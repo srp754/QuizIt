@@ -43,7 +43,7 @@ public class UserSearchServlet extends HttpServlet {
 		if (username.equals(userRepository.getUsername())) {
 			dispatch = request.getRequestDispatcher("user/userHomePage.jsp");
 		} else if (userRepository.userExists(username)) {
-			dispatch = request.getRequestDispatcher("user/userProfile.jsp?UserProfileId=" + username);
+			dispatch = request.getRequestDispatcher("user/userProfile.jsp");
 		} else {
 			dispatch = request.getRequestDispatcher("user/userNotFound.jsp");
 		}

@@ -156,6 +156,46 @@ public class QuizRepository
         return isAnswerCorrect;
     }
 
+    public static List<Integer> CheckAnswerWithPoints(int questionId, List<String> answers) //returns 2 items in list, score recieved and score possible
+    {
+        int possiblePoints = 1;
+        int correctPoints = 0;
+        List<Answer> dbAnswers = db.QuizPersistence.GetAnswers(questionId);
+        List<String> dbCorrectAnswers = new ArrayList<>();
+
+        for(Answer answer : dbAnswers)
+        {
+            if(answer.getAnswerCorrectFlag())
+            {
+                dbCorrectAnswers.add(answer.getAnswerText());
+//                possiblePoints++;
+            }
+        }
+
+        List<String> uniqueAnswerGuesses = new ArrayList<>(); //Need this so they can't get double points for same answer
+        for(String guessAnswer : answers)
+        {
+            if(!uniqueAnswerGuesses.contains(guessAnswer))
+                uniqueAnswerGuesses.add(guessAnswer);
+        }
+
+
+        for(String correctAnswer : dbCorrectAnswers)
+        {
+            for(String attemptAnswer : uniqueAnswerGuesses)
+            {
+                if(attemptAnswer.toLowerCase().equals(correctAnswer))
+                    correctPoints++;
+            }
+        }
+
+        List<Integer> scoreAchievedScorePossbileList = new ArrayList<>();
+        scoreAchievedScorePossbileList.add(correctPoints);
+        scoreAchievedScorePossbileList.add(possiblePoints);
+
+        return scoreAchievedScorePossbileList;
+    }
+
     public static List<Answer> GetAllAnswersForQuiz(int quizId) //Note sure this is needed, only if DB perf still bad
     {
 //        List<Answer> answers = db.QuizPersistence.GetAllAnswersForQuiz(quizId);
