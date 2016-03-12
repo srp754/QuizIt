@@ -107,13 +107,15 @@
                         if(activityList.get(i).type.equals("QuizCreated")) {
                             QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                             out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": Created quiz \"" + qs.getQuizName() + "\"</li>");
+                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": Created quiz <a href='/quiz/quizsummary.jsp?id="
+                                    + qs.getQuizId() + "'>" + qs.getQuizName() + "</a></li>");
                             count++;
                         }
                         else if(activityList.get(i).type.equals("QuizTaken")) {
                             QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                             out.println("<li class='list-group-item' data-toggle='tooltip' title='" +
-                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": Took quiz \"" + qs.getQuizName() + "\"</li>");
+                                    qs.getQuizDescription() + "'>" + activityList.get(i).date + ": Took quiz <a href='/quiz/quizsummary.jsp?id="
+                                    + qs.getQuizId() + "'>" + qs.getQuizName() + "</a></li>");
                             count++;
                         }
                         if(count >= 5) {
@@ -137,7 +139,8 @@
                     int count = 0;
                     for(int i=quizList.size()-1; i >= 0; i--) {
                         QuizSummary qs = db.QuizPersistence.GetQuizSummary(quizList.get(i).linkId);
-                        out.println("<li class='list-group-item'>"+ qs.getQuizDescription() + "</li>");
+                        out.println("<li class='list-group-item'><a href='/quiz/quizsummary.jsp?id=" + qs.getQuizId() + "'>"
+                                + qs.getQuizDescription() + "</a></li>");
                         count++;
                         if(count >= 5) {
                             break;
@@ -165,7 +168,8 @@
                     for(int i=quizList.size()-1; i >= 0; i--) {
                         QuizSummary qs = db.QuizPersistence.GetQuizSummary(quizList.get(i).linkId);
                         out.println("<li class='list-group-item' data-toggle='tooltip' title='Created by " +
-                                db.UserPersistence.idToUsername(qs.getCreatorId()) + "'>" + quizList.get(i).date + ": " + qs.getQuizDescription() + "</li>");
+                                db.UserPersistence.idToUsername(qs.getCreatorId()) + "'>" + quizList.get(i).date + ": "
+                                + "<a href='/quiz/quizsummary.jsp?id=" + qs.getQuizId() + "'>" + qs.getQuizDescription() + "</a></li>");
                         count++;
                         if(count >= 5) {
                             break;

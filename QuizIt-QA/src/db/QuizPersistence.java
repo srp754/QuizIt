@@ -39,6 +39,8 @@ public class QuizPersistence
             ResultSet rs = DatabaseTasks.GetResultSet(query);
             rs.next(); // exactly one result so allowed
             quizId = rs.getInt(1);
+
+            db.UserPersistence.InsertUserActivity(qz.getCreatorId(), "QuizCreated", quizId);
         }
         catch (SQLException e)
         {
@@ -141,6 +143,10 @@ public class QuizPersistence
             ResultSet rs = DatabaseTasks.GetResultSet(query);
             rs.next(); // exactly one result so allowed
             attemptId = rs.getInt(1);
+
+            if(attemptId != 0) {
+                db.UserPersistence.InsertUserActivity(attempt.getUserId(), "QuizTaken", attempt.getQuizId());
+            }
         }
         catch (SQLException e)
         {
@@ -173,6 +179,9 @@ public class QuizPersistence
         sb.append(" WHERE QuizId = " + attempt.getQuizId() + ";");
 
         DatabaseTasks.ExecuteUpdate(sb.toString());
+        if(attempt.getAttemptId() != 0) {
+            db.UserPersistence.InsertUserActivity(attempt.getUserId(), "QuizTaken", attempt.getQuizId());
+        }
     }
 
     public static boolean IsUniqueAttempt(int userId, int quizId)
