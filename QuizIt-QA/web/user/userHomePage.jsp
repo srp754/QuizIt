@@ -133,17 +133,22 @@
             <h2>Popular Quizzes</h2>
             <%
                 List<Activity> quizList = db.QuizPersistence.GetTakenQuizzesActivity();
+                List<Integer> quizIdsDisplayed = new ArrayList<Integer>();
+                quizIdsDisplayed.add(-1);
                 if(!quizList.isEmpty()) {
                     out.println("<ul class='list-group'>");
 
                     int count = 0;
                     for(int i=quizList.size()-1; i >= 0; i--) {
                         QuizSummary qs = db.QuizPersistence.GetQuizSummary(quizList.get(i).linkId);
-                        out.println("<li class='list-group-item'><a href='/quiz/quizsummary.jsp?id=" + qs.getQuizId() + "'>"
-                                + qs.getQuizDescription() + "</a></li>");
-                        count++;
-                        if(count >= 5) {
-                            break;
+                        if(!quizIdsDisplayed.contains(qs.getQuizId())) {
+                            out.println("<li class='list-group-item'><a href='/quiz/quizsummary.jsp?id=" + qs.getQuizId() + "'>"
+                                    + qs.getQuizDescription() + "</a></li>");
+                            count++;
+                            quizIdsDisplayed.add(qs.getQuizId());
+                            if(count >= 5) {
+                                break;
+                            }
                         }
                     }
                     out.println("</ul>");

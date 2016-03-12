@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,user.*,db.*,quiz.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <% IUserRepository user = (UserRepository) session.getAttribute("user");
-    String username = request.getParameter("UserProfileId");
+    String username = request.getParameter("username");
     User pUser = db.UserPersistence.GetUser(username);
 %>
 <html lang="en">
@@ -74,7 +74,7 @@
     <div class="container">
         <h1><%= pUser.userName %>'s Profile</h1>
         <%
-            if(db.SocialPersistence.GetFriendsIds(user.getUserId()).contains(pUser.userId)) {
+            if(user.FriendshipExists(pUser.userId)) {
                 out.println("<button type='submit' disabled class='btn btn-primary btn-md'>Already friends</button>");
             }
             else if (SocialRepository.requestExists(user.getUserId(), pUser.userId) ||

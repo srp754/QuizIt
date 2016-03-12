@@ -1,10 +1,7 @@
-<%@ page import="user.*" %>
+<%@ page import="quiz.*, user.*, java.util.*" %>
+<% IUserRepository user = (UserRepository) session.getAttribute("user"); %>
 <!DOCTYPE html>
 
-<% IUserRepository user = (UserRepository) session.getAttribute("user");
-    String username = request.getParameter("username");
-    int userId = user.usernameToId(username);
-%>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -15,16 +12,16 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title><%= username %></title>
+    <title>Achievements</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../css/starter-template.css" rel="stylesheet">
+    <link href="/css/starter-template.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -50,9 +47,9 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
-                <li><a href="#feed">Feed</a></li>
+                <li><a href="/user/userFeed.jsp">Feed</a></li>
                 <% if(user.isAdmin()) {
-                    out.println("<li><a href='user/dashboard.html'>Admin</a></li>");
+                    out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
                 %>
                 <li><a href="/user/messages.jsp">&#128172;</a></li>
@@ -72,27 +69,8 @@
 <div class="container">
 
     <div class="starter-template">
-        <h1><%= username %></h1>
-        <%
-            if (user.FriendshipExists(userId)) {
-        %>
-        <p>You are Friends</p>
-        <%
-        } else if (Messaging.requestExists(user.getUserId(), userId)) {
-        %>
-        <p>Friend request pending.</p>
-        <%
-        } else {
-        %>
-        <form action="/MessageServlet" method="post">
-            <input name="username" type="hidden" value="<%= username %>"/>
-            <input name="messagetype" type="hidden" value="friend"/>
-            <input name="content" type="hidden" value=""/>
-            <button type="submit" class="btn btn-primary">Send Friend Request</button>
-        </form>
-        <%
-            }
-        %>
+        <h1>Your Achievements</h1>
+        <h2></h2>
     </div>
 
 </div><!-- /.container -->
@@ -102,9 +80,9 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="../dist/js/bootstrap.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/dist/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
