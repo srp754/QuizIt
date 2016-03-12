@@ -3,20 +3,11 @@
 <%
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);
-	List<QuizSummary> quizSummaries = (ArrayList<QuizSummary>) getServletContext().getAttribute("quizsummary");
-	QuizSummary wantedSummary = null;
-	for(QuizSummary currSummary: quizSummaries) {
-		if(currSummary.getQuizId() == quizId) {
-			wantedSummary = currSummary;
-		}
-	}
-	List<QuizStats> quizStatsTable =  (ArrayList<QuizStats>) getServletContext().getAttribute("quizstats");
-
-	QuizStats wantedStats = null;
-	for(QuizStats currStats: quizStatsTable) {
-		if(currStats.getQuizId() == quizId) {
-			wantedStats = currStats;
-		}
+	QuizSummary wantedSummary = QuizRepository.GetQuizSummary(quizId);
+	int totalAttempts = 0;
+	QuizStats wantedStats = QuizRepository.GetQuizStats(quizId);
+	if(wantedStats != null) {
+		totalAttempts = wantedStats.getQuizAttempts();
 	}
 %>
 <!DOCTYPE html>
@@ -64,19 +55,19 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="user/userHomePage">Home</a></li>
-				<li><a href="quiz/quizhomepage.jsp">Quiz</a></li>
-				<li><a href="#feed">Feed</a></li>
+				<li><a href="/user/userHomePage.jsp">Home</a></li>
+				<li class="active"><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
+				<li><a href="/user/userFeed.jsp">Feed</a></li>
 				<% if(user.isAdmin()) {
-					out.println("<li><a href='user/dashboard.html'>Admin</a></li>");
+					out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
 				}
 				%>
-				<li><a href="user/messages.jsp">&#128172;</a></li>
+				<li><a href="/user/messages.jsp">&#128172;</a></li>
 			</ul>
-			<form class="navbar-form navbar-right" action="../SignOutServlet" method="post">
+			<form class="navbar-form navbar-right" action="/SignOutServlet" method="post">
 				<button type="submit" class="btn btn-primary">Sign Out</button>
 			</form>
-			<form class="navbar-form navbar-right" action="../UserSearchServlet" method="post">
+			<form class="navbar-form navbar-right" action="/UserSearchServlet" method="post">
 				<div class="form-group">
 					<input type="text" placeholder="&#128269;" class="form-control" name="username">
 				</div>
@@ -85,18 +76,60 @@
 	</div>
 </nav>
 
-<div class="container">
-
-	<div class="starter-template">
+<div class="jumbotron">
+	<div class="container">
 		<h1><%out.println(wantedSummary.getQuizName()); %></h1>
-		<h2><%out.println(wantedSummary.getQuizDescription()); %></h2>
 		<h2>Creator: <%out.println(wantedSummary.getCreatorId()); %></h2>
-		<h2>Total Attempts: <%out.println(wantedStats.getQuizAttempts()); %></h2>
-		<p><a class="btn btn-primary btn-lg" href="takequiz.jsp?id=<%=wantedSummary.getQuizId() %>" role="button">Take Quiz</a></p>
-		<h2>Quiz Options</h2>
-	</div>
+		<h2>Total Attempts: <%out.println(totalAttempts); %></h2>
+		
+		<form action="/MessageServlet" method="post">
+		<p>Challenge a friend! <input type="text" name="username" />
+		<input name="messagetype" type="hidden" value="challenge"/>
+		<input name="content" type="hidden" value="<%= quizId %>"/>
+		<input type="submit" value="Send Challenge" /></p>
+		</form>
+		<%
+		if (request.getAttribute("status") != null) {
+		%>
+		<p><%= (String) request.getAttribute("status") %></p>
+		<%
+		}
+		%>
+		
+		<p><%out.println(wantedSummary.getQuizDescription()); %></p>
+		<p><a class="btn btn-primary btn-lg" href="takequiz.jsp?id=<%= quizId %>" role="button">Take Quiz</a>
+			<p <%
+				if (wantedSummary.getCreatorId() != user.getUserId())
+					out.print(" hidden ");
+			%>
+			 ><a class="btn btn-success btn-lg" href="#" role="button">Edit Quiz</a></p>
+		</p>
 
-</div><!-- /.container -->
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-3">
+			<h2>Statistics</h2>
+		</div>
+
+		<div class="col-md-3">
+			<h2>All-Time Top Performers</h2>
+		</div>
+
+		<div class="col-md-3">
+			<h2>24 Hr Top Performers</h2>
+		</div>
+		<div class="col-md-3">
+			<h2>Your Performance</h2>
+		</div>
+	</div>
+</div>
+
+</body>
+
+
 
 
 <!-- Bootstrap core JavaScript

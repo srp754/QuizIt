@@ -50,9 +50,9 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/user/userHomePage.jsp">Home</a></li>
                 <li><a href="/quiz/quizhomepage.jsp">Quiz</a></li>
-                <li><a href="#feed">Feed</a></li>
+                <li><a href="/user/userFeed.jsp">Feed</a></li>
                 <% if(user.isAdmin()) {
-                    out.println("<li><a href='user/dashboard.html'>Admin</a></li>");
+                    out.println("<li><a href='/admin/dashboard.jsp'>Admin</a></li>");
                 }
                 %>
                 <li><a href="/user/messages.jsp">&#128172;</a></li>
@@ -69,6 +69,7 @@
     </div>
 </nav>
 
+
 <div class="container">
 
     <div class="starter-template">
@@ -78,7 +79,8 @@
         %>
         <p>You are Friends</p>
         <%
-        } else if (Messaging.requestExists(user.getUserId(), userId)) {
+        } else if (SocialRepository.requestExists(user.getUserId(), userId) ||
+        		SocialRepository.requestExists(userId, user.getUserId())) {
         %>
         <p>Friend request pending.</p>
         <%

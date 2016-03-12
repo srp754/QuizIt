@@ -1,22 +1,40 @@
 package quiz;
 
-public interface Question {
-	//Override of toString(): Returns the question in a String format 
-	public String toString(); 
-	
-	// Checks if the user's response to the question is the correct answer 
-	public boolean checkAnswer(Answer answer);
-	
-	// If the expected answer is a string, checks answer (Return null if a string is unexpected!) 
-	public boolean checkAnswer(String answer); 
-	
-	//Returns the question ID
-	public int getId();
-	
-	// Return Question Type 
-	/* "qresponse", "fillblank", "pictureresponse", "multiplechoice"
-	 * 
-	 */
-	public String getQuestionType();
-	
+import java.util.List;
+
+public class Question
+{
+	private int questionId = 0;
+	private int quizId;
+	private String questionType;
+	private String questionText;
+	private List<Answer> answers;
+
+	public Question(int quizzId, String questionType, String questionText)
+	{
+		this.quizId = quizzId;
+		this.questionType = questionType;
+		this.questionText = questionText;
+	}
+	public Question(int questionId,int quizId, String questionType, String questionText)
+	{
+		this.questionId = questionId;
+		this.quizId = quizId;
+		this.questionType = questionType;
+		this.questionText = questionText;
+	}
+
+	public int getQuestionId() {return questionId;}
+	public int getQuizId() {return quizId;}
+	public void setQuizId(int id) { this.quizId = id; }
+	public String getQuestionType() {return questionType;}
+	public String getQuestionText() {return questionText;}
+	public void setQuestionId(int id) {this.questionId = id;}
+	public List<Answer> getAnswers() { return answers; }
+	public void setAnswers(List<Answer> answers) { this.answers = answers; }
+
+	public boolean checkAnswer(String currAnswer)
+	{
+		return false;
+	}
 }

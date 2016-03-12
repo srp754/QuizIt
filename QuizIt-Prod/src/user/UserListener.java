@@ -44,7 +44,7 @@ public class UserListener implements ServletContextListener,
     }
 
     public void sessionDestroyed(HttpSessionEvent se) {
-      /* Session is destroyed. */
+      db.DBConnection.closeConnection();
     }
 
     // -------------------------------------------------------

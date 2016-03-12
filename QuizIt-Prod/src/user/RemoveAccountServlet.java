@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 /**
@@ -15,18 +16,25 @@ import java.sql.SQLException;
 @WebServlet("/RemoveAccountServlet")
 public class RemoveAccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/plain");
+        response.setHeader("Cache-Control", "no-cache");
+        PrintWriter out = response.getWriter();
         IUserRepository userRepo = (UserRepository) request.getSession().getAttribute("user");
         String username = request.getParameter("inputUserName");
 
         if(userRepo.userExists(username)) {
-            DatabaseTasks.DeleteUserDetail(username);
+            db.UserPersistence.DeleteUserDetail(username);
+            out.print(username + " successfully removed");
         }
-
-        response.sendRedirect("user/remove_user.jsp");
+        else {
+            out.print(username + " not found. Please try another user.");
+        }
+        out.close();
+        //response.sendRedirect("docs/admin/remove_user.jsp");
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doPost(request, response);
     }
 }

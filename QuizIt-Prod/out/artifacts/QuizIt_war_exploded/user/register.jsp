@@ -38,7 +38,8 @@
 <body>
 
 <div class="container">
-    <form class="form-signin" action="../NewAccountServlet" method="post">
+    <form class="form-signin" action="/NewAccountServlet" method="post">
+        <h1 class="form-group">Sign Up</h1>
         <div class="form-group">
             <label for="inputUserName">Username</label>
             <input type="name" class="form-control" id="inputUserName" placeholder="Username" name="inputUserName" required>
