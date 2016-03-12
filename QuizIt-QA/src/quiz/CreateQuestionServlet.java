@@ -95,7 +95,7 @@ public class CreateQuestionServlet extends HttpServlet {
 				createQuizQuestions.add(question);
 			}
 		}
-
+		
 		request.setAttribute("lastquestiontype", questionType);
 		request.setAttribute("createquestions", createQuizQuestions);
 
