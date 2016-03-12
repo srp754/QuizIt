@@ -39,6 +39,8 @@ public class QuizPersistence
             ResultSet rs = DatabaseTasks.GetResultSet(query);
             rs.next(); // exactly one result so allowed
             quizId = rs.getInt(1);
+
+            db.UserPersistence.InsertUserActivity(qz.getCreatorId(), "QuizCreated", quizId);
         }
         catch (SQLException e)
         {
@@ -141,6 +143,9 @@ public class QuizPersistence
             ResultSet rs = DatabaseTasks.GetResultSet(query);
             rs.next(); // exactly one result so allowed
             attemptId = rs.getInt(1);
+
+            db.UserPersistence.InsertUserActivity(attempt.getUserId(), "QuizTaken", attempt.getQuizId());
+
         }
         catch (SQLException e)
         {
@@ -173,6 +178,9 @@ public class QuizPersistence
         sb.append(" WHERE QuizId = " + attempt.getQuizId() + ";");
 
         DatabaseTasks.ExecuteUpdate(sb.toString());
+
+        db.UserPersistence.InsertUserActivity(attempt.getUserId(), "QuizTaken", attempt.getQuizId());
+
     }
 
     public static boolean IsUniqueAttempt(int userId, int quizId)
@@ -234,13 +242,13 @@ public class QuizPersistence
 
         return qStats;
     }
-    
+
     public static double getQuizHighScore(String username, int quizId) {
         double score = 0.0;
 
         try {
             ResultSet rs = DatabaseTasks.GetResultSet(
-            		String.format("SELECT MAX(SumActualScore) AS score FROM QuizStats WHERE QuizId = %1$s;", quizId));
+                    String.format("SELECT MAX(SumActualScore) AS score FROM QuizStats WHERE QuizId = %1$s;", quizId));
 
             if(rs.next()) {
                 score = rs.getDouble("score");
@@ -249,7 +257,7 @@ public class QuizPersistence
             e.printStackTrace();
         }
 
-        return score;    	
+        return score;
     }
 
     public static QuizSummary GetQuizSummary(int quizId)
