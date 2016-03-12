@@ -87,9 +87,11 @@
                 List<QuizSummary> quizSummaries = QuizRepository.GetAllQuizSummaries();
                 for (QuizSummary currentSummary: quizSummaries) {
                     int quizid = currentSummary.getQuizId();
+                    String username = user.idToUsername(currentSummary.getCreatorId());
+                    String absURL = "/user/userProfile.jsp?username=";
                     out.println("<tr>");
                     out.println("<td>" + "<a href=\"/quiz/quizsummary.jsp?id=" + quizid + "\">" + currentSummary.getQuizName() + "</a></td>");
-                    out.println("<td>" + currentSummary.getCreatorId() + "</td>");
+                    out.println("<td>" + "<a href=\"" + absURL + username + "\">" + username + "</a></td>");
                     out.println("<td>" + currentSummary.getCreateDate() + "</td>");
                     out.print("</td>");
                 }
