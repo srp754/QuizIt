@@ -90,64 +90,80 @@
 			<input type="hidden" name="quizid"
 				   value=<%=wantedSummary.getQuizId()%> />
 			<%
-				for (Question currQuestion : quizQuestions) {
+				for (int i =0; i < quizQuestions.size(); i++)
+				{
+					Question currQuestion = quizQuestions.get(i);
 					String questionType = currQuestion.getQuestionType();
-					if (questionType.equals("qresponse")) {
-			%>
-			<br>
-			<%
-				out.println(currQuestion.toString());
-			%>
-			<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
-			<br>
-			<%
-			} else if (questionType.equals("fillblank")) {
-				String unparsedQ = currQuestion.toString();
-				String parsedQ = unparsedQ.replace("|", "_____");
-			%>
-			<%
-				out.println(parsedQ);
-			%>
-			<br> <input type="text" name="<%=currQuestion.getQuestionId()%>">
-			<br>
-			<%
-			} else if (questionType.equals("multiplechoice")) {
-				MultipleChoice mcq = (MultipleChoice) currQuestion;
-				out.println(currQuestion.toString());
-				List<Answer> answerChoices = mcq.getAnswerChoices();
+					if (questionType.equals("qresponse"))
+					{
+						%>
+						<h4>
+						<%
+							out.println("<b>" + i + ".</b> " + currQuestion.getQuestionText());
+						%>
+						</h4>
+						<input type="text" name="<%=currQuestion.getQuestionId()%>">
+						<%
+					}
+					else if (questionType.equals("fillblank"))
+					{
+						String unparsedQ = currQuestion.getQuestionText();
+						String parsedQ = unparsedQ.replace("|", "_____");
+						%>
+						<h4>
+							<%
+								out.println("<b>" + i + ".</b> " + parsedQ);
+							%>
+						</h4>
+						<input type="text" name="<%=currQuestion.getQuestionId()%>">
 
-				for (Answer currAnswer : answerChoices) {
-			%>
-			<br> <input type="radio" name="<%=currQuestion.getQuestionId()%>"
-						id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.toString()%>">
-			<%
-				out.println(currAnswer.toString());
-			%>
-			<br>
-			<%
+						<%
+					}
+					else if (questionType.equals("multiplechoice"))
+					{
+						%>
+						<h4>
+						<%
+							out.println("<b>" + i + ".</b> " + currQuestion.getQuestionText());
+						%>
+						</h4>
+						<%
+						List<Answer> answerChoices = QuizRepository.GetAnswers(currQuestion.getQuestionId());
+
+							for (Answer currAnswer : answerChoices)
+							{
+								%>
+								<input type="radio" name="<%=currQuestion.getQuestionId()%>"
+											id="<%=currAnswer.getAnswerId()%>" value="<%=currAnswer.toString()%>">
+								<%
+									out.println(currAnswer.getAnswerText());
+								%>
+								<br>
+								<%
+							}
+
+					}
+					else if (questionType.equals("pictureresponse"))
+					{
+						List<String> questionAndUrlList = Answer.answerToList(currQuestion.getQuestionText());
+						String questionText = questionAndUrlList.get(0);
+						String imageURL = questionAndUrlList.get(1);
+						%>
+						<h4>
+							<%
+								out.println("<b>" + i + ".</b> " + questionText);
+							%>
+						</h4>
+							<img src="<%=imageURL%>" />
+							<br />
+							<br />
+							<input type="text" name="<%=currQuestion.getQuestionId() %>">
+							<br />
+						<
+					}
 				}
 			%>
-
-			<%
-			} else if (questionType.equals("pictureresponse")) {
-				PictureResponse currPictureResponse = (PictureResponse) currQuestion;
-				String imageURL = currPictureResponse.getImageURL();
-				String questionStr = currPictureResponse.toString();
-			%>
-
-			<img src="<%=imageURL%>" />
-			<br>
-			<%out.println(currPictureResponse.toString());%>
-			<br>
-			<input type="text" name="<%=currPictureResponse.getId() %>">
-			<br>
-			<%
-				}
-			%>
-			<br>
-			<%
-				}
-			%>
+			<br />
 			<button type="submit" class="btn btn-success">Submit</button>
 		</form>
 	</div>

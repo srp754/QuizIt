@@ -222,27 +222,38 @@
             <ul class="list-group">
             <%
                 activityList = db.UserPersistence.GetActivities();
+                boolean anyItems = false;
+
                 if(!activityList.isEmpty()) {
                     count = 0;
                     List<Integer> friendIds = db.SocialPersistence.GetFriendsIds(user.getUserId());
                     for (int i = activityList.size() - 1; i >= 0; i--) {
                         int id = activityList.get(i).userId;
+                        String username = db.UserPersistence.idToUsername(id);
+
                         if(friendIds.contains(id)) {
                             if(activityList.get(i).type.equals("QuizCreated")) {
                                 QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
+                                System.out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
+                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId='" + username + "'>"
+                                        + username + "</a> created quiz \"" + qs.getQuizName() + "\"</li>");
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
-                                    + "'>" + db.UserPersistence.idToUsername(id) + " created quiz \"" + qs.getQuizName() + "\"</li>");
+                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId=" + username + "'>"
+                                        + username + "</a> created quiz \"" + qs.getQuizName() + "\"</li>");
                             }
                             else if(activityList.get(i).type.equals("QuizTaken")) {
                                 QuizSummary qs = db.QuizPersistence.GetQuizSummary(activityList.get(i).linkId);
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + qs.getQuizDescription()
-                                        + "'>" + db.UserPersistence.idToUsername(id) + " took quiz \"" + qs.getQuizName() + "\"</li>");
+                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId=" + username + "'>"
+                                        + username + "</a> took quiz \"" + qs.getQuizName() + "\"</li>");
                             }
                             else if(activityList.get(i).type.equals("Achievement")) {
                                 Achievement a = db.UserPersistence.GetAchievement(activityList.get(i).linkId);
                                 out.println("<li class='list-group-item' data-toggle='tooltip' title='" + a.description
-                                        + "'>" + db.UserPersistence.idToUsername(id) + " earned achievement \"" + a.name + "\"</li>");
+                                        + "'>" + "<a href='/user/userProfile.jsp?UserProfileId=" + username + "'>"
+                                        + id + "</a> earned achievement \"" + a.name + "\"</li>");
                             }
+                            anyItems = true;
                             count++;
                         }
 
@@ -251,7 +262,7 @@
                         }
                     }
                 }
-                else {
+                if(!anyItems) {
                     out.println("<li class='list-group-item'>None</li>");
                 }
 

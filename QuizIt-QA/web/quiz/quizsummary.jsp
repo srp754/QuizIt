@@ -81,8 +81,23 @@
 		<h1><%out.println(wantedSummary.getQuizName()); %></h1>
 		<h2>Creator: <%out.println(wantedSummary.getCreatorId()); %></h2>
 		<h2>Total Attempts: <%out.println(totalAttempts); %></h2>
+		
+		<form action="/MessageServlet" method="post">
+		<p>Challenge a friend! <input type="text" name="username" />
+		<input name="messagetype" type="hidden" value="challenge"/>
+		<input name="content" type="hidden" value="<%= quizId %>"/>
+		<input type="submit" value="Send Challenge" /></p>
+		</form>
+		<%
+		if (request.getAttribute("status") != null) {
+		%>
+		<p><%= (String) request.getAttribute("status") %></p>
+		<%
+		}
+		%>
+		
 		<p><%out.println(wantedSummary.getQuizDescription()); %></p>
-		<p><a class="btn btn-primary btn-lg" href="takequiz.jsp?id=<%=wantedSummary.getQuizId() %>" role="button">Take Quiz</a>
+		<p><a class="btn btn-primary btn-lg" href="takequiz.jsp?id=<%= quizId %>" role="button">Take Quiz</a>
 			<p <%
 				if (wantedSummary.getCreatorId() != user.getUserId())
 					out.print(" hidden ");
@@ -100,7 +115,7 @@
 		</div>
 
 		<div class="col-md-3">
-			<h2>All-Time Top Perfomers</h2>
+			<h2>All-Time Top Performers</h2>
 		</div>
 
 		<div class="col-md-3">
