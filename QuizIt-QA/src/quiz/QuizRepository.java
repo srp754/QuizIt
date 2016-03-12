@@ -207,4 +207,29 @@ public class QuizRepository
         List<QuizSummary> summaries = QuizPersistence.GetQuizSummaries();
         return summaries;
     }
+
+    public static List<QuizAttempt> GetAllQuizAttempts(int quizId) {
+        return db.QuizPersistence.GetAllQuizAttempts(quizId);
+    }
+
+    public static QuizAttempt GetQuizAttempt(int quizId) {
+        return db.QuizPersistence.GetQuizAttempt(quizId);
+    }
+
+    public static List<QuizAttempt> GetAllPersonalAttempts(int quizId, int userId) {
+        return db.QuizPersistence.GetAllPersonalAttempts(quizId, userId);
+    }
+
+    // Returns a List of Top Scorers (sorted) of records from the last 24 hours
+    public static List<QuizAttempt> GetTopAttemptsFromTime(int quizId) {
+        return db.QuizPersistence.GetTopAttemptsFromTime(quizId);
+    }
+
+    public static List<QuizAttempt> GetMostRecentAttempts(int quizId) {
+        return db.QuizPersistence.GetMostRecentAttempts(quizId);
+    }
+
+    public static double getQuizHighScore(String username, int quizId) {
+        return db.QuizPersistence.getQuizHighScore(username, quizId);
+    }
 }

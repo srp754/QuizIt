@@ -3,12 +3,30 @@
 <%
 	String quizIdStr = request.getParameter("id");
 	int quizId = Integer.parseInt(quizIdStr);
+	int userId = user.getUserId();
 	QuizSummary wantedSummary = QuizRepository.GetQuizSummary(quizId);
-	int totalAttempts = 0;
+	int totalAttempts = QuizRepository.GetAllQuizAttempts(quizId).size();
+	int userAttempts = 0;
+	double averageScore = 0;
 	QuizStats wantedStats = QuizRepository.GetQuizStats(quizId);
 	if(wantedStats != null) {
-		totalAttempts = wantedStats.getQuizAttempts();
+		userAttempts = wantedStats.getUserAttempts();
+		if(wantedStats.getSumPossibleScores() != 0) {
+			averageScore = (double) wantedStats.getSumActualScores()/wantedStats.getSumPossibleScores();
+			averageScore = (1-averageScore) *100;
+			averageScore = Math.floor(averageScore *100)/100;
+		}
 	}
+	List<QuizAttempt> topPerformers = QuizRepository.GetAllQuizAttempts(quizId);
+	Collections.sort(topPerformers, new Comparator<QuizAttempt>(){
+		public int compare(QuizAttempt o1, QuizAttempt o2){
+			if(o1.getAttemptScore() == o2.getAttemptScore()){
+				return 0;
+			}
+			return o1.getAttemptScore() > o2.getAttemptScore() ? -1 : 1;
+		}
+	});
+	int topCut = 5;
 %>
 <!DOCTYPE html>
 
@@ -79,8 +97,13 @@
 <div class="jumbotron">
 	<div class="container">
 		<h1><%out.println(wantedSummary.getQuizName()); %></h1>
-		<h2>Creator: <%out.println(wantedSummary.getCreatorId()); %></h2>
-		<h2>Total Attempts: <%out.println(totalAttempts); %></h2>
+		<%
+			String creatorUsername = user.idToUsername(wantedSummary.getCreatorId());
+			String absURL = "/user/userProfile.jsp?username=";
+		%>
+		<h2>Creator:<a href="<%=absURL+creatorUsername%>"><%out.println(creatorUsername);%></a></h2>
+
+
 		
 		<form action="/MessageServlet" method="post">
 		<p>Challenge a friend! <input type="text" name="username" />
@@ -97,6 +120,7 @@
 		%>
 		
 		<p><%out.println(wantedSummary.getQuizDescription()); %></p>
+		<p>Your High Score: <%out.println(QuizRepository.getQuizHighScore(user.idToUsername(userId), quizId));%></p>
 		<p><a class="btn btn-primary btn-lg" href="takequiz.jsp?id=<%= quizId %>" role="button">Take Quiz</a>
 			<p <%
 				if (wantedSummary.getCreatorId() != user.getUserId())
@@ -109,19 +133,99 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-md-2">
 			<h2>Statistics</h2>
+			<li>Average Score: <%out.println(averageScore+"%");%></li>
+			<li>Total Attempts: <%out.println(totalAttempts); %></li>
+			<li>Unique Attempts: <%out.println(userAttempts); %></li>
+		</div>
+		<div class="col-md-2">
+			<h2>Recent Results</h2>
+			<%
+				List<QuizAttempt> recentPerformers = QuizRepository.GetMostRecentAttempts(quizId);
+				int recentPerformersSize = recentPerformers.size();
+				int cutoff = topCut;
+				if(recentPerformersSize < topCut) {
+					cutoff = recentPerformersSize;
+				}
+				for(int b = 0; b < cutoff; b++) {
+					QuizAttempt currentRecentPerformer = recentPerformers.get(b);
+					if(currentRecentPerformer != null) {
+						int currentRecentId = currentRecentPerformer.getUserId();
+						String recentUsername = user.idToUsername(currentRecentId);
+						int recentAttemptScore = currentRecentPerformer.getAttemptScore();
+						%>
+						<li><%out.println(recentUsername+" Score: "+recentAttemptScore);%></li>
+						<%
+					}
+				}
+			%>
+		</div>
+		<div class="col-md-2">
+			<h2>All-Time Top Perfomers</h2>
+			<%
+				int topPerformersSize = topPerformers.size();
+				int entries = topCut;
+				if (topPerformersSize < topCut) {
+					entries = topPerformersSize;
+				}
+				for(int i = 0; i < entries; i++) {
+					QuizAttempt currentTopPerformer = topPerformers.get(i);
+					if(currentTopPerformer != null) {
+						int performerId = currentTopPerformer.getUserId();
+						String username = user.idToUsername(performerId);
+						int attemptScore = currentTopPerformer.getAttemptScore();
+			%>
+			<li><%out.println(username+" Score: "+attemptScore);%></li>
+			<%
+					}
+				}
+			%>
 		</div>
 
-		<div class="col-md-3">
-			<h2>All-Time Top Performers</h2>
-		</div>
-
-		<div class="col-md-3">
+		<div class="col-md-2">
 			<h2>24 Hr Top Performers</h2>
+			<%
+				List<QuizAttempt> timeTopAttempts = QuizRepository.GetTopAttemptsFromTime(quizId);
+				int totalTimeAttempts = timeTopAttempts.size();
+				int timeEntries = topCut;
+				if (totalTimeAttempts < timeEntries) {
+					timeEntries = totalTimeAttempts;
+				}
+				for(int j = 0; j < timeEntries; j++) {
+					QuizAttempt currentTimeAttempt = timeTopAttempts.get(j);
+					if(currentTimeAttempt != null) {
+						String timeUsername = user.idToUsername(currentTimeAttempt.getUserId());
+						int timeScore = currentTimeAttempt.getAttemptScore();
+			%>
+			<li><%out.println(timeUsername+" Score: "+timeScore);%></li>
+			<%
+					}
+				}
+			%>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-2">
 			<h2>Your Performance</h2>
+			<%
+				List<QuizAttempt> personalAttempts = QuizRepository.GetAllPersonalAttempts(quizId, userId);
+				int numPersonalAttempts = personalAttempts.size();
+				int personalEntries = topCut;
+				if (numPersonalAttempts < personalEntries) {
+					personalEntries = numPersonalAttempts;
+				}
+				for(int i = 0; i < personalEntries; i++) {
+					QuizAttempt currentPersonalAttempt = personalAttempts.get(i);
+					if(currentPersonalAttempt != null) {
+						String username = user.idToUsername(userId);
+						int personalAttemptScore = currentPersonalAttempt.getAttemptScore();
+						String dateTaken = currentPersonalAttempt.getDateCreated();
+						String dateSubStr = dateTaken.substring(6,16);
+			%>
+			<li><%out.println(dateSubStr+" Score: "+personalAttemptScore);%></li>
+			<%
+					}
+				}
+			%>
 		</div>
 	</div>
 </div>

@@ -51,4 +51,6 @@ public class QuizAttempt
 	}
 
 	public void setAttemptId(int value) {this.attemptId = value;}
+
+	public String getDateCreated() {return dateCreated;}
 }

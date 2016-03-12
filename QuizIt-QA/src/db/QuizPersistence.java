@@ -478,4 +478,203 @@ public class QuizPersistence
 
         return correctAnswer;
     }
+    public static QuizAttempt GetQuizAttempt(int quizId) {
+        QuizAttempt quizAttempt = null;
+        // int attemptId = 0;
+        int userId = 0;
+        int attemptScore = 0;
+        int attemptPossible = 0;
+        long elapsedTime = 0;
+        String dateCreated = "";
+        SimpleDateFormat elapsedFormat = new SimpleDateFormat("HH:mm:ss");
+        ResultSet rs;
+        try
+        {
+            Statement stmt = db.DBConnection.getStatement();
+
+            String query = String.format("Select * from QuizHistory where QuizId = %1$s;", quizId);
+            rs = stmt.executeQuery(query);
+            if(rs.next())
+                //QuizAttempt(int quizId, int userId, int attemptScore, int attemptPossible, long elapsedTime, String dateCreated)
+                //attemptId = Integer.parseInt(rs.getString("AttemptId"));
+                userId = Integer.parseInt(rs.getString("UserId"));
+            attemptScore = Integer.parseInt(rs.getString("AttemptScore"));
+            attemptPossible = Integer.parseInt(rs.getString("AttemptPossible"));
+            Date d = null;
+            try {
+                d = elapsedFormat.parse(rs.getString("ElapsedTime"));
+            } catch (ParseException  pe) {
+                pe.printStackTrace();
+            }
+            elapsedTime = d.getTime();
+            dateCreated = rs.getString("AttemptDate");
+            quizAttempt = new QuizAttempt(quizId, userId, attemptScore, attemptPossible, elapsedTime, dateCreated);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return quizAttempt;
+    }
+
+    public static List<QuizAttempt> GetAllQuizAttempts(int quizId) {
+        List<QuizAttempt> foundAttempts = new ArrayList<QuizAttempt>();
+        ResultSet rs;
+        int userId = 0;
+        int attemptScore = 0;
+        int attemptPossible = 0;
+        long elapsedTime = 0;
+        SimpleDateFormat elapsedFormat = new SimpleDateFormat("HH:mm:ss");
+        String dateCreated = "";
+        try
+        {
+            Statement stmt = db.DBConnection.getStatement();
+
+            String query = String.format("Select * from QuizHistory where QuizId = %1$s;", quizId);
+            rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                userId = Integer.parseInt(rs.getString("UserId"));
+                attemptScore = Integer.parseInt(rs.getString("AttemptScore"));
+                attemptPossible = Integer.parseInt(rs.getString("AttemptPossible"));
+                Date d = null;
+                try {
+                    d = elapsedFormat.parse(rs.getString("ElapsedTime"));
+                } catch (ParseException  pe) {
+                    pe.printStackTrace();
+                }
+                elapsedTime = d.getTime();
+                dateCreated = rs.getString("AttemptDate");
+                QuizAttempt currentAttempt = new QuizAttempt(quizId, userId, attemptScore, attemptPossible, elapsedTime, dateCreated);
+                foundAttempts.add(currentAttempt);
+            }
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return foundAttempts;
+    }
+
+    public static List<QuizAttempt> GetAllPersonalAttempts(int quizId, int userId) {
+        List<QuizAttempt> foundAttempts = new ArrayList<QuizAttempt>();
+        ResultSet rs;
+        int attemptScore = 0;
+        int attemptPossible = 0;
+        long elapsedTime = 0;
+        SimpleDateFormat elapsedFormat = new SimpleDateFormat("HH:mm:ss");
+        String dateCreated = "";
+        try
+        {
+            Statement stmt = db.DBConnection.getStatement();
+
+            String query = String.format("Select * from QuizHistory where QuizId = %1$s and UserId = %2$s;", quizId, userId);
+            rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                userId = Integer.parseInt(rs.getString("UserId"));
+                attemptScore = Integer.parseInt(rs.getString("AttemptScore"));
+                attemptPossible = Integer.parseInt(rs.getString("AttemptPossible"));
+                Date d = null;
+                try {
+                    d = elapsedFormat.parse(rs.getString("ElapsedTime"));
+                } catch (ParseException  pe) {
+                    pe.printStackTrace();
+                }
+                elapsedTime = d.getTime();
+                dateCreated = rs.getString("AttemptDate");
+                QuizAttempt currentAttempt = new QuizAttempt(quizId, userId, attemptScore, attemptPossible, elapsedTime, dateCreated);
+                foundAttempts.add(currentAttempt);
+            }
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return foundAttempts;
+    }
+
+    public static List<QuizAttempt> GetTopAttemptsFromTime(int quizId) {
+        List<QuizAttempt> topAttempts = new ArrayList<QuizAttempt>();
+        ResultSet rs;
+        int userId = 0;
+        int attemptScore = 0;
+        int attemptPossible = 0;
+        long elapsedTime = 0;
+        SimpleDateFormat elapsedFormat = new SimpleDateFormat("HH:mm:ss");
+        String dateCreated = "";
+        try
+        {
+            Statement stmt = db.DBConnection.getStatement();
+
+            String query = String.format("Select * from QuizHistory where QuizId = %1$s and AttemptDate > DATE_SUB(NOW(), INTERVAL 24 HOUR) Order By AttemptScore Desc;", quizId);
+            rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                userId = Integer.parseInt(rs.getString("UserId"));
+                attemptScore = Integer.parseInt(rs.getString("AttemptScore"));
+                attemptPossible = Integer.parseInt(rs.getString("AttemptPossible"));
+                Date d = null;
+                try {
+                    d = elapsedFormat.parse(rs.getString("ElapsedTime"));
+                } catch (ParseException  pe) {
+                    pe.printStackTrace();
+                }
+                elapsedTime = d.getTime();
+                dateCreated = rs.getString("AttemptDate");
+                QuizAttempt currentAttempt = new QuizAttempt(quizId, userId, attemptScore, attemptPossible, elapsedTime, dateCreated);
+                topAttempts.add(currentAttempt);
+            }
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return topAttempts;
+    }
+
+    public static List<QuizAttempt> GetMostRecentAttempts(int quizId) {
+        List<QuizAttempt> recentAttempts = new ArrayList<QuizAttempt>();
+        ResultSet rs;
+        int userId = 0;
+        int attemptScore = 0;
+        int attemptPossible = 0;
+        long elapsedTime = 0;
+        SimpleDateFormat elapsedFormat = new SimpleDateFormat("HH:mm:ss");
+        String dateCreated = "";
+        try
+        {
+            Statement stmt = db.DBConnection.getStatement();
+
+            String query = String.format("Select * from QuizHistory where QuizId = %1$s Order By AttemptScore Desc;", quizId);
+            rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                userId = Integer.parseInt(rs.getString("UserId"));
+                attemptScore = Integer.parseInt(rs.getString("AttemptScore"));
+                attemptPossible = Integer.parseInt(rs.getString("AttemptPossible"));
+                Date d = null;
+                try {
+                    d = elapsedFormat.parse(rs.getString("ElapsedTime"));
+                } catch (ParseException  pe) {
+                    pe.printStackTrace();
+                }
+                elapsedTime = d.getTime();
+                dateCreated = rs.getString("AttemptDate");
+                QuizAttempt currentAttempt = new QuizAttempt(quizId, userId, attemptScore, attemptPossible, elapsedTime, dateCreated);
+                recentAttempts.add(currentAttempt);
+            }
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return recentAttempts;
+    }
+
 }
